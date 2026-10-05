@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body data-tab="spec">
+<div class="timer-fixed" data-timer aria-live="off"></div>
 <div class="wrap">
   <header class="top">
     <div class="title"><h1>BUG HUNT</h1><span>Full version · ใช้สิ่งที่ได้จาก session</span></div>
@@ -24,6 +25,7 @@
   </header>
 
   <nav class="mtabs" role="tablist" aria-label="ส่วนของหน้า">
+    <div class="timer-mini" data-timer></div>
     <button type="button" role="tab" data-t="spec">Requirement</button>
     <button type="button" role="tab" data-t="app">แอป</button>
     <button type="button" role="tab" data-t="board">สิ่งที่เจอ <span id="mcount"></span></button>
@@ -68,7 +70,7 @@
     <section class="phone-col" aria-labelledby="app-h" data-sec="app">
       <div class="col-head"><h2 id="app-h">ระบบที่ต้องทดสอบ</h2><span class="tag">QUICKSHIFT APP</span></div>
       <div class="phone"><div class="screen" id="screen"></div></div>
-      <div class="reset-row"><button class="ghost" type="button" id="appReset">รีเซ็ตแอป</button></div>
+      <div class="reset-row"><button class="reset-btn" type="button" id="appReset"><span aria-hidden="true">↺</span> รีเซ็ตแอป</button><span class="reset-hint">ล้างงานที่สมัครและกลับไปหน้าแรกของแอป</span></div>
     </section>
 
     <!-- FINDINGS -->
@@ -100,11 +102,14 @@
       </div>
     </section>
   </main>
+  <footer class="site-foot">© 2026 Level Up!: Becoming Your Team's MVQ(A) · นิภาพร จันต๊ะวงค์ (เมย์)</footer>
 </div>
+<div class="gate" id="gate" hidden><div class="gate-card" id="gateBody" role="dialog" aria-modal="true" aria-label="เริ่มเกม"></div></div>
 <script src="config.js"></script>
 <script src="assets/api.js"></script>
 <script src="assets/quickshift.js"></script>
 <script src="assets/findings.js"></script>
+<script src="assets/timer.js"></script>
 <script src="assets/tabs.js"></script>
 </body>
 </html>

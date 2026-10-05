@@ -97,6 +97,7 @@
     catch (e) { area.value = text; area.hidden = false; area.focus(); area.select(); msg.textContent = 'คัดลอกอัตโนมัติไม่ได้ ข้อความถูกเลือกไว้แล้ว กด Ctrl/Cmd + C'; msg.className = 'msg bad'; }
   });
 
+  window.BugHuntFindings = { count: () => items.length };
   render();
   flush($('fTeam').value.trim());
 })();

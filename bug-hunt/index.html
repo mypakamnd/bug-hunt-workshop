@@ -12,11 +12,12 @@
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body data-tab="spec">
+<div class="timer-fixed" data-timer aria-live="off"></div>
 <div class="wrap">
   <header class="top">
     <div class="title"><h1>BUG HUNT</h1><span>ice breaking ก่อนเริ่ม session</span></div>
     <div class="mission">
-      <div><b>1</b><span>อ่าน <strong>Requirement</strong> ของแอป QuickShift</span></div>
+      <div><b>1</b><span>อ่านว่า<strong>ระบบ QuickShift</strong> ทำอะไรได้บ้าง</span></div>
       <div><b>2</b><span>ลองใช้แอปให้เหมือนเป็นผู้ใช้จริง</span></div>
       <div><b>3</b><span>เจออะไร<strong>แปลก ไม่ตรง หรือสงสัย</strong> บันทึกไว้ใน "สิ่งที่เจอ"</span></div>
       <div><b>4</b><span>มีเวลา 10 นาที ทีมที่เจอมากที่สุดชนะ 🏆</span></div>
@@ -24,42 +25,31 @@
   </header>
 
   <nav class="mtabs" role="tablist" aria-label="ส่วนของหน้า">
-    <button type="button" role="tab" data-t="spec">Requirement</button>
+    <div class="timer-mini" data-timer></div>
+    <button type="button" role="tab" data-t="spec">ระบบ</button>
     <button type="button" role="tab" data-t="app">แอป</button>
     <button type="button" role="tab" data-t="board">สิ่งที่เจอ <span id="mcount"></span></button>
   </nav>
 
   <main class="bench">
-    <!-- SPEC -->
+    <!-- ABOUT THE SYSTEM (no requirements in the ice-breaking round) -->
     <section aria-labelledby="spec-h" data-sec="spec">
-      <div class="col-head"><h2 id="spec-h">Requirement</h2><span class="tag">PRD v0.3</span></div>
+      <div class="col-head"><h2 id="spec-h">รู้จักระบบ</h2><span class="tag">QUICKSHIFT</span></div>
       <article class="spec">
-        <div class="doc-meta"><span>Product: QuickShift (หางานพาร์ทไทม์รายวัน)</span><span>Feature: ค้นหาและสมัครงาน · Status: Ready for test</span></div>
-        <h3>หน้ารายการงาน</h3>
+        <div class="doc-meta"><span>QuickShift · แอปหางานพาร์ทไทม์รายวัน</span><span>สำหรับคนที่อยากหางานเสริมเป็นรายวัน เช่น นักศึกษา หรือฟรีแลนซ์</span></div>
+        <h3>ระบบนี้ทำอะไรได้บ้าง</h3>
         <ol>
-          <li><code>REQ-01</code><span>แสดงงานทั้งหมด โดยเรียงจากงานล่าสุดก่อน</span></li>
-          <li><code>REQ-02</code><span>ผู้ใช้ค้นหางานได้จากชื่องานหรือสถานที่</span></li>
-          <li><code>REQ-03</code><span>ผู้ใช้เรียงงานตามค่าจ้างจากมากไปน้อยได้</span></li>
-          <li><code>REQ-04</code><span>แสดงจำนวนงานที่ตรงกับผลการค้นหา</span></li>
-          <li><code>REQ-05</code><span>ค่าจ้างทุกงานแสดงเป็นบาทต่อวัน</span></li>
-          <li><code>REQ-06</code><span>งานที่เริ่มเร็ว ๆ นี้ให้แสดงป้าย "ด่วน"</span></li>
+          <li><code>หางาน</code><span>ดูรายการงานพาร์ทไทม์ที่เปิดรับ ค้นหา และเรียงลำดับงานได้</span></li>
+          <li><code>ดูงาน</code><span>กดเข้าไปดูรายละเอียดงาน เช่น ค่าจ้าง สถานที่ วันเริ่มงาน และวันปิดรับสมัคร</span></li>
+          <li><code>สมัคร</code><span>กรอกข้อมูลของตัวเองเพื่อสมัครงานที่สนใจ</span></li>
+          <li><code>ติดตาม</code><span>ดูงานที่สมัครไว้ในแท็บ "งานที่สมัคร" และยกเลิกการสมัครได้</span></li>
         </ol>
-        <h3>รายละเอียดงานและการสมัคร</h3>
+        <h3>ลองเล่นแบบนี้</h3>
         <ol>
-          <li><code>REQ-07</code><span>งานที่ปิดรับสมัครแล้วต้องสมัครไม่ได้ และไม่ควรทำให้ผู้ใช้สับสน</span></li>
-          <li><code>REQ-08</code><span>ต้องกรอกชื่อ-นามสกุล</span></li>
-          <li><code>REQ-09</code><span>ผู้สมัครต้องมีอายุ 18 ปีขึ้นไป</span></li>
-          <li><code>REQ-10</code><span>เบอร์โทรศัพท์ต้องถูกต้อง</span></li>
-          <li><code>REQ-11</code><span>วันที่เริ่มงานได้ต้องไม่เป็นวันในอดีต</span></li>
-          <li><code>REQ-12</code><span>แนบ resume ได้ ขนาดไฟล์ต้องไม่ใหญ่เกินไป</span></li>
-          <li><code>REQ-13</code><span>สมัครงานเดิมซ้ำไม่ได้</span></li>
-          <li><code>REQ-14</code><span>เมื่อสมัครสำเร็จ ระบบจะแจ้งเตือนผู้ใช้</span></li>
-        </ol>
-        <h3>งานที่สมัคร</h3>
-        <ol>
-          <li><code>REQ-15</code><span>แสดงจำนวนงานที่สมัครไว้บนแท็บ</span></li>
-          <li><code>REQ-16</code><span>ผู้ใช้ยกเลิกการสมัครได้</span></li>
-          <li><code>REQ-17</code><span>ระบบต้องใช้งานง่ายและโหลดเร็ว</span></li>
+          <li><code>1</code><span>ลองหางานที่อยากทำ ด้วยวิธีที่คุณคิดว่าผู้ใช้จริงจะใช้</span></li>
+          <li><code>2</code><span>เลือกงาน 1–2 งาน แล้วลองสมัครดู</span></li>
+          <li><code>3</code><span>เข้าไปดูงานที่สมัครไว้ แล้วลองยกเลิก</span></li>
+          <li><code>4</code><span>อะไรที่ดูแปลก ไม่สมเหตุสมผล หรือทำให้สงสัย จดไว้ใน "สิ่งที่เจอ"</span></li>
         </ol>
       </article>
     </section>
@@ -68,7 +58,7 @@
     <section class="phone-col" aria-labelledby="app-h" data-sec="app">
       <div class="col-head"><h2 id="app-h">ระบบที่ต้องทดสอบ</h2><span class="tag">QUICKSHIFT APP</span></div>
       <div class="phone"><div class="screen" id="screen"></div></div>
-      <div class="reset-row"><button class="ghost" type="button" id="appReset">รีเซ็ตแอป</button></div>
+      <div class="reset-row"><button class="reset-btn" type="button" id="appReset"><span aria-hidden="true">↺</span> รีเซ็ตแอป</button><span class="reset-hint">ล้างงานที่สมัครและกลับไปหน้าแรกของแอป</span></div>
     </section>
 
     <!-- FINDINGS -->
@@ -78,7 +68,7 @@
       <div class="card">
         <form class="f-form" id="fForm" data-round="icebreak" novalidate>
           <label>ชื่อทีม / ชื่อเล่น<input id="fTeam" type="text" maxlength="40" placeholder="เช่น ทีมแมวส้ม"></label>
-          <label>เจออะไร<textarea id="fText" maxlength="600" placeholder="เช่น ค้นหาแล้วไม่เจอ… / requirement ข้อนี้อ่านแล้วงง…"></textarea></label>
+          <label>เจออะไร<textarea id="fText" maxlength="600" placeholder="เช่น ค้นหาแล้วไม่เจอ… / กดแล้วงงว่าทำไมเป็นแบบนี้…"></textarea></label>
           <button class="submit" id="fSubmit" type="submit">บันทึก</button>
           <div class="msg" id="fMsg" role="status"></div>
         </form>
@@ -93,11 +83,14 @@
       </div>
     </section>
   </main>
+  <footer class="site-foot">© 2026 Level Up!: Becoming Your Team's MVQ(A) · นิภาพร จันต๊ะวงค์ (เมย์)</footer>
 </div>
+<div class="gate" id="gate" hidden><div class="gate-card" id="gateBody" role="dialog" aria-modal="true" aria-label="เริ่มเกม"></div></div>
 <script src="config.js"></script>
 <script src="assets/api.js"></script>
 <script src="assets/quickshift.js"></script>
 <script src="assets/findings.js"></script>
+<script src="assets/timer.js"></script>
 <script src="assets/tabs.js"></script>
 </body>
 </html>
