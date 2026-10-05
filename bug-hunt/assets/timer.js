@@ -130,6 +130,8 @@
   }
 
   function over(announce) {
+    // Save the half-typed answer before the form locks (also on a reload after time ran out).
+    const autoSaved = window.BugHuntFindings && window.BugHuntFindings.autoSave ? window.BugHuntFindings.autoSave() : 0;
     document.body.dataset.game = 'over';
     wrap.inert = false;
     if (app) app.inert = true;
@@ -151,9 +153,21 @@
       node('div', 'gate-title', 'หมดเวลา!'),
       node('div', 'gate-time', String(n)),
       node('p', 'gate-note', n ? 'คุณบันทึกสิ่งที่เจอไว้ ' + n + ' อย่าง' : 'ยังไม่ได้บันทึกสิ่งที่เจอเลย'),
+      autoSaved ? node('p', 'gate-sub', 'ข้อความที่พิมพ์ค้างไว้ถูกบันทึกให้อัตโนมัติแล้ว') : null,
       n ? node('p', 'gate-sub', window.BugHuntApi && window.BugHuntApi.enabled ? 'คำตอบส่งถึงผู้จัดแล้ว รอดูเฉลยพร้อมกัน' : 'กด "คัดลอกทั้งหมด" แล้วนำไปวางในแชทของ session') : null,
       node('div', 'gate-actions', null)].filter(Boolean));
     gateBody.lastChild.append(close, again);
+    const compare = document.getElementById('compare');
+    if (compare) {
+      const cmp = node('button', 'gate-btn', '⇄ เปรียบเทียบกับรอบ Ice breaking'); cmp.type = 'button';
+      cmp.addEventListener('click', () => {
+        overlay.hidden = true;
+        document.body.dataset.tab = 'board';
+        document.querySelectorAll('.mtabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.t === 'board')));
+        compare.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      gateBody.lastChild.prepend(cmp);
+    }
     overlay.hidden = false;
     close.focus();
   }

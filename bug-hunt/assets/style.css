@@ -251,3 +251,25 @@ body[data-game="over"] [data-sec="app"] .screen { filter: grayscale(.8); opacity
 
 .field input { min-width: 0; max-width: 100%; box-sizing: border-box; }
 .field input[type=date] { -webkit-appearance: none; appearance: none; min-height: 40px; }
+
+/* compare ice-breaking vs workshop (shown when the workshop round is over) */
+.compare { border-color: var(--gold); display: grid; gap: 12px; }
+.compare .col-head { margin: 0; }
+.compare .col-head h2 { font-size: 17px; }
+.cmp-summary { background: rgba(255,197,61,.08); border: 1px dashed var(--gold); border-radius: 8px; padding: 10px 12px; display: grid; gap: 4px; }
+.cmp-summary p { margin: 0; font-size: 14.5px; }
+.cmp-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 520px) { .cmp-cols { grid-template-columns: minmax(0, 1fr); } }
+.cmp-col { background: var(--panel-2); border: 1px solid var(--line); border-top: 4px solid var(--line); border-radius: 8px; padding: 10px 12px; min-width: 0; }
+.cmp-col.ice { border-top-color: var(--cyan); } .cmp-col.ws { border-top-color: var(--gold); }
+.cmp-round { font-family: var(--font-pixel); font-size: 9px; letter-spacing: .05em; }
+.cmp-col.ice .cmp-round { color: var(--cyan); } .cmp-col.ws .cmp-round { color: var(--gold); }
+.cmp-sub { margin: 2px 0 6px; font-size: 12.5px; color: var(--muted); }
+.cmp-num { font-family: var(--font-pixel); font-size: 26px; line-height: 1.4; font-variant-numeric: tabular-nums; }
+.cmp-unit { margin: 0 0 6px; font-size: 13px; color: var(--muted); }
+.cmp-split { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 13px; margin-bottom: 6px; }
+.cmp-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-height: 260px; overflow-y: auto; }
+.cmp-list li { font-size: 13.5px; border-top: 1px dashed var(--line); padding-top: 6px; overflow-wrap: anywhere; }
+.cmp-src { margin: 0; font-size: 12px; color: var(--muted); }
+.cmp-name { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.cmp-name input { flex: 1 1 140px; min-width: 0; background: var(--bg); color: var(--ink); border: 2px solid var(--line); border-radius: 8px; padding: 6px 10px; }

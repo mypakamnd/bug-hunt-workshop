@@ -46,5 +46,15 @@ window.BugHuntApi = (function () {
     throw new Error('claim ' + res.status + ': ' + (await res.text()).slice(0, 200));
   }
 
-  return { enabled, session, insert, list, claimTeam };
+  // One team's answers in one round (team name matched case-insensitively).
+  async function listTeam(round, team) {
+    const q = '?select=detail,kind,req,created_at&order=created_at.asc&limit=200' +
+      '&session=eq.' + encodeURIComponent(session) + '&round=eq.' + encodeURIComponent(round) +
+      '&team=ilike.' + encodeURIComponent(team.trim());
+    const res = await fetch(base + '/rest/v1/findings' + q, { headers });
+    if (!res.ok) throw new Error('listTeam ' + res.status);
+    return res.json();
+  }
+
+  return { enabled, session, insert, list, claimTeam, listTeam };
 })();

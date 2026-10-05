@@ -40,6 +40,7 @@
       const h = node('div', 'h');
       if (full) h.append(node('span', 'chip ' + (it.kind === 'req' ? 'req' : 'bug'), it.kind === 'req' ? 'REQ ไม่ชัด' : 'BUG'), node('span', 'chip ref', it.req));
       else h.append(node('span', 'chip ref', '#' + (idx + 1)));
+      if (it.auto) h.append(node('span', 'chip ref', 'บันทึกอัตโนมัติ'));
       if (api.enabled) h.append(node('span', 'chip ' + (it.sent ? 'ok' : 'ref'), it.sent ? 'ส่งแล้ว' : 'รอส่ง'));
       if (!it.sent || !api.enabled) {
         const del = node('button', 'act', 'ลบ'); del.type = 'button'; del.style.marginLeft = 'auto';
@@ -68,6 +69,12 @@
     } finally { sending = false; render(); }
   }
 
+  // Draft of the text box, kept so a refresh or the end of the round doesn't lose it.
+  const DRAFT_KEY = 'bh-draft-' + round + '-' + api.session;
+  const saveDraft = () => { try { localStorage.setItem(DRAFT_KEY, $('fText').value); } catch (e) {} };
+  try { $('fText').value = localStorage.getItem(DRAFT_KEY) || ''; } catch (e) {}
+  $('fText').addEventListener('input', saveDraft);
+
   form.addEventListener('submit', async e => {
     e.preventDefault();
     const team = $('fTeam').value.trim(), detail = $('fText').value.trim(), msg = $('fMsg');
@@ -76,7 +83,7 @@
     const it = { team, detail, sent: false };
     if (full) { it.kind = document.querySelector('input[name=kind]:checked').value; it.req = $('fReq').value; }
     items.push(it); save(); render();
-    $('fText').value = '';
+    $('fText').value = ''; saveDraft();
     $('fSubmit').disabled = true;
     const ok = await flush(team);
     $('fSubmit').disabled = false;
@@ -98,8 +105,23 @@
 
   window.BugHuntFindings = {
     count: () => items.length,
+    items: () => items.map(i => Object.assign({}, i)),
     // Clears only this browser's copy; answers already sent to the dashboard stay there.
-    reset: () => { items = []; save(); render(); $('fText').value = ''; $('fMsg').textContent = ''; $('copyMsg').textContent = ''; $('copyArea').hidden = true; }
+    // Time's up: keep whatever is still typed in the box (no minimum length) and send anything unsent.
+    // Returns how many drafts were saved (0 or 1).
+    autoSave: () => {
+      const team = $('fTeam').value.trim(), detail = $('fText').value.trim();
+      let saved = 0;
+      if (team && detail) {
+        const it = { team, detail, sent: false, auto: true };
+        if (full) { it.kind = document.querySelector('input[name=kind]:checked').value; it.req = $('fReq').value; }
+        items.push(it); save(); render(); saved = 1;
+      }
+      $('fText').value = ''; saveDraft();
+      flush(team);
+      return saved;
+    },
+    reset: () => { items = []; save(); render(); $('fText').value = ''; saveDraft(); $('fMsg').textContent = ''; $('copyMsg').textContent = ''; $('copyArea').hidden = true; }
   };
   render();
   flush($('fTeam').value.trim());
