@@ -11,5 +11,6 @@ window.BUG_HUNT_CONFIG = {
   supabaseUrl: 'https://fkohbdoiiizljhzdqnbm.supabase.co',
   supabaseAnonKey: 'sb_publishable_IFkyyv4s71Vdykikg_kgfw_Y8SYMygh',
   session: 'level-up-2026-10-10',
-  durationMinutes: 10
+  // เวลาเล่นต่อรอบ (นาที): icebreak = /ice-breaking, full = /workshop
+  durationMinutes: { icebreak: 10, full: 30 }
 };

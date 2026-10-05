@@ -19,7 +19,6 @@
   const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; } };
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(items)); } catch (e) {} };
   let items = load();
-  try { $('fTeam').value = localStorage.getItem('bh-team') || ''; } catch (e) {}
   const node = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
 
   $('syncNote').textContent = api.enabled
@@ -72,9 +71,8 @@
   form.addEventListener('submit', async e => {
     e.preventDefault();
     const team = $('fTeam').value.trim(), detail = $('fText').value.trim(), msg = $('fMsg');
-    if (!team) { msg.textContent = 'ใส่ชื่อทีมหรือชื่อเล่นก่อน'; msg.className = 'msg bad'; $('fTeam').focus(); return; }
+    if (!team) { msg.textContent = 'ยังไม่มีชื่อทีม กดเริ่มเกมใหม่เพื่อตั้งชื่อทีม'; msg.className = 'msg bad'; return; }
     if (detail.length < 5) { msg.textContent = 'เล่ารายละเอียดเพิ่มอีกนิด'; msg.className = 'msg bad'; $('fText').focus(); return; }
-    try { localStorage.setItem('bh-team', team); } catch (e) {}
     const it = { team, detail, sent: false };
     if (full) { it.kind = document.querySelector('input[name=kind]:checked').value; it.req = $('fReq').value; }
     items.push(it); save(); render();

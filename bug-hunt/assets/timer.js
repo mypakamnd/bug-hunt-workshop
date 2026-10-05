@@ -9,8 +9,11 @@
  */
 (function () {
   const cfg = window.BUG_HUNT_CONFIG || {};
-  const minutes = Number(cfg.durationMinutes) > 0 ? Number(cfg.durationMinutes) : 10;
   const round = document.getElementById('fForm').dataset.round;
+  // durationMinutes is either one number for every round or { icebreak: 10, full: 30 }
+  const dm = cfg.durationMinutes;
+  const rawMinutes = dm && typeof dm === 'object' ? dm[round] : dm;
+  const minutes = Number(rawMinutes) > 0 ? Number(rawMinutes) : 10;
   const KEY = 'bh-timer-' + round + '-' + (cfg.session || 'default');
   const wrap = document.querySelector('.wrap');
   const app = document.querySelector('[data-sec="app"]');
@@ -32,12 +35,12 @@
   };
   const usedNames = () => { try { return JSON.parse(store.get(USED_KEY) || '[]'); } catch (e) { return []; } };
   const keyOf = t => t.trim().toLowerCase();
+  const teamName = document.getElementById('teamName');
+  // The team name is entered only on the start gate; the form just shows it.
   function lockTeam() {
-    const claimed = store.get(CLAIM_KEY);
-    if (!claimed) return;
+    const claimed = store.get(CLAIM_KEY) || '';
     teamInput.value = claimed;
-    teamInput.readOnly = true;
-    teamInput.title = 'ชื่อทีมถูกล็อกไว้จนจบรอบนี้';
+    if (teamName) teamName.textContent = claimed || '–';
   }
 
   let endAt = get(), tick = null;
@@ -65,7 +68,8 @@
     input.id = 'gateTeam'; input.type = 'text'; input.maxLength = 40; input.autocomplete = 'off';
     input.placeholder = 'เช่น ทีมแมวส้ม';
     const used = usedNames();
-    if (!used.includes(keyOf(teamInput.value || ''))) input.value = teamInput.value || '';
+    const last = store.get('bh-team') || '';
+    if (!used.includes(keyOf(last))) input.value = last;
     const msg = node('p', 'gate-msg', used.length ? 'เครื่องนี้เล่นรอบนี้ไปแล้ว ตั้งชื่อทีมใหม่เพื่อเล่นอีกรอบ' : '');
     field.append(label, input, msg, start);
     field.addEventListener('submit', e => { e.preventDefault(); startGame(input, msg, start); });
@@ -175,9 +179,7 @@
     endAt = 0;
     set(0);
     store.set(CLAIM_KEY, null);
-    teamInput.readOnly = false;
-    teamInput.title = '';
-    teamInput.value = '';
+    lockTeam();
     if (window.BugHuntFindings && window.BugHuntFindings.reset) window.BugHuntFindings.reset();
     const appReset = document.getElementById('appReset');
     if (appReset) appReset.click();
@@ -189,7 +191,9 @@
 
   if (restartBtn) restartBtn.addEventListener('click', confirmRestart);
 
-  if (!endAt) showReady();
+  lockTeam();
+  // No team on this device (first visit, or a game started before names were required): ask first.
+  if (!endAt || !store.get(CLAIM_KEY)) { endAt = 0; set(0); showReady(); }
   else if (endAt > Date.now()) play();
   else over(false);
 })();

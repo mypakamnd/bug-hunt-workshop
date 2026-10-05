@@ -85,7 +85,8 @@
 
         <div class="card">
           <form class="f-form" id="fForm" data-round="icebreak" novalidate>
-            <label>ชื่อทีม / ชื่อเล่น<input id="fTeam" type="text" maxlength="40" placeholder="เช่น ทีมแมวส้ม"></label>
+            <div class="team-chip"><span>ทีม</span><b id="teamName">–</b></div>
+            <input id="fTeam" type="hidden">
             <label>เจออะไร<textarea id="fText" maxlength="600"
                 placeholder="เช่น ค้นหาแล้วไม่เจอ… / กดแล้วงงว่าทำไมเป็นแบบนี้…"></textarea></label>
             <button class="submit" id="fSubmit" type="submit">บันทึก</button>

@@ -26,7 +26,7 @@
         <div><b>2</b><span>ลองใช้แอป หา <span class="bugc">Bug</span> ที่ทำงานไม่ตรง requirement</span></div>
         <div><b>3</b><span>หา <span class="reqc">Requirement ที่ไม่ชัด</span> ที่ตีความได้หลายแบบ หรือเทสไม่ได้</span>
         </div>
-        <div><b>4</b><span>บันทึกใน "สิ่งที่เจอ" ภายใน 10 นาที ทีมที่เจอถูกมากที่สุดชนะ 🏆</span></div>
+        <div><b>4</b><span>บันทึกใน "สิ่งที่เจอ" ภายใน 30 นาที ทีมที่เจอถูกมากที่สุดชนะ 🏆</span></div>
       </div>
     </header>
 
@@ -96,11 +96,9 @@
 
         <div class="card">
           <form class="f-form" id="fForm" data-round="full" novalidate>
-            <div class="f-row">
-              <label>ชื่อทีม / ชื่อเล่น<input id="fTeam" type="text" maxlength="40"
-                  placeholder="เช่น ทีมแมวส้ม"></label>
-              <label>เกี่ยวกับ<select id="fReq"></select></label>
-            </div>
+            <div class="team-chip"><span>ทีม</span><b id="teamName">–</b></div>
+            <input id="fTeam" type="hidden">
+            <label>เกี่ยวกับ<select id="fReq"></select></label>
             <div class="kind" role="radiogroup" aria-label="ประเภท">
               <label><input type="radio" name="kind" value="bug" checked> 🐞 Bug</label>
               <label><input type="radio" name="kind" value="req"> ❓ Req ไม่ชัด</label>
