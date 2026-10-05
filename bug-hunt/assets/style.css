@@ -215,6 +215,10 @@ body[data-game="over"] [data-sec="app"] .screen { filter: grayscale(.8); opacity
 @media (prefers-reduced-motion: reduce) { [data-timer][data-state="last"] { animation: none; } }
 
 .site-foot { margin-top: 32px; padding-top: 14px; border-top: 1px solid var(--line); text-align: center; font-size: 13px; color: var(--muted); }
+/* keep the footer at the bottom of the screen when the page is shorter than the viewport */
+.wrap, .join { box-sizing: border-box; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+.wrap > .site-foot, .join > .site-foot { margin-top: auto; }
+.wrap > :nth-last-child(2), .join > :nth-last-child(2) { margin-bottom: 32px; }
 
 .reset-row { flex-direction: column; align-items: center; gap: 6px; margin-top: 14px; }
 .reset-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--panel-2); color: var(--cyan); border: 2px solid var(--cyan); border-radius: 10px; padding: 10px 22px; font-family: var(--font-display); font-weight: 500; font-size: 16px; box-shadow: 4px 4px 0 rgba(0,0,0,.35); transition: transform .12s, box-shadow .12s, background .12s; }
@@ -273,3 +277,14 @@ body[data-game="over"] [data-sec="app"] .screen { filter: grayscale(.8); opacity
 .cmp-src { margin: 0; font-size: 12px; color: var(--muted); }
 .cmp-name { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
 .cmp-name input { flex: 1 1 140px; min-width: 0; background: var(--bg); color: var(--ink); border: 2px solid var(--line); border-radius: 8px; padding: 6px 10px; }
+
+/* time-up auto-save notice */
+.auto-note { margin: 0; font-size: 13px; line-height: 1.5; color: var(--gold); background: rgba(255,197,61,.08); border: 1px dashed var(--gold); border-radius: 8px; padding: 8px 10px; }
+body[data-game="over"] .auto-note { color: var(--muted); border-color: var(--line); background: transparent; }
+.gate-warn { margin: 0; max-width: 520px; font-size: 14px; line-height: 1.6; color: var(--gold); background: rgba(255,197,61,.08); border: 1px dashed var(--gold); border-radius: 8px; padding: 8px 12px; }
+.time-toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 35; width: min(560px, calc(100% - 32px)); background: var(--red); color: #fff; font-weight: 600; text-align: center; border-radius: 10px; padding: 12px 16px; box-shadow: 4px 4px 0 rgba(0,0,0,.4); }
+
+/* BUG HUNT title goes back to the hub */
+.home-link { color: inherit; text-decoration: none; }
+.home-link:hover { filter: brightness(1.15); }
+.home-link:focus-visible { outline: 3px solid var(--cyan); outline-offset: 4px; border-radius: 4px; }

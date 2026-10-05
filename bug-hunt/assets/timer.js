@@ -47,6 +47,22 @@
   const fmt = ms => { const s = Math.max(0, Math.ceil(ms / 1000)); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); };
   const node = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
 
+  // Tell players up front that time-up saves and locks their answers.
+  const lockText = 'เมื่อหมดเวลา ' + minutes + ' นาที ระบบจะบันทึกคำตอบอัตโนมัติ รวมข้อความที่พิมพ์ค้างไว้ และจะแก้ไขหรือเพิ่มคำตอบไม่ได้อีก';
+  const formNote = node('p', 'auto-note', '⏰ ' + lockText);
+  form.prepend(formNote);
+  const toast = node('div', 'time-toast');
+  toast.hidden = true; toast.setAttribute('role', 'status');
+  document.body.append(toast);
+  let warned = false;
+  function warnLastMinute() {
+    if (warned) return;
+    warned = true;
+    toast.textContent = '⏰ เหลือ 1 นาที · หมดเวลาแล้วระบบจะบันทึกคำตอบอัตโนมัติและแก้ไขไม่ได้';
+    toast.hidden = false;
+    setTimeout(() => { toast.hidden = true; }, 6000);
+  }
+
   function lockForm(on) { form.querySelectorAll('input, select, textarea, button').forEach(el => { el.disabled = on; }); }
   function setPills(text, state) { pills.forEach(p => { p.textContent = text; p.dataset.state = state; }); }
 
@@ -56,6 +72,8 @@
     if (app) app.inert = false;
     if (restartBtn) restartBtn.hidden = true;
     lockForm(false);
+    warned = false;
+    formNote.textContent = '⏰ ' + lockText;
     setPills('⏱ ' + fmt(minutes * 60000), 'ready');
     const rules = document.querySelector('.mission').cloneNode(true);
     rules.className = 'gate-rules';
@@ -74,11 +92,12 @@
     field.append(label, input, msg, start);
     field.addEventListener('submit', e => { e.preventDefault(); startGame(input, msg, start); });
     gateBody.replaceChildren(
-      node('div', 'gate-title', 'BUG HUNT'),
+      (() => { const t = node('div', 'gate-title'); const a = node('a', 'home-link', 'BUG HUNT'); a.href = '/'; a.title = 'กลับหน้าหลัก'; t.append(a); return t; })(),
       node('p', 'gate-sub', document.querySelector('.title span').textContent),
       rules,
       node('div', 'gate-time', fmt(minutes * 60000)),
       node('p', 'gate-note', 'มีเวลา ' + minutes + ' นาที เวลาจะเริ่มนับทันทีที่กดเริ่มเกม · ชื่อทีมใช้ได้ทีมละครั้งต่อรอบ'),
+      node('p', 'gate-warn', '⚠️ ' + lockText),
       field);
     overlay.hidden = false;
     input.focus();
@@ -124,6 +143,7 @@
       const left = endAt - Date.now();
       if (left <= 0) { clearInterval(tick); over(true); return; }
       setPills('⏱ ' + fmt(left), left <= 60000 ? 'last' : 'playing');
+      if (left <= 60000) warnLastMinute();
     };
     update();
     tick = setInterval(update, 250);
@@ -133,6 +153,8 @@
     // Save the half-typed answer before the form locks (also on a reload after time ran out).
     const autoSaved = window.BugHuntFindings && window.BugHuntFindings.autoSave ? window.BugHuntFindings.autoSave() : 0;
     document.body.dataset.game = 'over';
+    toast.hidden = true;
+    formNote.textContent = '🔒 หมดเวลาแล้ว ระบบบันทึกคำตอบอัตโนมัติ และปิดการแก้ไขแล้ว';
     wrap.inert = false;
     if (app) app.inert = true;
     lockForm(true);
