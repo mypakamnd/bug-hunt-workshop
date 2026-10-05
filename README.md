@@ -36,3 +36,4 @@ vercel --prod
 ## ไฟล์ที่ไม่ deploy
 - `bug-hunt-answer-key.md` เฉลยสำหรับผู้จัด
 - `supabase-setup.sql` สคริปต์สร้างตาราง
+- `supabase-reset.sql` ล้างคำตอบและชื่อทีมทั้งหมด (ใช้ล้างข้อมูลทดสอบก่อนวันจริง)
