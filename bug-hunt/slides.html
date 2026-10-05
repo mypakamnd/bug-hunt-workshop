@@ -1,645 +1,1762 @@
 <!doctype html>
 <html lang="th">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<title>Level Up! MVQ(A) Slides</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Press+Start+2P&display=swap">
-<style>
-/* Layout: fixed 1280×720 arcade "screen" scaled to fit; HUD strip on top of each slide, controls + optional speaker notes below. Deliberately single dark theme (night arcade). */
-:root {
-  --bg: #0f1030;
-  --screen: #16173d;
-  --panel: #212255;
-  --line: #3a3c7a;
-  --ink: #f4f1ff;
-  --muted: #a8a6d6;
-  --gold: #ffc53d;
-  --cyan: #52d6ef;
-  --red: #ff6f7d;
-  --green: #6be4a6;
-  --amber: #ffa94d;
-  --font-display: "Mitr", "IBM Plex Sans Thai", system-ui, sans-serif;
-  --font-body: "IBM Plex Sans Thai", system-ui, sans-serif;
-  --font-pixel: "Press Start 2P", ui-monospace, monospace;
-  color-scheme: dark;
-}
-* { box-sizing: border-box; }
-html, body { height: 100%; }
-body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); display: grid; grid-template-rows: minmax(0, 1fr) auto auto; overflow: hidden; }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <title>Level Up! MVQ(A) Slides</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Press+Start+2P&display=swap">
+  <style>
+    /* Layout: fixed 1280×720 arcade "screen" scaled to fit; HUD strip on top of each slide, controls + optional speaker notes below. Deliberately single dark theme (night arcade). */
+    :root {
+      --bg: #0f1030;
+      --screen: #16173d;
+      --panel: #212255;
+      --line: #3a3c7a;
+      --ink: #f4f1ff;
+      --muted: #a8a6d6;
+      --gold: #ffc53d;
+      --cyan: #52d6ef;
+      --red: #ff6f7d;
+      --green: #6be4a6;
+      --amber: #ffa94d;
+      --font-display: "Mitr", "IBM Plex Sans Thai", system-ui, sans-serif;
+      --font-body: "IBM Plex Sans Thai", system-ui, sans-serif;
+      --font-pixel: "Press Start 2P", ui-monospace, monospace;
+      color-scheme: dark;
+    }
 
-.viewport { position: relative; overflow: hidden; min-height: 0; }
-.stage { position: absolute; left: 50%; top: 50%; width: 1280px; height: 720px; transform-origin: center; background: var(--screen); border-radius: 10px; box-shadow: 0 0 0 4px var(--line), 0 20px 60px rgba(0,0,0,.45); overflow: hidden;
-  background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px); background-size: 24px 24px; }
+    * {
+      box-sizing: border-box;
+    }
 
-.slide { position: absolute; inset: 0; padding: 48px 72px 44px; display: none; flex-direction: column; gap: 22px; font-size: 24px; line-height: 1.5; }
-.slide.active { display: flex; animation: enter .35s ease-out; }
-@keyframes enter { from { opacity: .4; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    html,
+    body {
+      height: 100%;
+    }
 
-.frag { opacity: 0; transform: translateY(10px); transition: opacity .3s, transform .3s; }
-.frag.in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { .slide.active { animation: none; } .frag { transition: none; transform: none; } }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto auto;
+      overflow: hidden;
+    }
 
-/* HUD */
-.hud { display: flex; align-items: center; justify-content: space-between; gap: 16px; font-family: var(--font-pixel); font-size: 12px; letter-spacing: .04em; color: var(--muted); }
-.hud .tag { color: var(--gold); }
-.levels { display: flex; gap: 6px; }
-.levels span { width: 34px; height: 34px; display: grid; place-items: center; border: 2px solid var(--line); border-radius: 4px; font-family: var(--font-pixel); font-size: 13px; color: var(--muted); }
-.levels span.on { background: var(--gold); border-color: var(--gold); color: var(--bg); box-shadow: 0 0 18px rgba(255,197,61,.5); }
-.levels span.done { border-color: var(--gold); color: var(--gold); }
+    .viewport {
+      position: relative;
+      overflow: hidden;
+      min-height: 0;
+    }
 
-h1, h2 { font-family: var(--font-display); font-weight: 600; margin: 0; line-height: 1.2; text-wrap: balance; }
-h2 { font-size: 46px; }
-.lvl-title h2 { font-size: 42px; }
-h2 .sub { display: block; font-size: 22px; font-weight: 400; color: var(--muted); font-family: var(--font-body); margin-top: 6px; }
-p { margin: 0; }
-.muted { color: var(--muted); }
-.gold { color: var(--gold); }
-.cyan { color: var(--cyan); }
-.pixel { font-family: var(--font-pixel); }
+    .stage {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 1280px;
+      height: 720px;
+      transform-origin: center;
+      background: var(--screen);
+      border-radius: 10px;
+      box-shadow: 0 0 0 4px var(--line), 0 20px 60px rgba(0, 0, 0, .45);
+      overflow: hidden;
+      background-image: radial-gradient(rgba(255, 255, 255, .05) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
 
-.card { background: var(--panel); border: 2px solid var(--line); border-radius: 8px; padding: 20px 24px; box-shadow: 5px 5px 0 rgba(0,0,0,.35); min-width: 0; }
-.card.gold { border-color: var(--gold); color: var(--ink); }
-.card.cyan { border-color: var(--cyan); }
-.card h3 { font-family: var(--font-display); font-weight: 500; font-size: 26px; margin: 0 0 8px; }
-.label { font-family: var(--font-pixel); font-size: 11px; letter-spacing: .06em; color: var(--muted); display: block; margin-bottom: 10px; }
-.cols { display: grid; gap: 24px; flex: 1; min-height: 0; }
-.c2 { grid-template-columns: 1fr 1fr; }
-.c3 { grid-template-columns: repeat(3, 1fr); }
-.lvl { grid-template-columns: 1.15fr 1fr; }
-ul.clean { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
-ul.clean li { padding-left: 30px; position: relative; }
-ul.clean li::before { content: "▸"; position: absolute; left: 4px; color: var(--gold); }
-.quote { font-family: var(--font-display); font-size: 27px; color: var(--ink); border-left: 5px solid var(--gold); padding-left: 18px; }
-.badge { display: inline-flex; align-items: center; gap: 12px; background: rgba(255,197,61,.12); border: 2px dashed var(--gold); border-radius: 999px; padding: 8px 20px; font-size: 20px; color: var(--gold); align-self: flex-start; }
-.anti { border-color: var(--red); }
-.anti .label { color: var(--red); }
-.center { margin: auto; text-align: center; display: grid; gap: 20px; justify-items: center; }
-.strike { text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 3px; color: var(--muted); }
-.lock { font-family: var(--font-pixel); font-size: 11px; border: 2px solid var(--muted); color: var(--muted); border-radius: 4px; padding: 4px 8px; vertical-align: middle; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 48px 72px 44px;
+      display: none;
+      flex-direction: column;
+      gap: 22px;
+      font-size: 24px;
+      line-height: 1.5;
+    }
 
-/* title slide */
-.title-wrap { margin: auto 0; display: grid; gap: 22px; }
-.title-big { font-family: var(--font-pixel); font-size: 76px; line-height: 1.15; color: var(--gold); text-shadow: 6px 6px 0 #6b3fd1; }
-.title-sub { font-family: var(--font-display); font-size: 46px; font-weight: 500; }
-.title-sub .a { color: var(--cyan); }
-.blink { font-family: var(--font-pixel); font-size: 14px; color: var(--muted); animation: blink 1.2s steps(2) infinite; }
-@keyframes blink { 50% { opacity: .2; } }
-@media (prefers-reduced-motion: reduce) { .blink { animation: none; } }
+    .slide.active {
+      display: flex;
+      animation: enter .35s ease-out;
+    }
 
-/* table */
-table.t { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 22px; }
-table.t th, table.t td { padding: 12px 18px; border-bottom: 2px solid var(--line); text-align: left; vertical-align: top; }
-table.t th { font-family: var(--font-display); font-weight: 500; color: var(--muted); font-size: 22px; }
-table.t td:first-child { color: var(--muted); width: 18%; }
-table.t .hl { background: rgba(82,214,239,.1); color: var(--ink); }
-table.t th.hl { color: var(--cyan); border-top: 2px solid var(--cyan); }
+    @keyframes enter {
+      from {
+        opacity: .4;
+        transform: translateY(8px);
+      }
 
-.big-emoji { font-size: 64px; line-height: 1; }
-.vote { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px; }
-.answer { font-family: var(--font-pixel); font-size: 15px; padding: 10px 14px; border-radius: 4px; white-space: nowrap; }
-.answer.t { background: rgba(255,111,125,.15); color: var(--red); border: 2px solid var(--red); }
-.answer.q { background: rgba(82,214,239,.15); color: var(--cyan); border: 2px solid var(--cyan); }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
 
-/* mvp slide */
-.acronym { display: grid; gap: 12px; }
-.acr-row { display: grid; grid-template-columns: 64px 1fr; align-items: center; gap: 16px; font-size: 24px; }
-.acr-row b { font-family: var(--font-pixel); font-size: 34px; color: var(--gold); text-align: center; }
-.acr-row.a b { color: var(--cyan); }
+    .frag {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .3s, transform .3s;
+    }
 
-/* map */
-.map { position: relative; margin-block: auto; display: grid; grid-template-columns: repeat(7, 1fr); align-items: start; gap: 12px; }
-.map::before { content: ""; position: absolute; left: 40px; right: 40px; top: 112px; border-top: 4px dashed var(--line); z-index: 0; }
-.node { position: relative; z-index: 1; display: grid; justify-items: center; gap: 10px; text-align: center; }
-.node .tile { width: 92px; height: 92px; display: grid; place-items: center; background: var(--panel); border: 3px solid var(--gold); border-radius: 8px; font-family: var(--font-pixel); font-size: 34px; color: var(--gold); box-shadow: 5px 5px 0 rgba(0,0,0,.35); }
-.node .nm { font-family: var(--font-display); font-size: 22px; }
-.node .tr { font-size: 17px; color: var(--muted); line-height: 1.35; max-width: 170px; }
-.node.end .tile { border-color: var(--cyan); color: var(--cyan); font-size: 13px; width: 92px; height: 92px; }
-.node.start .tile { border-color: var(--muted); color: var(--muted); font-size: 13px; width: 92px; height: 92px; }
-.scope { display: none; }
+    .frag.in {
+      opacity: 1;
+      transform: none;
+    }
 
-/* level visuals */
-.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 19px; }
-.chip { background: var(--bg); border: 2px solid var(--line); border-radius: 6px; padding: 8px 12px; }
-.chip.k { border-color: var(--cyan); color: var(--cyan); }
-.arrow { color: var(--gold); font-family: var(--font-pixel); font-size: 14px; }
-.bars { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; align-items: end; height: 96px; border-bottom: 2px solid var(--line); }
-.bars div { background: var(--line); border-radius: 4px 4px 0 0; }
-.bars div.qa { background: var(--gold); }
-.bar-labels { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; font-size: 16px; color: var(--muted); text-align: center; }
-.matrix { display: grid; grid-template-columns: 40px repeat(3, 1fr); grid-template-rows: repeat(3, 70px) 34px; gap: 6px; font-size: 16px; }
-.matrix .cell { border-radius: 4px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; padding: 4px; }
-.lo { background: rgba(107,228,166,.16); } .md { background: rgba(255,169,77,.18); } .hi { background: rgba(255,111,125,.22); }
-.matrix .ax { color: var(--muted); display: grid; place-items: center; font-size: 14px; }
-.matrix .ax.y { writing-mode: vertical-rl; transform: rotate(180deg); grid-row: 1 / 4; }
-.pin { background: var(--ink); color: var(--bg); border-radius: 999px; padding: 3px 12px; font-size: 16px; font-weight: 600; }
-.report { font-size: 18px; line-height: 1.45; }
-.report .bad { color: var(--red); }
-.report .good { color: var(--green); }
-.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.tile-s { background: var(--bg); border: 2px solid var(--line); border-radius: 6px; padding: 10px 14px; }
-.tile-s .n { font-family: var(--font-pixel); font-size: 22px; color: var(--green); font-variant-numeric: tabular-nums; }
-.tile-s .n.w { color: var(--amber); }
-.tile-s .k { font-size: 15px; color: var(--muted); }
-.example { font-family: var(--font-pixel); font-size: 10px; color: var(--muted); }
+    @media (prefers-reduced-motion: reduce) {
+      .slide.active {
+        animation: none;
+      }
 
-/* recap */
-table.t.recap td:first-child { color: var(--gold); font-family: var(--font-display); width: 26%; white-space: nowrap; }
-.steps-q { display: grid; gap: 14px; }
-.steps-q .s { display: grid; grid-template-columns: 56px 1fr; gap: 16px; align-items: center; font-size: 26px; }
-.steps-q .s b { font-family: var(--font-pixel); font-size: 22px; width: 56px; height: 56px; display: grid; place-items: center; background: var(--gold); color: var(--bg); border-radius: 6px; }
-.closing { font-family: var(--font-display); font-size: 44px; line-height: 1.4; max-width: 1000px; text-wrap: balance; }
-.unlock { font-family: var(--font-pixel); font-size: 18px; color: var(--muted); }
-.unlock-big { font-family: var(--font-pixel); font-size: 72px; color: var(--gold); text-shadow: 6px 6px 0 #6b3fd1; }
-.unlock-big .a { color: var(--cyan); }
+      .frag {
+        transition: none;
+        transform: none;
+      }
+    }
+
+    /* HUD */
+    .hud {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-family: var(--font-pixel);
+      font-size: 12px;
+      letter-spacing: .04em;
+      color: var(--muted);
+    }
+
+    .hud .tag {
+      color: var(--gold);
+    }
+
+    .levels {
+      display: flex;
+      gap: 6px;
+    }
+
+    .levels span {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      font-family: var(--font-pixel);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .levels span.on {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--bg);
+      box-shadow: 0 0 18px rgba(255, 197, 61, .5);
+    }
+
+    .levels span.done {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    h1,
+    h2 {
+      font-family: var(--font-display);
+      font-weight: 600;
+      margin: 0;
+      line-height: 1.2;
+      text-wrap: balance;
+    }
+
+    h2 {
+      font-size: 46px;
+    }
+
+    .lvl-title h2 {
+      font-size: 42px;
+    }
+
+    h2 .sub {
+      display: block;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--muted);
+      font-family: var(--font-body);
+      margin-top: 6px;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .gold {
+      color: var(--gold);
+    }
+
+    .cyan {
+      color: var(--cyan);
+    }
+
+    .pixel {
+      font-family: var(--font-pixel);
+    }
+
+    .card {
+      background: var(--panel);
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      padding: 20px 24px;
+      box-shadow: 5px 5px 0 rgba(0, 0, 0, .35);
+      min-width: 0;
+    }
+
+    .card.gold {
+      border-color: var(--gold);
+      color: var(--ink);
+    }
+
+    .card.cyan {
+      border-color: var(--cyan);
+    }
+
+    .card h3 {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 26px;
+      margin: 0 0 8px;
+    }
+
+    .label {
+      font-family: var(--font-pixel);
+      font-size: 11px;
+      letter-spacing: .06em;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .cols {
+      display: grid;
+      gap: 24px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .c2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .c3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .lvl {
+      grid-template-columns: 1.15fr 1fr;
+    }
+
+    ul.clean {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    ul.clean li {
+      padding-left: 30px;
+      position: relative;
+    }
+
+    ul.clean li::before {
+      content: "▸";
+      position: absolute;
+      left: 4px;
+      color: var(--gold);
+    }
+
+    .quote {
+      font-family: var(--font-display);
+      font-size: 27px;
+      color: var(--ink);
+      border-left: 5px solid var(--gold);
+      padding-left: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 197, 61, .12);
+      border: 2px dashed var(--gold);
+      border-radius: 999px;
+      padding: 8px 20px;
+      font-size: 20px;
+      color: var(--gold);
+      align-self: flex-start;
+    }
+
+    .anti {
+      border-color: var(--red);
+    }
+
+    .anti .label {
+      color: var(--red);
+    }
+
+    .center {
+      margin: auto;
+      text-align: center;
+      display: grid;
+      gap: 20px;
+      justify-items: center;
+    }
+
+    .strike {
+      text-decoration: line-through;
+      text-decoration-color: var(--red);
+      text-decoration-thickness: 3px;
+      color: var(--muted);
+    }
+
+    .lock {
+      font-family: var(--font-pixel);
+      font-size: 11px;
+      border: 2px solid var(--muted);
+      color: var(--muted);
+      border-radius: 4px;
+      padding: 4px 8px;
+      vertical-align: middle;
+    }
+
+    /* title slide */
+    .title-wrap {
+      margin: auto 0;
+      display: grid;
+      gap: 22px;
+    }
+
+    .title-big {
+      font-family: var(--font-pixel);
+      font-size: 76px;
+      line-height: 1.15;
+      color: var(--gold);
+      text-shadow: 6px 6px 0 #6b3fd1;
+    }
+
+    .title-sub {
+      font-family: var(--font-display);
+      font-size: 46px;
+      font-weight: 500;
+    }
+
+    .title-sub .a {
+      color: var(--cyan);
+    }
+
+    .blink {
+      font-family: var(--font-pixel);
+      font-size: 14px;
+      color: var(--muted);
+      animation: blink 1.2s steps(2) infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: .2;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .blink {
+        animation: none;
+      }
+    }
+
+    /* table */
+    table.t {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 22px;
+    }
+
+    table.t th,
+    table.t td {
+      padding: 12px 18px;
+      border-bottom: 2px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    table.t th {
+      font-family: var(--font-display);
+      font-weight: 500;
+      color: var(--muted);
+      font-size: 22px;
+    }
+
+    table.t td:first-child {
+      color: var(--muted);
+      width: 18%;
+    }
+
+    table.t .hl {
+      background: rgba(82, 214, 239, .1);
+      color: var(--ink);
+    }
+
+    table.t th.hl {
+      color: var(--cyan);
+      border-top: 2px solid var(--cyan);
+    }
+
+    .big-emoji {
+      font-size: 64px;
+      line-height: 1;
+    }
+
+    .vote {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .answer {
+      font-family: var(--font-pixel);
+      font-size: 15px;
+      padding: 10px 14px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .answer.t {
+      background: rgba(255, 111, 125, .15);
+      color: var(--red);
+      border: 2px solid var(--red);
+    }
+
+    .answer.q {
+      background: rgba(82, 214, 239, .15);
+      color: var(--cyan);
+      border: 2px solid var(--cyan);
+    }
+
+    /* mvp slide */
+    .acronym {
+      display: grid;
+      gap: 12px;
+    }
+
+    .acr-row {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      align-items: center;
+      gap: 16px;
+      font-size: 24px;
+    }
+
+    .acr-row b {
+      font-family: var(--font-pixel);
+      font-size: 34px;
+      color: var(--gold);
+      text-align: center;
+    }
+
+    .acr-row.a b {
+      color: var(--cyan);
+    }
+
+    /* map */
+    .map {
+      position: relative;
+      margin-block: auto;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      align-items: start;
+      gap: 12px;
+    }
+
+    .map::before {
+      content: "";
+      position: absolute;
+      left: 40px;
+      right: 40px;
+      top: 112px;
+      border-top: 4px dashed var(--line);
+      z-index: 0;
+    }
+
+    .node {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      text-align: center;
+    }
+
+    .node .tile {
+      width: 92px;
+      height: 92px;
+      display: grid;
+      place-items: center;
+      background: var(--panel);
+      border: 3px solid var(--gold);
+      border-radius: 8px;
+      font-family: var(--font-pixel);
+      font-size: 34px;
+      color: var(--gold);
+      box-shadow: 5px 5px 0 rgba(0, 0, 0, .35);
+    }
+
+    .node .nm {
+      font-family: var(--font-display);
+      font-size: 22px;
+    }
+
+    .node .tr {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.35;
+      max-width: 170px;
+    }
+
+    .node.end .tile {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      font-size: 13px;
+      width: 92px;
+      height: 92px;
+    }
+
+    .node.start .tile {
+      border-color: var(--muted);
+      color: var(--muted);
+      font-size: 13px;
+      width: 92px;
+      height: 92px;
+    }
+
+    .scope {
+      display: none;
+    }
+
+    /* level visuals */
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      font-size: 19px;
+    }
+
+    .chip {
+      background: var(--bg);
+      border: 2px solid var(--line);
+      border-radius: 6px;
+      padding: 8px 12px;
+    }
+
+    .chip.k {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .arrow {
+      color: var(--gold);
+      font-family: var(--font-pixel);
+      font-size: 14px;
+    }
+
+    .bars {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      align-items: end;
+      height: 96px;
+      border-bottom: 2px solid var(--line);
+    }
+
+    .bars div {
+      background: var(--line);
+      border-radius: 4px 4px 0 0;
+    }
+
+    .bars div.qa {
+      background: var(--gold);
+    }
+
+    .bar-labels {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      font-size: 16px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: 40px repeat(3, 1fr);
+      grid-template-rows: repeat(3, 70px) 34px;
+      gap: 6px;
+      font-size: 16px;
+    }
+
+    .matrix .cell {
+      border-radius: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 4px;
+    }
+
+    .lo {
+      background: rgba(107, 228, 166, .16);
+    }
+
+    .md {
+      background: rgba(255, 169, 77, .18);
+    }
+
+    .hi {
+      background: rgba(255, 111, 125, .22);
+    }
+
+    .matrix .ax {
+      color: var(--muted);
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+    }
+
+    .matrix .ax.y {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      grid-row: 1 / 4;
+    }
+
+    .pin {
+      background: var(--ink);
+      color: var(--bg);
+      border-radius: 999px;
+      padding: 3px 12px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .report {
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    .report .bad {
+      color: var(--red);
+    }
+
+    .report .good {
+      color: var(--green);
+    }
+
+    .tiles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .tile-s {
+      background: var(--bg);
+      border: 2px solid var(--line);
+      border-radius: 6px;
+      padding: 10px 14px;
+    }
+
+    .tile-s .n {
+      font-family: var(--font-pixel);
+      font-size: 22px;
+      color: var(--green);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tile-s .n.w {
+      color: var(--amber);
+    }
+
+    .tile-s .k {
+      font-size: 15px;
+      color: var(--muted);
+    }
+
+    .example {
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* recap */
+    table.t.recap td:first-child {
+      color: var(--gold);
+      font-family: var(--font-display);
+      width: 26%;
+      white-space: nowrap;
+    }
+
+    .steps-q {
+      display: grid;
+      gap: 14px;
+    }
+
+    .steps-q .s {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 16px;
+      align-items: center;
+      font-size: 26px;
+    }
+
+    .steps-q .s b {
+      font-family: var(--font-pixel);
+      font-size: 22px;
+      width: 56px;
+      height: 56px;
+      display: grid;
+      place-items: center;
+      background: var(--gold);
+      color: var(--bg);
+      border-radius: 6px;
+    }
+
+    .closing {
+      font-family: var(--font-display);
+      font-size: 44px;
+      line-height: 1.4;
+      max-width: 1000px;
+      text-wrap: balance;
+    }
+
+    .unlock {
+      font-family: var(--font-pixel);
+      font-size: 18px;
+      color: var(--muted);
+    }
+
+    .unlock-big {
+      font-family: var(--font-pixel);
+      font-size: 72px;
+      color: var(--gold);
+      text-shadow: 6px 6px 0 #6b3fd1;
+    }
+
+    .unlock-big .a {
+      color: var(--cyan);
+    }
 
 
-/* pixel sprites + scenery */
-.spr { display: inline-block; line-height: 0; vertical-align: middle; flex: none; }
-.spr svg { display: block; shape-rendering: crispEdges; }
-.scene { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
-.scene .star { position: absolute; width: 4px; height: 4px; background: var(--ink); opacity: .5; animation: twinkle 3s ease-in-out infinite; }
-.scene .hills { position: absolute; left: 0; bottom: 26px; width: 100%; height: 120px; }
-.scene .ground { position: absolute; left: 0; right: 0; bottom: 0; height: 26px;
-  background: linear-gradient(#4fb37e 0 6px, #2b6b4f 6px 9px, #3a2b5c 9px);
-  background-size: 100% 100%; }
-.scene .ground::after { content: ""; position: absolute; inset: 9px 0 0; background: repeating-linear-gradient(90deg, transparent 0 30px, rgba(0,0,0,.25) 30px 32px), repeating-linear-gradient(0deg, transparent 0 7px, rgba(0,0,0,.18) 7px 8px); }
-.scene .cloud { position: absolute; opacity: .18; }
-@keyframes twinkle { 50% { opacity: .1; } }
-.slide { z-index: 1; padding-bottom: 60px; }
-.deco { position: absolute; pointer-events: none; }
-.bob { animation: bob 2.4s ease-in-out infinite; }
-.bob.d1 { animation-delay: .4s; } .bob.d2 { animation-delay: .8s; } .bob.d3 { animation-delay: 1.2s; }
-@keyframes bob { 50% { transform: translateY(-10px); } }
-@media (prefers-reduced-motion: reduce) { .bob, .scene .star { animation: none; } }
-.lvl-title { display: flex; align-items: center; gap: 22px; }
-.lvl-icon { width: 96px; height: 96px; display: grid; place-items: center; background: var(--panel); border: 3px solid var(--gold); border-radius: 8px; box-shadow: 5px 5px 0 rgba(0,0,0,.35); flex: none; }
-.hearts { display: flex; gap: 4px; }
-.label-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.label-row .label { margin: 0; }
-.node .ic { height: 56px; display: grid; place-items: end center; }
+    /* pixel sprites + scenery */
+    .spr {
+      display: inline-block;
+      line-height: 0;
+      vertical-align: middle;
+      flex: none;
+    }
 
-/* controls */
-.notes { background: var(--screen); border-top: 2px solid var(--line); padding-block: 14px; padding-inline: max(16px, 4vw); font-size: 15px; line-height: 1.6; max-height: 28vh; overflow-y: auto; }
-.notes .k { font-family: var(--font-pixel); font-size: 10px; color: var(--gold); display: block; margin-bottom: 6px; }
-.notes p { max-width: 90ch; }
-.controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; padding-block: 10px calc(10px + env(safe-area-inset-bottom, 0px)); padding-inline: 16px; background: var(--bg); border-top: 1px solid var(--line); }
-.xp { flex: 1 1 200px; display: flex; align-items: center; gap: 10px; font-family: var(--font-pixel); font-size: 10px; color: var(--muted); min-width: 0; }
-.xp .bar { flex: 1; height: 10px; border: 2px solid var(--line); border-radius: 3px; overflow: hidden; }
-.xp .fill { height: 100%; background: var(--gold); width: 0; transition: width .3s; }
-.btns { display: flex; gap: 8px; flex-wrap: wrap; }
-button { font-family: var(--font-body); font-size: 14px; background: var(--panel); color: var(--ink); border: 2px solid var(--line); border-radius: 6px; padding: 7px 14px; cursor: pointer; }
-button:hover { border-color: var(--gold); }
-button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
-button[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }
-.counter { font-family: var(--font-pixel); font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.hint { font-size: 12px; color: var(--muted); }
-@media (max-width: 640px) { .hint { display: none; } }
-</style>
+    .spr svg {
+      display: block;
+      shape-rendering: crispEdges;
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .scene .star {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--ink);
+      opacity: .5;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    .scene .hills {
+      position: absolute;
+      left: 0;
+      bottom: 26px;
+      width: 100%;
+      height: 120px;
+    }
+
+    .scene .ground {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 26px;
+      background: linear-gradient(#4fb37e 0 6px, #2b6b4f 6px 9px, #3a2b5c 9px);
+      background-size: 100% 100%;
+    }
+
+    .scene .ground::after {
+      content: "";
+      position: absolute;
+      inset: 9px 0 0;
+      background: repeating-linear-gradient(90deg, transparent 0 30px, rgba(0, 0, 0, .25) 30px 32px), repeating-linear-gradient(0deg, transparent 0 7px, rgba(0, 0, 0, .18) 7px 8px);
+    }
+
+    .scene .cloud {
+      position: absolute;
+      opacity: .18;
+    }
+
+    @keyframes twinkle {
+      50% {
+        opacity: .1;
+      }
+    }
+
+    .slide {
+      z-index: 1;
+      padding-bottom: 60px;
+    }
+
+    .deco {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .bob {
+      animation: bob 2.4s ease-in-out infinite;
+    }
+
+    .bob.d1 {
+      animation-delay: .4s;
+    }
+
+    .bob.d2 {
+      animation-delay: .8s;
+    }
+
+    .bob.d3 {
+      animation-delay: 1.2s;
+    }
+
+    @keyframes bob {
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .bob,
+      .scene .star {
+        animation: none;
+      }
+    }
+
+    .lvl-title {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .lvl-icon {
+      width: 96px;
+      height: 96px;
+      display: grid;
+      place-items: center;
+      background: var(--panel);
+      border: 3px solid var(--gold);
+      border-radius: 8px;
+      box-shadow: 5px 5px 0 rgba(0, 0, 0, .35);
+      flex: none;
+    }
+
+    .hearts {
+      display: flex;
+      gap: 4px;
+    }
+
+    .label-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .label-row .label {
+      margin: 0;
+    }
+
+    .node .ic {
+      height: 56px;
+      display: grid;
+      place-items: end center;
+    }
+
+    /* controls */
+    .notes {
+      background: var(--screen);
+      border-top: 2px solid var(--line);
+      padding-block: 14px;
+      padding-inline: max(16px, 4vw);
+      font-size: 15px;
+      line-height: 1.6;
+      max-height: 28vh;
+      overflow-y: auto;
+    }
+
+    .notes .k {
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .notes p {
+      max-width: 90ch;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px 16px;
+      padding-block: 10px calc(10px + env(safe-area-inset-bottom, 0px));
+      padding-inline: 16px;
+      background: var(--bg);
+      border-top: 1px solid var(--line);
+    }
+
+    .xp {
+      flex: 1 1 200px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      color: var(--muted);
+      min-width: 0;
+    }
+
+    .xp .bar {
+      flex: 1;
+      height: 10px;
+      border: 2px solid var(--line);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .xp .fill {
+      height: 100%;
+      background: var(--gold);
+      width: 0;
+      transition: width .3s;
+    }
+
+    .btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font-family: var(--font-body);
+      font-size: 14px;
+      background: var(--panel);
+      color: var(--ink);
+      border: 2px solid var(--line);
+      border-radius: 6px;
+      padding: 7px 14px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      border-color: var(--gold);
+    }
+
+    button:focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 2px;
+    }
+
+    button[aria-pressed="true"] {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .counter {
+      font-family: var(--font-pixel);
+      font-size: 11px;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 640px) {
+      .hint {
+        display: none;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div class="viewport" id="viewport">
-  <div class="stage" id="stage">
-    <div class="scene" aria-hidden="true">
-      <i class="spr cloud" data-s="cloud" data-z="8" style="position:absolute;left:560px;top:28px"></i>
-      <i class="spr cloud" data-s="cloud" data-z="6" style="position:absolute;left:1010px;top:200px"></i>
-      <svg class="hills" viewBox="0 0 1280 120" preserveAspectRatio="none"><path fill="#24255c" d="M0 120V80h40V64h40V48h48V40h56v16h40v16h48v16h56V64h40V40h48V24h64v16h40v24h48v16h56V56h48V40h56V32h64v16h40v24h48v24h48V72h56V56h48V48h64v24h40v48z"/><path fill="#1d1e4d" d="M0 120V96h64V88h96v8h80v-8h112V80h96v16h104v-8h120V96h96v-8h120v8h96V88h104v8h96v24z"/></svg>
-      <div class="ground"></div>
-    </div>
-
-    <!-- 1 -->
-    <section class="slide" data-notes="หน้าเปิด แนะนำตัวสั้น ๆ แล้วเข้าเรื่องทันที" data-time="0.5">
-      <div class="hud"><span class="tag">PLAYER 1</span><span>QA WORKSHOP</span></div>
-      <div class="title-wrap">
-        <div class="title-big">LEVEL UP!</div>
-        <div class="title-sub">Becoming Your Team's MVQ<span class="a">(A)</span></div>
-        <div style="display:grid;gap:4px"><p style="font-family:var(--font-display);font-size:28px">นิภาพร จันต๊ะวงค์ <span class="gold">(เมย์)</span></p><p class="muted" style="font-size:20px">Quality Assurance · PDKM · 10/10/2026</p></div>
+  <div class="viewport" id="viewport">
+    <div class="stage" id="stage">
+      <div class="scene" aria-hidden="true">
+        <i class="spr cloud" data-s="cloud" data-z="8" style="position:absolute;left:560px;top:28px"></i>
+        <i class="spr cloud" data-s="cloud" data-z="6" style="position:absolute;left:1010px;top:200px"></i>
+        <svg class="hills" viewBox="0 0 1280 120" preserveAspectRatio="none">
+          <path fill="#24255c"
+            d="M0 120V80h40V64h40V48h48V40h56v16h40v16h48v16h56V64h40V40h48V24h64v16h40v24h48v16h56V56h48V40h56V32h64v16h40v24h48v24h48V72h56V56h48V48h64v24h40v48z" />
+          <path fill="#1d1e4d"
+            d="M0 120V96h64V88h96v8h80v-8h112V80h96v16h104v-8h120V96h96v-8h120v8h96V88h104v8h96v24z" />
+        </svg>
+        <div class="ground"></div>
       </div>
-      <div class="blink">PRESS → TO START</div>
-      <i class="spr deco bob" data-s="trophy" data-z="7" style="right:250px;top:110px"></i>
-      <i class="spr deco bob d1" data-s="coin" data-z="5" style="right:420px;top:200px"></i>
-      <i class="spr deco bob d2" data-s="coin" data-z="5" style="right:110px;top:220px"></i>
-      <i class="spr deco" data-s="hero" data-z="12" style="right:300px;bottom:26px"></i>
-      <i class="spr deco bob d3" data-s="bug" data-z="6" style="right:120px;bottom:26px"></i>
-      <i class="spr deco bob d1" data-s="bug" data-z="4" style="right:40px;bottom:120px"></i>
-    </section>
 
-    <!-- 2 -->
-    <section class="slide" data-notes="จังหวะแรก: ในทีมเราได้ยินคำว่า MVP บ่อย แต่หมายถึง Minimum Viable Product คือทำขั้นต่ำให้พอใช้ได้ วันนี้เราจะพูดถึง MVP อีกแบบ คือ Most Valuable ซึ่งเป็นขั้นสูงสุด (Minimum กับ Most ตรงข้ามกันพอดี) จังหวะสอง: กด → เพื่อถามคำถาม ให้ผู้ฟังตอบสั้น ๆ คำตอบส่วนใหญ่จะเป็น 'QA' ใช้เปิดประเด็นว่าเรามองบทบาทนี้เป็นแค่คนหาบั๊ก" data-time="2">
-      <div class="hud"><span class="tag">INTRO</span><span>01 / HOOK</span></div>
-      <div class="cols c2" style="flex:0">
-        <div class="card"><span class="label">MVP ที่ทีมคุ้น</span><h3><span class="strike">Minimum</span> Viable Product</h3><p class="muted">ทำขั้นต่ำให้พอใช้ได้</p></div>
-        <div class="card gold" style="position:relative"><i class="spr" data-s="trophy" data-z="4" style="position:absolute;right:20px;top:18px"></i><span class="label" style="color:var(--gold)">MVP วันนี้</span><h3><span class="gold">Most</span> Valuable Player</h3><p class="muted">ขั้นสูงสุดของทีม</p></div>
-      </div>
-      <div class="center frag">
-        <div style="display:flex;gap:28px;align-items:end"><i class="spr bob" data-s="bug" data-z="5"></i><i class="spr bob d1" data-s="bug" data-z="7"></i><i class="spr bob d2" data-s="bug" data-z="5"></i></div>
-        <h2 style="font-size:52px">"ถ้าบั๊กหลุดไปถึง production…<br>ใครผิด?"</h2>
-      </div>
-    </section>
-
-    <!-- 3 -->
-    <section class="slide" data-notes="3 คำนี้มักใช้ปนกัน Testing คือการรันทดสอบ QC คือการตรวจว่าของผ่านมาตรฐาน ส่วน QA ดูแลกระบวนการเพื่อป้องกันไม่ให้เกิดปัญหาตั้งแต่แรก ชี้ไปที่คอลัมน์ QA" data-time="1">
-      <div class="hud"><span class="tag">INTRO</span><span>02 / DEFINITION</span></div>
-      <div class="lvl-title"><h2>Testing vs QC vs QA</h2><i class="spr" data-s="magnifier" data-z="4"></i><i class="spr" data-s="shield" data-z="4"></i></div>
-      <table class="t">
-        <tr><th></th><th>Testing</th><th>Quality Control</th><th class="hl">Quality Assurance</th></tr>
-        <tr><td>คำถามหลัก</td><td>ระบบทำงานถูกไหม</td><td>ผ่านเกณฑ์ไหม</td><td class="hl">ทำยังไงให้ไม่เกิดปัญหา</td></tr>
-        <tr><td>โฟกัส</td><td>Test case</td><td>ตัวผลิตภัณฑ์</td><td class="hl">กระบวนการ + ทีม</td></tr>
-        <tr><td>ลักษณะ</td><td>Detect</td><td>Detect</td><td class="hl">Prevent</td></tr>
-        <tr><td>ช่วงเวลา</td><td>หลังพัฒนาเสร็จ</td><td>ก่อนส่งมอบ</td><td class="hl">ตลอดวงจร</td></tr>
-      </table>
-    </section>
-
-    <!-- 4 -->
-    <section class="slide" data-notes="เปิดทีละใบ Tester คือคนชิมอาหารแล้วบอกว่าเค็มไป QC คือคนตรวจว่าจานนี้ได้มาตรฐานร้าน QA คือคนช่วยออกแบบสูตร ขั้นตอน และเทรนพ่อครัว เพื่อไม่ให้เค็มตั้งแต่แรก (ถ้าได้แค่ 40 นาที ข้ามสไลด์นี้)" data-time="1">
-      <div class="hud"><span class="tag">INTRO</span><span>03 / ANALOGY</span></div>
-      <h2>ถ้าซอฟต์แวร์คือร้านอาหาร…</h2>
-      <div class="cols c3">
-        <div class="card frag"><div class="big-emoji">🍳</div><h3 style="margin-top:14px">Tester</h3><p>ชิมก่อนเสิร์ฟ<br><span class="muted">"เค็มไปนะ"</span></p></div>
-        <div class="card frag"><div class="big-emoji">🔍</div><h3 style="margin-top:14px">QC</h3><p>ตรวจว่าจานนี้<br><span class="muted">ได้มาตรฐานของร้าน</span></p></div>
-        <div class="card cyan frag"><div class="big-emoji">📋</div><h3 style="margin-top:14px" class="cyan">QA</h3><p>ออกแบบสูตร ขั้นตอน<br><span class="muted">และเทรนพ่อครัว ให้ไม่เค็มตั้งแต่แรก</span></p></div>
-      </div>
-    </section>
-
-    <!-- 5 -->
-    <section class="slide" data-notes="เน้นว่า Tester ไม่ได้ด้อยกว่า การเทสยังเป็นทักษะหลักที่ QA ทุกคนต้องเก่ง แต่ QA ขยายบทบาทจากการตรวจที่ปลายทางไปดูแลคุณภาพตลอดเส้นทาง" data-time="1">
-      <div class="hud"><span class="tag">INTRO</span><span>04 / MINDSET</span></div>
-      <h2>Tester Mindset vs QA Mindset</h2>
-      <div class="cols c2">
-        <div class="card"><div class="label-row"><i class="spr" data-s="magnifier" data-z="4"></i><span class="label">TESTER</span></div>
-          <ul class="clean"><li>"ส่งงานมา เดี๋ยวเทสให้"</li><li>หาบั๊กให้เจอมากที่สุด</li><li>ทำตาม test case</li><li>เจอบั๊ก ส่งกลับให้ dev</li><li>วัดผลจากจำนวนบั๊ก</li></ul></div>
-        <div class="card cyan"><div class="label-row"><i class="spr" data-s="shield" data-z="4"></i><span class="label" style="color:var(--cyan)">QA</span></div>
-          <ul class="clean"><li>"ขอเข้าไปคุยตั้งแต่ตอนออกแบบ"</li><li>ทำให้เกิดบั๊กน้อยที่สุด</li><li>ถามว่า test case ครอบคลุมพอหรือยัง</li><li>หาสาเหตุและป้องกันครั้งหน้า</li><li>วัดผลจากความมั่นใจตอน release</li></ul></div>
-      </div>
-      <p class="muted" style="font-size:19px">การเทสยังเป็นทักษะหลัก QA ไม่ได้เลิกเทส แต่ขยายบทบาท</p>
-    </section>
-
-    <!-- 6 -->
-    <section class="slide" data-notes="อ่านทีละประโยค ให้ผู้ฟังยกมือโหวตว่าเป็น mindset แบบ Tester หรือ QA แล้วกด → เพื่อเฉลย ประโยคแรกเป็น Tester ประโยคสองเป็น QA" data-time="2">
-      <div class="hud"><span class="tag">MINI GAME</span><span>05 / VOTE</span></div>
-      <div class="lvl-title"><i class="spr" data-s="controller" data-z="5"></i><h2>Tester หรือ QA? <span class="sub">ยกมือโหวตทีละข้อ</span></h2></div>
-      <div style="display:grid;gap:22px">
-        <div class="card vote"><p style="font-size:28px">"เทสครบทุก test case แล้ว ปิดงานได้"</p><span class="answer t frag">🧪 TESTER</span></div>
-        <div class="card vote frag"><p style="font-size:28px">"AC ข้อนี้ยังไม่ชัด ถ้า user ไม่กรอกเบอร์โทร จะเกิดอะไรขึ้น?"</p><span class="answer q frag">🛡️ QA</span></div>
-      </div>
-    </section>
-
-    <!-- 7 -->
-    <section class="slide" data-notes="MVP ในกีฬาหรือเกมไม่ได้วัดจากแต้ม แต่วัดจากการทำให้ทีมชนะ QA ก็เหมือนกัน ไม่ได้วัดจากจำนวนบั๊ก Q คือ Quality ระดับพื้นฐานที่รู้และตรวจคุณภาพได้ ส่วน (A) คือ Assurance การสร้างความมั่นใจให้ทั้งทีม (A) อยู่ในวงเล็บและยังล็อกอยู่ เพราะต้อง Level Up ถึงจะได้มา ไม่ได้มาพร้อมตำแหน่ง" data-time="1.5">
-      <div class="hud"><span class="tag">INTRO</span><span>06 / MVP → MVQ(A)</span></div>
-      <h2>จาก MVP สู่ MVQ<span class="cyan">(A)</span></h2>
-      <div class="cols c2" style="align-items:center">
-        <div class="center" style="gap:14px">
-          <i class="spr bob" data-s="trophy" data-z="11"></i>
-          <p class="pixel" style="font-size:28px">MVP <span class="gold">→</span> MVQ<span class="cyan">(A)</span></p>
-        </div>
-        <div class="acronym">
-          <div class="acr-row"><b>M</b><span>Most · ที่สุด</span></div>
-          <div class="acr-row"><b>V</b><span>Valuable · วัดจากผลกระทบต่อทีม</span></div>
-          <div class="acr-row"><b>Q</b><span>Quality · รู้และตรวจคุณภาพได้</span></div>
-          <div class="acr-row a"><b>(A)</b><span>Assurance · ทำให้ทั้งทีมมั่นใจ <i class="spr" data-s="lock" data-z="3"></i></span></div>
-        </div>
-      </div>
-      <div class="quote">"MVP ไม่ใช่คนทำแต้มมากที่สุด แต่คือคนที่ทำให้ทีมชนะ"</div>
-    </section>
-
-    <!-- 8 -->
-    <section class="slide" data-notes="เปิดเผยว่าตัวอักษรของ 5 ด่านเรียงกันเป็นคำว่า LEVEL แต่ละด่านคู่กับคุณสมบัติของ MVP 1 ข้อ MVP ไม่ได้เก่งแค่เรื่องเดียว แต่ครบทั้ง 5 ด้าน MVQ(A) ก็เหมือนกัน" data-time="1.5">
-      <div class="hud"><span class="tag">WORLD MAP</span><span>5 STAGES</span></div>
-      <h2>เส้นทางสู่ MVQ(A): <span class="gold">L-E-V-E-L</span></h2>
-      <div class="map">
-        <div class="node start"><div class="ic"><i class="spr" data-s="hero" data-z="4"></i></div><div class="tile">START</div><div class="nm">Tester</div></div>
-        <div class="node"><div class="ic"><i class="spr" data-s="book" data-z="4"></i></div><div class="tile">L</div><div class="nm">Learn</div><div class="tr">รู้เกมทะลุ</div></div>
-        <div class="node"><div class="ic"><i class="spr" data-s="clock" data-z="4"></i></div><div class="tile">E</div><div class="nm">Early</div><div class="tr">อ่านเกมขาด</div></div>
-        <div class="node"><div class="ic"><i class="spr" data-s="target" data-z="4"></i></div><div class="tile">V</div><div class="nm">Validate</div><div class="tr">ตัดสินใจตอนคับขัน</div></div>
-        <div class="node"><div class="ic"><i class="spr" data-s="team" data-z="4"></i></div><div class="tile">E</div><div class="nm">Empower</div><div class="tr">ทำให้เพื่อนเล่นดีขึ้น</div></div>
-        <div class="node"><div class="ic"><i class="spr" data-s="chart" data-z="4"></i></div><div class="tile">L</div><div class="nm">Lead</div><div class="tr">มีสถิติรองรับ</div></div>
-        <div class="node end"><div class="ic"><i class="spr bob" data-s="trophy" data-z="3"></i></div><div class="tile">GOAL</div><div class="nm">MVQ(A)</div></div>
-      </div>
-      <div class="scope"><span>ตัวเอง</span><span>กระบวนการ</span><span>การทดสอบ</span><span>ทีม</span><span>องค์กร</span></div>
-    </section>
-
-    <!-- 9 L1 -->
-    <section class="slide" data-notes="แบบ MVP: รู้เกมทะลุปรุโปร่ง รู้กติกาและรู้จักคู่แข่ง QA ต้องเข้าใจว่าระบบทำไปเพื่ออะไร ไม่ใช่แค่ทำอะไรได้บ้าง ยกตัวอย่าง flow ผู้หางานกับนายจ้างที่เชื่อมกันข้าม Web, App และ Admin ถ้าเทสแค่หน้าเดียวจะไม่เห็นบั๊กที่อยู่ระหว่างระบบ" data-time="5">
-      <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 1/5 · ตัวเอง</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span><div class="levels"><span class="on">L</span><span>E</span><span>V</span><span>E</span><span>L</span></div></div>
-      <div class="lvl-title"><div class="lvl-icon"><i class="spr" data-s="book" data-z="5"></i></div><h2>Learn the Product <span class="sub">รู้จักธุรกิจ ผู้ใช้ และ domain ไม่ใช่รู้แค่หน้าจอ</span></h2></div>
-      <div class="cols lvl">
-        <div style="display:grid;gap:18px;align-content:start">
-          <div class="quote">"บั๊กที่อันตรายที่สุด คือบั๊กที่เราไม่รู้ว่ามันเป็นบั๊ก"</div>
-          <ul class="clean"><li>อธิบายได้ว่าฟีเจอร์แก้ปัญหาอะไรให้ผู้ใช้</li><li>รู้ว่า user แต่ละกลุ่มใช้งานต่างกันอย่างไร</li><li>เข้าใจ flow ข้ามระบบ</li></ul>
-          <div class="badge">🏅 ทีมมาถาม QA ว่าฟีเจอร์ควรทำงานยังไง</div>
-        </div>
-        <div style="display:grid;gap:16px;align-content:start">
-          <div class="card"><span class="label">ตัวอย่าง: FLOW ข้ามระบบ</span>
-            <div class="flow"><span class="chip">ผู้หางาน</span><span class="arrow">▶</span><span class="chip k">Web / App</span><span class="arrow">▶</span><span class="chip">สมัครงาน</span><span class="arrow">▶</span><span class="chip k">นายจ้าง</span><span class="arrow">▶</span><span class="chip k">Admin</span></div></div>
-          <div class="card"><span class="label">ลองทำ</span><p style="font-size:20px">อ่านรีวิวจากผู้ใช้จริง · นั่งฟัง CS/Sales · วาด flow เอง</p></div>
-          <div class="card anti"><span class="label">❌ ANTI-PATTERN</span><p style="font-size:20px">เทสตาม test case โดยไม่รู้ว่าแต่ละขั้นมีไว้ทำไม</p></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 10 L2 -->
-    <section class="slide" data-notes="แบบ MVP: อ่านเกมขาด ขยับไปดักก่อนบอลมา Shift-Left คือให้ QA เข้าไปตั้งแต่ requirement และ design ยิ่งเจอปัญหาเร็ว ต้นทุนในการแก้ยิ่งต่ำ แก้ในเอกสารถูกกว่าแก้บน production มาก (กราฟเป็นภาพเชิงแนวคิด ไม่ใช่ตัวเลขจริง)" data-time="5">
-      <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 2/5 · กระบวนการ</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span><div class="levels"><span class="done">L</span><span class="on">E</span><span>V</span><span>E</span><span>L</span></div></div>
-      <div class="lvl-title"><div class="lvl-icon"><i class="spr" data-s="clock" data-z="5"></i></div><h2>Early Involvement <span class="sub">เข้าไปตั้งแต่ requirement (Shift-Left) หาบั๊กก่อนมีโค้ด</span></h2></div>
-      <div class="cols lvl">
-        <div style="display:grid;gap:18px;align-content:start">
-          <div class="quote">"บั๊กที่ถูกที่สุด คือบั๊กที่ไม่เคยถูกเขียนเป็นโค้ด"</div>
-          <ul class="clean"><li>เข้า grooming แล้วถามว่า "ถ้า...ล่ะ?"</li><li>ช่วยเขียน Acceptance Criteria ให้ชัดและเทสได้</li><li>ทักเรื่อง edge case, error, เน็ตหลุด ก่อน dev เริ่ม</li></ul>
-          <div class="badge">🏅 จับบั๊กได้ตั้งแต่ยังเป็นเอกสาร</div>
-        </div>
-        <div style="display:grid;gap:16px;align-content:start">
-          <div class="card"><span class="label">ต้นทุนการแก้บั๊ก (ภาพเชิงแนวคิด)</span>
-            <div class="bars"><div class="qa" style="height:8%"></div><div class="qa" style="height:16%"></div><div style="height:32%"></div><div style="height:58%"></div><div style="height:100%;background:var(--red)"></div></div>
-            <div class="bar-labels" style="margin-top:8px"><span class="gold">Req</span><span class="gold">Design</span><span>Dev</span><span>Test</span><span>Prod</span></div></div>
-          <div class="card"><span class="label">ลองทำ</span><p style="font-size:20px">3 Amigos (PO + Dev + QA) · รีวิว UI ก่อนส่ง dev</p></div>
-          <div class="card anti"><span class="label">❌ ANTI-PATTERN</span><p style="font-size:20px">รอ dev ส่งงานมาแล้วค่อยเริ่มอ่าน requirement</p></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 11 L3 -->
-    <section class="slide" data-notes="แบบ MVP: ตัดสินใจถูกในช่วงคับขัน ความเสี่ยง = โอกาสที่จะพัง × ความเสียหายถ้าพัง ถามทั้งห้องว่า Payment, Login และเปลี่ยนสีปุ่ม อันไหนเสี่ยงที่สุด แล้วกด → เพื่อวางลงตาราง ปิดด้วยคำถามว่าถ้าเหลือเวลา 1 ชั่วโมงจะเทสอะไร" data-time="6">
-      <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 3/5 · การทดสอบ</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span><div class="levels"><span class="done">L</span><span class="done">E</span><span class="on">V</span><span>E</span><span>L</span></div></div>
-      <div class="lvl-title"><div class="lvl-icon"><i class="spr" data-s="target" data-z="5"></i></div><h2>Validate by Risk <span class="sub">ทดสอบตามความเสี่ยง ไม่ใช่เทสทุกอย่างเท่ากันหมด</span></h2></div>
-      <div class="cols lvl">
-        <div style="display:grid;gap:18px;align-content:start">
-          <div class="quote">"เทสทุกอย่างไม่ได้ แต่ต้องเทสสิ่งที่สำคัญที่สุดก่อนเสมอ"</div>
-          <ul class="clean"><li>รู้ว่าส่วนไหนพังแล้วกระทบหนัก</li><li>ครอบคลุม happy path, negative และ boundary</li><li>ใช้ exploratory testing หาสิ่งที่ test case ไม่ได้เขียน</li></ul>
-          <div class="card" style="padding:14px 20px"><p style="font-size:22px">⏳ <b>"ถ้าเหลือเวลา 1 ชั่วโมง จะเทสอะไร?"</b></p></div>
-          <div class="badge">🏅 release ได้อย่างมั่นใจแม้เวลาน้อย</div>
-        </div>
-        <div class="card"><span class="label">RISK MATRIX · IMPACT × LIKELIHOOD</span>
-          <div class="matrix">
-            <div class="ax y">Impact ↑</div>
-            <div class="cell md"></div><div class="cell hi"><span class="pin frag">Login</span></div><div class="cell hi"><span class="pin frag">Payment</span></div>
-            <div class="cell lo"></div><div class="cell md"></div><div class="cell hi"></div>
-            <div class="cell lo"><span class="pin frag">สีปุ่ม</span></div><div class="cell lo"></div><div class="cell md"></div>
-            <div></div><div class="ax" style="grid-column:2 / 5">Likelihood →</div>
+      <!-- 1 -->
+      <section class="slide" data-notes="หน้าเปิด แนะนำตัวสั้น ๆ แล้วเข้าเรื่องทันที" data-time="0.5">
+        <div class="hud"><span class="tag">PLAYER 1</span><span>QA WORKSHOP</span></div>
+        <div class="title-wrap">
+          <div class="title-big">LEVEL UP!</div>
+          <div class="title-sub">Becoming Your Team's MVQ<span class="a">(A)</span></div>
+          <div style="display:grid;gap:4px">
+            <p style="font-family:var(--font-display);font-size:28px">นิภาพร จันต๊ะวงค์ <span class="gold">(เมย์)</span>
+            </p>
+            <p class="muted" style="font-size:20px">Quality Assurance · PDKM · 10/10/2026</p>
           </div>
         </div>
-      </div>
-    </section>
+        <div class="blink">PRESS → TO START</div>
+        <i class="spr deco bob" data-s="trophy" data-z="7" style="right:250px;top:110px"></i>
+        <i class="spr deco bob d1" data-s="coin" data-z="5" style="right:420px;top:200px"></i>
+        <i class="spr deco bob d2" data-s="coin" data-z="5" style="right:110px;top:220px"></i>
+        <i class="spr deco" data-s="hero" data-z="12" style="right:300px;bottom:26px"></i>
+        <i class="spr deco bob d3" data-s="bug" data-z="6" style="right:120px;bottom:26px"></i>
+        <i class="spr deco bob d1" data-s="bug" data-z="4" style="right:40px;bottom:120px"></i>
+      </section>
 
-    <!-- 12 L4 -->
-    <section class="slide" data-notes="แบบ MVP: แอสซิสต์ ทำให้เพื่อนเล่นดีขึ้น เปลี่ยนจากผู้เฝ้าประตูที่บอกแค่ผ่านหรือไม่ผ่าน มาเป็นโค้ชด้านคุณภาพ เทียบ bug report 2 แบบ ให้เห็นว่าการสื่อสารที่ดีช่วยให้ dev แก้ได้เร็ว เน้นการสื่อสารแบบไม่กล่าวโทษ" data-time="5">
-      <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 4/5 · ทีม</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span><div class="levels"><span class="done">L</span><span class="done">E</span><span class="done">V</span><span class="on">E</span><span>L</span></div></div>
-      <div class="lvl-title"><div class="lvl-icon"><i class="spr" data-s="team" data-z="5"></i></div><h2>Empower the Team <span class="sub">ทำให้คุณภาพเป็นความรับผิดชอบของทุกคน</span></h2></div>
-      <div class="cols lvl">
-        <div style="display:grid;gap:18px;align-content:start">
-          <div class="quote">"QA ที่เก่งไม่ได้ทำงานคนเดียว แต่ทำให้ทั้งทีมเก่งเรื่องคุณภาพขึ้น"</div>
-          <div class="flow" style="font-size:22px"><span class="chip">🚧 Gatekeeper</span><span class="arrow">▶</span><span class="chip k">🧑‍🏫 Quality Coach</span></div>
-          <ul class="clean"><li>pair testing กับ dev · Definition of Done ร่วมกัน</li><li>bug bash ทั้งทีม · automation ที่ทุกคนใช้ได้</li><li>สื่อสารแบบไม่กล่าวโทษ</li></ul>
-          <div class="badge">🏅 dev มาปรึกษา QA ก่อนส่งงาน</div>
+      <!-- 2 -->
+      <section class="slide"
+        data-notes="จังหวะแรก: ในทีมเราได้ยินคำว่า MVP บ่อย แต่หมายถึง Minimum Viable Product คือทำขั้นต่ำให้พอใช้ได้ วันนี้เราจะพูดถึง MVP อีกแบบ คือ Most Valuable ซึ่งเป็นขั้นสูงสุด (Minimum กับ Most ตรงข้ามกันพอดี) จังหวะสอง: กด → เพื่อถามคำถาม ให้ผู้ฟังตอบสั้น ๆ คำตอบส่วนใหญ่จะเป็น 'QA' ใช้เปิดประเด็นว่าเรามองบทบาทนี้เป็นแค่คนหาบั๊ก"
+        data-time="2">
+        <div class="hud"><span class="tag">INTRO</span><span>01 / HOOK</span></div>
+        <div class="cols c2" style="flex:0">
+          <div class="card"><span class="label">MVP ที่ทีมคุ้น</span>
+            <h3><span class="strike">Minimum</span> Viable Product</h3>
+            <p class="muted">ทำขั้นต่ำให้พอใช้ได้</p>
+          </div>
+          <div class="card gold" style="position:relative"><i class="spr" data-s="trophy" data-z="4"
+              style="position:absolute;right:20px;top:18px"></i><span class="label" style="color:var(--gold)">MVP
+              วันนี้</span>
+            <h3><span class="gold">Most</span> Valuable Player</h3>
+            <p class="muted">ขั้นสูงสุดของทีม</p>
+          </div>
         </div>
-        <div style="display:grid;gap:16px;align-content:start">
-          <div class="card report"><span class="label">BUG REPORT</span>
-            <p class="bad">❌ "สมัครงานไม่ได้ครับ"</p>
-            <p class="good frag" style="margin-top:12px">✅ [iOS · App] กดสมัครงานแล้วค้างที่ loading เมื่อแนบ resume เกิน 5MB<br><span class="muted">Steps 1-2-3 · Expected / Actual · แนบวิดีโอ</span></p></div>
-          <div class="card anti"><span class="label">❌ ANTI-PATTERN</span><p style="font-size:20px">"QA vs Dev" มองว่าหาบั๊กเจอคือการเอาชนะ dev</p></div>
+        <div class="center frag">
+          <div style="display:flex;gap:28px;align-items:end"><i class="spr bob" data-s="bug" data-z="5"></i><i
+              class="spr bob d1" data-s="bug" data-z="7"></i><i class="spr bob d2" data-s="bug" data-z="5"></i></div>
+          <h2 style="font-size:52px">"ถ้าบั๊กหลุดไปถึง production…<br>ใครผิด?"</h2>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- 13 L5 -->
-    <section class="slide" data-notes="แบบ MVP: ผลงานมีสถิติรองรับ และเป็นผู้นำในสนาม เทียบการรายงานแบบใช้ความรู้สึกกับแบบมีข้อมูล ตัวเลขบน dashboard เป็นตัวอย่าง ปิดด้วยการทำ RCA ทุกครั้งที่มีบั๊กบน production และนำไปคุยใน Retrospective" data-time="5">
-      <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 5/5 · องค์กร</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span><div class="levels"><span class="done">L</span><span class="done">E</span><span class="done">V</span><span class="done">E</span><span class="on">L</span></div></div>
-      <div class="lvl-title"><div class="lvl-icon"><i class="spr" data-s="chart" data-z="5"></i></div><h2>Lead with Data <span class="sub">ใช้ข้อมูลตัดสินใจ และปรับปรุงอย่างต่อเนื่อง</span></h2></div>
-      <div class="cols lvl">
-        <div style="display:grid;gap:18px;align-content:start">
-          <div class="quote">"ความรู้สึกบอกว่าพร้อม แต่ข้อมูลบอกว่าพร้อมจริงไหม"</div>
-          <ul class="clean"><li>รายงานด้วยตัวเลข: pass rate, bug ตาม severity</li><li>ดู bug trend และหา root cause</li><li>ให้ความเห็น Go/No-Go ที่มีหลักฐานรองรับ</li></ul>
-          <div class="badge">🏅 PO ถาม QA ก่อนตัดสินใจ release</div>
+      <!-- 3 -->
+      <section class="slide"
+        data-notes="3 คำนี้มักใช้ปนกัน Testing คือการรันทดสอบ QC คือการตรวจว่าของผ่านมาตรฐาน ส่วน QA ดูแลกระบวนการเพื่อป้องกันไม่ให้เกิดปัญหาตั้งแต่แรก ชี้ไปที่คอลัมน์ QA"
+        data-time="1">
+        <div class="hud"><span class="tag">INTRO</span><span>02 / DEFINITION</span></div>
+        <div class="lvl-title">
+          <h2>Testing vs QC vs QA</h2><i class="spr" data-s="magnifier" data-z="4"></i><i class="spr" data-s="shield"
+            data-z="4"></i>
         </div>
-        <div style="display:grid;gap:16px;align-content:start">
-          <div class="card"><span class="label">RELEASE DASHBOARD <span class="example">· ตัวอย่าง</span></span>
-            <div class="tiles">
-              <div class="tile-s"><div class="n">96%</div><div class="k">Pass rate</div></div>
-              <div class="tile-s"><div class="n">0</div><div class="k">Critical bugs</div></div>
-              <div class="tile-s"><div class="n w">4</div><div class="k">Minor bugs (open)</div></div>
-              <div class="tile-s"><div class="n">2%</div><div class="k">Defect leakage</div></div>
-            </div></div>
-          <div class="card report"><span class="label">รายงานสถานะ</span>
-            <p class="bad">❌ "เทสเสร็จแล้วครับ"</p>
-            <p class="good frag" style="margin-top:8px">✅ "Pass 96% · Critical 0 · Minor 4 มี workaround แล้ว · พร้อม Go"</p></div>
+        <table class="t">
+          <tr>
+            <th></th>
+            <th>Testing</th>
+            <th>Quality Control</th>
+            <th class="hl">Quality Assurance</th>
+          </tr>
+          <tr>
+            <td>คำถามหลัก</td>
+            <td>ระบบทำงานถูกไหม</td>
+            <td>ผ่านเกณฑ์ไหม</td>
+            <td class="hl">ทำยังไงให้ไม่เกิดปัญหา</td>
+          </tr>
+          <tr>
+            <td>โฟกัส</td>
+            <td>Test case</td>
+            <td>ตัวผลิตภัณฑ์</td>
+            <td class="hl">กระบวนการ + ทีม</td>
+          </tr>
+          <tr>
+            <td>ลักษณะ</td>
+            <td>Detect</td>
+            <td>Detect</td>
+            <td class="hl">Prevent</td>
+          </tr>
+          <tr>
+            <td>ช่วงเวลา</td>
+            <td>หลังพัฒนาเสร็จ</td>
+            <td>ก่อนส่งมอบ</td>
+            <td class="hl">ตลอดวงจร</td>
+          </tr>
+        </table>
+      </section>
+
+      <!-- 4 -->
+      <section class="slide"
+        data-notes="เปิดทีละใบ Tester คือคนชิมอาหารแล้วบอกว่าเค็มไป QC คือคนตรวจว่าจานนี้ได้มาตรฐานร้าน QA คือคนช่วยออกแบบสูตร ขั้นตอน และเทรนพ่อครัว เพื่อไม่ให้เค็มตั้งแต่แรก (ถ้าได้แค่ 40 นาที ข้ามสไลด์นี้)"
+        data-time="1">
+        <div class="hud"><span class="tag">INTRO</span><span>03 / ANALOGY</span></div>
+        <h2>ถ้าซอฟต์แวร์คือร้านอาหาร…</h2>
+        <div class="cols c3">
+          <div class="card frag">
+            <div class="big-emoji">🍳</div>
+            <h3 style="margin-top:14px">Tester</h3>
+            <p>ชิมก่อนเสิร์ฟ<br><span class="muted">"เค็มไปนะ"</span></p>
+          </div>
+          <div class="card frag">
+            <div class="big-emoji">🔍</div>
+            <h3 style="margin-top:14px">QC</h3>
+            <p>ตรวจว่าจานนี้<br><span class="muted">ได้มาตรฐานของร้าน</span></p>
+          </div>
+          <div class="card cyan frag">
+            <div class="big-emoji">📋</div>
+            <h3 style="margin-top:14px" class="cyan">QA</h3>
+            <p>ออกแบบสูตร ขั้นตอน<br><span class="muted">และเทรนพ่อครัว ให้ไม่เค็มตั้งแต่แรก</span></p>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- 14 -->
-    <section class="slide" data-notes="สรุปทั้ง 5 ด่านในตารางเดียว แต่ละด่านขยายขอบเขตจากตัวเองไปถึงองค์กร" data-time="1.5">
-      <div class="hud"><span class="tag">STAGE CLEAR</span><span>RECAP</span></div>
-      <h2>เส้นทางการเติบโต</h2>
-      <table class="t recap">
-        <tr><th>Level</th><th>โฟกัส</th><th>จาก</th><th>สู่</th></tr>
-        <tr><td><i class="spr" data-s="book" data-z="2" style="margin-right:10px"></i>L · Learn</td><td>ตัวเอง</td><td class="muted">ผู้ทำตาม test case</td><td>ผู้เข้าใจผลิตภัณฑ์</td></tr>
-        <tr><td><i class="spr" data-s="clock" data-z="2" style="margin-right:10px"></i>E · Early</td><td>กระบวนการ</td><td class="muted">ผู้รอรับงาน</td><td>ผู้ป้องกันบั๊ก</td></tr>
-        <tr><td><i class="spr" data-s="target" data-z="2" style="margin-right:10px"></i>V · Validate</td><td>การทดสอบ</td><td class="muted">ผู้เทสทุกอย่าง</td><td>ผู้เทสอย่างมีกลยุทธ์</td></tr>
-        <tr><td><i class="spr" data-s="team" data-z="2" style="margin-right:10px"></i>E · Empower</td><td>ทีม</td><td class="muted">ผู้เฝ้าประตู</td><td>โค้ชด้านคุณภาพ</td></tr>
-        <tr><td><i class="spr" data-s="chart" data-z="2" style="margin-right:10px"></i>L · Lead</td><td>องค์กร</td><td class="muted">ผู้รายงานผล</td><td>ผู้ช่วยตัดสินใจ</td></tr>
-      </table>
-    </section>
+      <!-- 5 -->
+      <section class="slide"
+        data-notes="เน้นว่า Tester ไม่ได้ด้อยกว่า การเทสยังเป็นทักษะหลักที่ QA ทุกคนต้องเก่ง แต่ QA ขยายบทบาทจากการตรวจที่ปลายทางไปดูแลคุณภาพตลอดเส้นทาง"
+        data-time="1">
+        <div class="hud"><span class="tag">INTRO</span><span>04 / MINDSET</span></div>
+        <h2>Tester Mindset vs QA Mindset</h2>
+        <div class="cols c2">
+          <div class="card">
+            <div class="label-row"><i class="spr" data-s="magnifier" data-z="4"></i><span class="label">TESTER</span>
+            </div>
+            <ul class="clean">
+              <li>"ส่งงานมา เดี๋ยวเทสให้"</li>
+              <li>หาบั๊กให้เจอมากที่สุด</li>
+              <li>ทำตาม test case</li>
+              <li>เจอบั๊ก ส่งกลับให้ dev</li>
+              <li>วัดผลจากจำนวนบั๊ก</li>
+            </ul>
+          </div>
+          <div class="card cyan">
+            <div class="label-row"><i class="spr" data-s="shield" data-z="4"></i><span class="label"
+                style="color:var(--cyan)">QA</span></div>
+            <ul class="clean">
+              <li>"ขอเข้าไปคุยตั้งแต่ตอนออกแบบ"</li>
+              <li>ทำให้เกิดบั๊กน้อยที่สุด</li>
+              <li>ถามว่า test case ครอบคลุมพอหรือยัง</li>
+              <li>หาสาเหตุและป้องกันครั้งหน้า</li>
+              <li>วัดผลจากความมั่นใจตอน release</li>
+            </ul>
+          </div>
+        </div>
+        <p class="muted" style="font-size:19px">การเทสยังเป็นทักษะหลัก QA ไม่ได้เลิกเทส แต่ขยายบทบาท</p>
+      </section>
 
-    <!-- 15 -->
-    <section class="slide" data-notes="ให้ทุกคนเลือก 1 ด่านและ 1 action ของตัวเอง คิดในใจหรือเขียน Post-it ก็ได้ แล้วบอกเพื่อนในทีม 1 คนให้ช่วยติดตาม" data-time="1.5">
-      <div class="hud"><span class="tag">NEXT QUEST</span><span>CALL TO ACTION</span></div>
-      <h2>Next Quest: เริ่มพรุ่งนี้ได้เลย</h2>
-      <div class="steps-q" style="margin-block:auto">
-        <div class="s"><b>1</b><span>เลือก <span class="gold">1 ด่าน</span> ที่จะ Level Up ในเดือนนี้</span></div>
-        <div class="s"><b>2</b><span>เขียน <span class="gold">1 action</span> ที่ทำได้ทันที</span></div>
-        <div class="s"><b>3</b><span>บอก <span class="gold">เพื่อนในทีม 1 คน</span> ให้ช่วยติดตาม</span></div>
-      </div>
-      <i class="spr deco" data-s="hero" data-z="9" style="right:150px;bottom:26px"></i>
-      <i class="spr deco bob" data-s="star" data-z="5" style="right:110px;top:150px"></i>
-      <i class="spr deco bob d2" data-s="coin" data-z="5" style="right:300px;top:210px"></i>
-    </section>
+      <!-- 6 -->
+      <section class="slide"
+        data-notes="อ่านทีละประโยค ให้ผู้ฟังยกมือโหวตว่าเป็น mindset แบบ Tester หรือ QA แล้วกด → เพื่อเฉลย ประโยคแรกเป็น Tester ประโยคสองเป็น QA"
+        data-time="2">
+        <div class="hud"><span class="tag">MINI GAME</span><span>05 / VOTE</span></div>
+        <div class="lvl-title"><i class="spr" data-s="controller" data-z="5"></i>
+          <h2>Tester หรือ QA? <span class="sub">ยกมือโหวตทีละข้อ</span></h2>
+        </div>
+        <div style="display:grid;gap:22px">
+          <div class="card vote">
+            <p style="font-size:28px">"เทสครบทุก test case แล้ว ปิดงานได้"</p><span class="answer t frag">🧪
+              TESTER</span>
+          </div>
+          <div class="card vote frag">
+            <p style="font-size:28px">"AC ข้อนี้ยังไม่ชัด ถ้า user ไม่กรอกเบอร์โทร จะเกิดอะไรขึ้น?"</p><span
+              class="answer q frag">🛡️ QA</span>
+          </div>
+        </div>
+      </section>
 
-    <!-- 16 -->
-    <section class="slide" data-notes="พูดช้า ๆ แล้วหยุดค้างให้ผู้ฟังได้คิดสักครู่" data-time="0.5">
-      <div class="hud"><span class="tag">FINAL WORDS</span><span></span></div>
-      <div class="center">
-        <i class="spr bob" data-s="trophy" data-z="6"></i>
-        <p class="closing">"MVQ(A) ไม่ใช่คนที่หาบั๊กได้มากที่สุด แต่เป็นคนที่ทำให้ทีม<span class="gold">ส่งของที่มีคุณภาพได้อย่างมั่นใจที่สุด</span>"</p>
-        <p class="muted" style="font-size:24px">MVP ทำให้ทีมชนะ · MVQ(A) ทำให้ทีมมั่นใจ</p>
-      </div>
-    </section>
+      <!-- 7 -->
+      <section class="slide"
+        data-notes="MVP ในกีฬาหรือเกมไม่ได้วัดจากแต้ม แต่วัดจากการทำให้ทีมชนะ QA ก็เหมือนกัน ไม่ได้วัดจากจำนวนบั๊ก Q คือ Quality ระดับพื้นฐานที่รู้และตรวจคุณภาพได้ ส่วน (A) คือ Assurance การสร้างความมั่นใจให้ทั้งทีม (A) อยู่ในวงเล็บและยังล็อกอยู่ เพราะต้อง Level Up ถึงจะได้มา ไม่ได้มาพร้อมตำแหน่ง"
+        data-time="1.5">
+        <div class="hud"><span class="tag">INTRO</span><span>06 / MVP → MVQ(A)</span></div>
+        <h2>จาก MVP สู่ MVQ<span class="cyan">(A)</span></h2>
+        <div class="cols c2" style="align-items:center">
+          <div class="center" style="gap:14px">
+            <i class="spr bob" data-s="trophy" data-z="11"></i>
+            <p class="pixel" style="font-size:28px">MVP <span class="gold">→</span> MVQ<span class="cyan">(A)</span></p>
+          </div>
+          <div class="acronym">
+            <div class="acr-row"><b>M</b><span>Most · ที่สุด</span></div>
+            <div class="acr-row"><b>V</b><span>Valuable · วัดจากผลกระทบต่อทีม</span></div>
+            <div class="acr-row"><b>Q</b><span>Quality · รู้และตรวจคุณภาพได้</span></div>
+            <div class="acr-row a"><b>(A)</b><span>Assurance · ทำให้ทั้งทีมมั่นใจ <i class="spr" data-s="lock"
+                  data-z="3"></i></span></div>
+          </div>
+        </div>
+        <div class="quote">"MVP ไม่ใช่คนทำแต้มมากที่สุด แต่คือคนที่ทำให้ทีมชนะ"</div>
+      </section>
 
-    <!-- 17 -->
-    <section class="slide" data-notes="ปลดล็อกตัว (A) ที่ล็อกไว้ในสไลด์ 7 วงเล็บหายไปกลายเป็น MVQA จากนั้นเปิด Q&A และค้างหน้านี้ไว้ เวลาช่วงนี้ยืดหยุ่นได้" data-time="3">
-      <div class="hud"><span class="tag">GAME CLEAR</span><span>🏆</span></div>
-      <div class="center">
-        <p class="unlock" style="display:flex;align-items:center;gap:14px"><i class="spr" data-s="unlock" data-z="3"></i>ACHIEVEMENT UNLOCKED</p>
-        <p class="unlock-big">MVQ<span class="a">A</span></p>
-        <h2 style="font-size:40px">Q &amp; A · Thank you!</h2>
-        <p class="muted" style="font-size:20px">นิภาพร จันต๊ะวงค์ (เมย์) · Quality Assurance · PDKM</p>
-      </div>
-      <i class="spr deco" data-s="hero" data-z="9" style="left:110px;bottom:26px"></i>
-      <i class="spr deco bob" data-s="trophy" data-z="8" style="right:120px;bottom:40px"></i>
-      <i class="spr deco bob d1" data-s="star" data-z="5" style="left:150px;top:120px"></i>
-      <i class="spr deco bob d2" data-s="star" data-z="4" style="right:170px;top:110px"></i>
-      <i class="spr deco bob d3" data-s="coin" data-z="5" style="right:330px;top:200px"></i>
-      <i class="spr deco bob d1" data-s="coin" data-z="5" style="left:330px;top:220px"></i>
-    </section>
+      <!-- 8 -->
+      <section class="slide"
+        data-notes="เปิดเผยว่าตัวอักษรของ 5 ด่านเรียงกันเป็นคำว่า LEVEL แต่ละด่านคู่กับคุณสมบัติของ MVP 1 ข้อ MVP ไม่ได้เก่งแค่เรื่องเดียว แต่ครบทั้ง 5 ด้าน MVQ(A) ก็เหมือนกัน"
+        data-time="1.5">
+        <div class="hud"><span class="tag">WORLD MAP</span><span>5 STAGES</span></div>
+        <h2>เส้นทางสู่ MVQ(A): <span class="gold">L-E-V-E-L</span></h2>
+        <div class="map">
+          <div class="node start">
+            <div class="ic"><i class="spr" data-s="hero" data-z="4"></i></div>
+            <div class="tile">START</div>
+            <div class="nm">Tester</div>
+          </div>
+          <div class="node">
+            <div class="ic"><i class="spr" data-s="book" data-z="4"></i></div>
+            <div class="tile">L</div>
+            <div class="nm">Learn</div>
+            <div class="tr">รู้เกมทะลุ</div>
+          </div>
+          <div class="node">
+            <div class="ic"><i class="spr" data-s="clock" data-z="4"></i></div>
+            <div class="tile">E</div>
+            <div class="nm">Early</div>
+            <div class="tr">อ่านเกมขาด</div>
+          </div>
+          <div class="node">
+            <div class="ic"><i class="spr" data-s="target" data-z="4"></i></div>
+            <div class="tile">V</div>
+            <div class="nm">Validate</div>
+            <div class="tr">ตัดสินใจตอนคับขัน</div>
+          </div>
+          <div class="node">
+            <div class="ic"><i class="spr" data-s="team" data-z="4"></i></div>
+            <div class="tile">E</div>
+            <div class="nm">Empower</div>
+            <div class="tr">ทำให้เพื่อนเล่นดีขึ้น</div>
+          </div>
+          <div class="node">
+            <div class="ic"><i class="spr" data-s="chart" data-z="4"></i></div>
+            <div class="tile">L</div>
+            <div class="nm">Lead</div>
+            <div class="tr">มีสถิติรองรับ</div>
+          </div>
+          <div class="node end">
+            <div class="ic"><i class="spr bob" data-s="trophy" data-z="3"></i></div>
+            <div class="tile">GOAL</div>
+            <div class="nm">MVQ(A)</div>
+          </div>
+        </div>
+        <div class="scope">
+          <span>ตัวเอง</span><span>กระบวนการ</span><span>การทดสอบ</span><span>ทีม</span><span>องค์กร</span>
+        </div>
+      </section>
 
+      <!-- 9 L1 -->
+      <section class="slide"
+        data-notes="แบบ MVP: รู้เกมทะลุปรุโปร่ง รู้กติกาและรู้จักคู่แข่ง QA ต้องเข้าใจว่าระบบทำไปเพื่ออะไร ไม่ใช่แค่ทำอะไรได้บ้าง ยกตัวอย่าง flow ผู้หางานกับนายจ้างที่เชื่อมกันข้าม Web, App และ Admin ถ้าเทสแค่หน้าเดียวจะไม่เห็นบั๊กที่อยู่ระหว่างระบบ"
+        data-time="5">
+        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 1/5 ·
+              ตัวเอง</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr"
+                data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
+          <div class="levels"><span class="on">L</span><span>E</span><span>V</span><span>E</span><span>L</span></div>
+        </div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr" data-s="book" data-z="5"></i></div>
+          <h2>Learn the Product <span class="sub">รู้จักธุรกิจ ผู้ใช้ และ domain ไม่ใช่รู้แค่หน้าจอ</span></h2>
+        </div>
+        <div class="cols lvl">
+          <div style="display:grid;gap:18px;align-content:start">
+            <div class="quote">"บั๊กที่อันตรายที่สุด คือบั๊กที่เราไม่รู้ว่ามันเป็นบั๊ก"</div>
+            <ul class="clean">
+              <li>อธิบายได้ว่าฟีเจอร์แก้ปัญหาอะไรให้ผู้ใช้</li>
+              <li>รู้ว่า user แต่ละกลุ่มใช้งานต่างกันอย่างไร</li>
+              <li>เข้าใจ flow ข้ามระบบ</li>
+            </ul>
+            <div class="badge">🏅 ทีมมาถาม QA ว่าฟีเจอร์ควรทำงานยังไง</div>
+          </div>
+          <div style="display:grid;gap:16px;align-content:start">
+            <div class="card"><span class="label">ตัวอย่าง: FLOW ข้ามระบบ</span>
+              <div class="flow"><span class="chip">ผู้หางาน</span><span class="arrow">▶</span><span class="chip k">Web /
+                  App</span><span class="arrow">▶</span><span class="chip">สมัครงาน</span><span
+                  class="arrow">▶</span><span class="chip k">นายจ้าง</span><span class="arrow">▶</span><span
+                  class="chip k">Admin</span></div>
+            </div>
+            <div class="card"><span class="label">ลองทำ</span>
+              <p style="font-size:20px">อ่านรีวิวจากผู้ใช้จริง · นั่งฟัง CS/Sales · วาด flow เอง</p>
+            </div>
+            <div class="card anti"><span class="label">❌ ANTI-PATTERN</span>
+              <p style="font-size:20px">เทสตาม test case โดยไม่รู้ว่าแต่ละขั้นมีไว้ทำไม</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 L2 -->
+      <section class="slide"
+        data-notes="แบบ MVP: อ่านเกมขาด ขยับไปดักก่อนบอลมา Shift-Left คือให้ QA เข้าไปตั้งแต่ requirement และ design ยิ่งเจอปัญหาเร็ว ต้นทุนในการแก้ยิ่งต่ำ แก้ในเอกสารถูกกว่าแก้บน production มาก (กราฟเป็นภาพเชิงแนวคิด ไม่ใช่ตัวเลขจริง)"
+        data-time="5">
+        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 2/5 ·
+              กระบวนการ</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr"
+                data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
+          <div class="levels"><span class="done">L</span><span
+              class="on">E</span><span>V</span><span>E</span><span>L</span></div>
+        </div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr" data-s="clock" data-z="5"></i></div>
+          <h2>Early Involvement <span class="sub">เข้าไปตั้งแต่ requirement (Shift-Left) หาบั๊กก่อนมีโค้ด</span></h2>
+        </div>
+        <div class="cols lvl">
+          <div style="display:grid;gap:18px;align-content:start">
+            <div class="quote">"บั๊กที่ถูกที่สุด คือบั๊กที่ไม่เคยถูกเขียนเป็นโค้ด"</div>
+            <ul class="clean">
+              <li>เข้า grooming แล้วถามว่า "ถ้า...ล่ะ?"</li>
+              <li>ช่วยเขียน Acceptance Criteria ให้ชัดและเทสได้</li>
+              <li>ทักเรื่อง edge case, error, เน็ตหลุด ก่อน dev เริ่ม</li>
+            </ul>
+            <div class="badge">🏅 จับบั๊กได้ตั้งแต่ยังเป็นเอกสาร</div>
+          </div>
+          <div style="display:grid;gap:16px;align-content:start">
+            <div class="card"><span class="label">ต้นทุนการแก้บั๊ก (ภาพเชิงแนวคิด)</span>
+              <div class="bars">
+                <div class="qa" style="height:8%"></div>
+                <div class="qa" style="height:16%"></div>
+                <div style="height:32%"></div>
+                <div style="height:58%"></div>
+                <div style="height:100%;background:var(--red)"></div>
+              </div>
+              <div class="bar-labels" style="margin-top:8px"><span class="gold">Req</span><span
+                  class="gold">Design</span><span>Dev</span><span>Test</span><span>Prod</span></div>
+            </div>
+            <div class="card"><span class="label">ลองทำ</span>
+              <p style="font-size:20px">3 Amigos (PO + Dev + QA) · รีวิว UI ก่อนส่ง dev</p>
+            </div>
+            <div class="card anti"><span class="label">❌ ANTI-PATTERN</span>
+              <p style="font-size:20px">รอ dev ส่งงานมาแล้วค่อยเริ่มอ่าน requirement</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11 L3 -->
+      <section class="slide"
+        data-notes="แบบ MVP: ตัดสินใจถูกในช่วงคับขัน ความเสี่ยง = โอกาสที่จะพัง × ความเสียหายถ้าพัง ถามทั้งห้องว่า Payment, Login และเปลี่ยนสีปุ่ม อันไหนเสี่ยงที่สุด แล้วกด → เพื่อวางลงตาราง ปิดด้วยคำถามว่าถ้าเหลือเวลา 1 ชั่วโมงจะเทสอะไร"
+        data-time="6">
+        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 3/5 ·
+              การทดสอบ</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr"
+                data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
+          <div class="levels"><span class="done">L</span><span class="done">E</span><span
+              class="on">V</span><span>E</span><span>L</span></div>
+        </div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr" data-s="target" data-z="5"></i></div>
+          <h2>Validate by Risk <span class="sub">ทดสอบตามความเสี่ยง ไม่ใช่เทสทุกอย่างเท่ากันหมด</span></h2>
+        </div>
+        <div class="cols lvl">
+          <div style="display:grid;gap:18px;align-content:start">
+            <div class="quote">"เทสทุกอย่างไม่ได้ แต่ต้องเทสสิ่งที่สำคัญที่สุดก่อนเสมอ"</div>
+            <ul class="clean">
+              <li>รู้ว่าส่วนไหนพังแล้วกระทบหนัก</li>
+              <li>ครอบคลุม happy path, negative และ boundary</li>
+              <li>ใช้ exploratory testing หาสิ่งที่ test case ไม่ได้เขียน</li>
+            </ul>
+            <div class="card" style="padding:14px 20px">
+              <p style="font-size:22px">⏳ <b>"ถ้าเหลือเวลา 1 ชั่วโมง จะเทสอะไร?"</b></p>
+            </div>
+            <div class="badge">🏅 release ได้อย่างมั่นใจแม้เวลาน้อย</div>
+          </div>
+          <div class="card"><span class="label">RISK MATRIX · IMPACT × LIKELIHOOD</span>
+            <div class="matrix">
+              <div class="ax y">Impact ↑</div>
+              <div class="cell md"></div>
+              <div class="cell hi"><span class="pin frag">Login</span></div>
+              <div class="cell hi"><span class="pin frag">Payment</span></div>
+              <div class="cell lo"></div>
+              <div class="cell md"></div>
+              <div class="cell hi"></div>
+              <div class="cell lo"><span class="pin frag">สีปุ่ม</span></div>
+              <div class="cell lo"></div>
+              <div class="cell md"></div>
+              <div></div>
+              <div class="ax" style="grid-column:2 / 5">Likelihood →</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 12 L4 -->
+      <section class="slide"
+        data-notes="แบบ MVP: แอสซิสต์ ทำให้เพื่อนเล่นดีขึ้น เปลี่ยนจากผู้เฝ้าประตูที่บอกแค่ผ่านหรือไม่ผ่าน มาเป็นโค้ชด้านคุณภาพ เทียบ bug report 2 แบบ ให้เห็นว่าการสื่อสารที่ดีช่วยให้ dev แก้ได้เร็ว เน้นการสื่อสารแบบไม่กล่าวโทษ"
+        data-time="5">
+        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 4/5 ·
+              ทีม</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart"
+                data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
+          <div class="levels"><span class="done">L</span><span class="done">E</span><span class="done">V</span><span
+              class="on">E</span><span>L</span></div>
+        </div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr" data-s="team" data-z="5"></i></div>
+          <h2>Empower the Team <span class="sub">ทำให้คุณภาพเป็นความรับผิดชอบของทุกคน</span></h2>
+        </div>
+        <div class="cols lvl">
+          <div style="display:grid;gap:18px;align-content:start">
+            <div class="quote">"QA ที่เก่งไม่ได้ทำงานคนเดียว แต่ทำให้ทั้งทีมเก่งเรื่องคุณภาพขึ้น"</div>
+            <div class="flow" style="font-size:22px"><span class="chip">🚧 Gatekeeper</span><span
+                class="arrow">▶</span><span class="chip k">🧑‍🏫 Quality Coach</span></div>
+            <ul class="clean">
+              <li>pair testing กับ dev · Definition of Done ร่วมกัน</li>
+              <li>bug bash ทั้งทีม · automation ที่ทุกคนใช้ได้</li>
+              <li>สื่อสารแบบไม่กล่าวโทษ</li>
+            </ul>
+            <div class="badge">🏅 dev มาปรึกษา QA ก่อนส่งงาน</div>
+          </div>
+          <div style="display:grid;gap:16px;align-content:start">
+            <div class="card report"><span class="label">BUG REPORT</span>
+              <p class="bad">❌ "สมัครงานไม่ได้ครับ"</p>
+              <p class="good frag" style="margin-top:12px">✅ [iOS · App] กดสมัครงานแล้วค้างที่ loading เมื่อแนบ resume
+                เกิน 5MB<br><span class="muted">Steps 1-2-3 · Expected / Actual · แนบวิดีโอ</span></p>
+            </div>
+            <div class="card anti"><span class="label">❌ ANTI-PATTERN</span>
+              <p style="font-size:20px">"QA vs Dev" มองว่าหาบั๊กเจอคือการเอาชนะ dev</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 13 L5 -->
+      <section class="slide"
+        data-notes="แบบ MVP: ผลงานมีสถิติรองรับ และเป็นผู้นำในสนาม เทียบการรายงานแบบใช้ความรู้สึกกับแบบมีข้อมูล ตัวเลขบน dashboard เป็นตัวอย่าง ปิดด้วยการทำ RCA ทุกครั้งที่มีบั๊กบน production และนำไปคุยใน Retrospective"
+        data-time="5">
+        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 5/5 ·
+              องค์กร</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr"
+                data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
+          <div class="levels"><span class="done">L</span><span class="done">E</span><span class="done">V</span><span
+              class="done">E</span><span class="on">L</span></div>
+        </div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr" data-s="chart" data-z="5"></i></div>
+          <h2>Lead with Data <span class="sub">ใช้ข้อมูลตัดสินใจ และปรับปรุงอย่างต่อเนื่อง</span></h2>
+        </div>
+        <div class="cols lvl">
+          <div style="display:grid;gap:18px;align-content:start">
+            <div class="quote">"ความรู้สึกบอกว่าพร้อม แต่ข้อมูลบอกว่าพร้อมจริงไหม"</div>
+            <ul class="clean">
+              <li>รายงานด้วยตัวเลข: pass rate, bug ตาม severity</li>
+              <li>ดู bug trend และหา root cause</li>
+              <li>ให้ความเห็น Go/No-Go ที่มีหลักฐานรองรับ</li>
+            </ul>
+            <div class="badge">🏅 PO ถาม QA ก่อนตัดสินใจ release</div>
+          </div>
+          <div style="display:grid;gap:16px;align-content:start">
+            <div class="card"><span class="label">RELEASE DASHBOARD <span class="example">· ตัวอย่าง</span></span>
+              <div class="tiles">
+                <div class="tile-s">
+                  <div class="n">96%</div>
+                  <div class="k">Pass rate</div>
+                </div>
+                <div class="tile-s">
+                  <div class="n">0</div>
+                  <div class="k">Critical bugs</div>
+                </div>
+                <div class="tile-s">
+                  <div class="n w">4</div>
+                  <div class="k">Minor bugs (open)</div>
+                </div>
+                <div class="tile-s">
+                  <div class="n">2%</div>
+                  <div class="k">Defect leakage</div>
+                </div>
+              </div>
+            </div>
+            <div class="card report"><span class="label">รายงานสถานะ</span>
+              <p class="bad">❌ "เทสเสร็จแล้วครับ"</p>
+              <p class="good frag" style="margin-top:8px">✅ "Pass 96% · Critical 0 · Minor 4 มี workaround แล้ว · พร้อม
+                Go"</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 14 -->
+      <section class="slide" data-notes="สรุปทั้ง 5 ด่านในตารางเดียว แต่ละด่านขยายขอบเขตจากตัวเองไปถึงองค์กร"
+        data-time="1.5">
+        <div class="hud"><span class="tag">STAGE CLEAR</span><span>RECAP</span></div>
+        <h2>เส้นทางการเติบโต</h2>
+        <table class="t recap">
+          <tr>
+            <th>Level</th>
+            <th>โฟกัส</th>
+            <th>จาก</th>
+            <th>สู่</th>
+          </tr>
+          <tr>
+            <td><i class="spr" data-s="book" data-z="2" style="margin-right:10px"></i>L · Learn</td>
+            <td>ตัวเอง</td>
+            <td class="muted">ผู้ทำตาม test case</td>
+            <td>ผู้เข้าใจผลิตภัณฑ์</td>
+          </tr>
+          <tr>
+            <td><i class="spr" data-s="clock" data-z="2" style="margin-right:10px"></i>E · Early</td>
+            <td>กระบวนการ</td>
+            <td class="muted">ผู้รอรับงาน</td>
+            <td>ผู้ป้องกันบั๊ก</td>
+          </tr>
+          <tr>
+            <td><i class="spr" data-s="target" data-z="2" style="margin-right:10px"></i>V · Validate</td>
+            <td>การทดสอบ</td>
+            <td class="muted">ผู้เทสทุกอย่าง</td>
+            <td>ผู้เทสอย่างมีกลยุทธ์</td>
+          </tr>
+          <tr>
+            <td><i class="spr" data-s="team" data-z="2" style="margin-right:10px"></i>E · Empower</td>
+            <td>ทีม</td>
+            <td class="muted">ผู้เฝ้าประตู</td>
+            <td>โค้ชด้านคุณภาพ</td>
+          </tr>
+          <tr>
+            <td><i class="spr" data-s="chart" data-z="2" style="margin-right:10px"></i>L · Lead</td>
+            <td>องค์กร</td>
+            <td class="muted">ผู้รายงานผล</td>
+            <td>ผู้ช่วยตัดสินใจ</td>
+          </tr>
+        </table>
+      </section>
+
+      <!-- 15 -->
+      <section class="slide"
+        data-notes="ให้ทุกคนเลือก 1 ด่านและ 1 action ของตัวเอง คิดในใจหรือเขียน Post-it ก็ได้ แล้วบอกเพื่อนในทีม 1 คนให้ช่วยติดตาม"
+        data-time="1.5">
+        <div class="hud"><span class="tag">NEXT QUEST</span><span>CALL TO ACTION</span></div>
+        <h2>Next Quest: เริ่มพรุ่งนี้ได้เลย</h2>
+        <div class="steps-q" style="margin-block:auto">
+          <div class="s"><b>1</b><span>เลือก <span class="gold">1 ด่าน</span> ที่จะ Level Up ในเดือนนี้</span></div>
+          <div class="s"><b>2</b><span>เขียน <span class="gold">1 action</span> ที่ทำได้ทันที</span></div>
+          <div class="s"><b>3</b><span>บอก <span class="gold">เพื่อนในทีม 1 คน</span> ให้ช่วยติดตาม</span></div>
+        </div>
+        <i class="spr deco" data-s="hero" data-z="9" style="right:150px;bottom:26px"></i>
+        <i class="spr deco bob" data-s="star" data-z="5" style="right:110px;top:150px"></i>
+        <i class="spr deco bob d2" data-s="coin" data-z="5" style="right:300px;top:210px"></i>
+      </section>
+
+      <!-- 16 -->
+      <section class="slide" data-notes="พูดช้า ๆ แล้วหยุดค้างให้ผู้ฟังได้คิดสักครู่" data-time="0.5">
+        <div class="hud"><span class="tag">FINAL WORDS</span><span></span></div>
+        <div class="center">
+          <i class="spr bob" data-s="trophy" data-z="6"></i>
+          <p class="closing">"MVQ(A) ไม่ใช่คนที่หาบั๊กได้มากที่สุด แต่เป็นคนที่ทำให้ทีม<span
+              class="gold">ส่งของที่มีคุณภาพได้อย่างมั่นใจที่สุด</span>"</p>
+          <p class="muted" style="font-size:24px">MVP ทำให้ทีมชนะ · MVQ(A) ทำให้ทีมมั่นใจ</p>
+        </div>
+      </section>
+
+      <!-- 17 -->
+      <section class="slide"
+        data-notes="ปลดล็อกตัว (A) ที่ล็อกไว้ในสไลด์ 7 วงเล็บหายไปกลายเป็น MVQA จากนั้นเปิด Q&A และค้างหน้านี้ไว้ เวลาช่วงนี้ยืดหยุ่นได้"
+        data-time="3">
+        <div class="hud"><span class="tag">GAME CLEAR</span><span>🏆</span></div>
+        <div class="center">
+          <p class="unlock" style="display:flex;align-items:center;gap:14px"><i class="spr" data-s="unlock"
+              data-z="3"></i>ACHIEVEMENT UNLOCKED</p>
+          <p class="unlock-big">MVQ<span class="a">A</span></p>
+          <h2 style="font-size:40px">Q &amp; A · Thank you!</h2>
+          <p class="muted" style="font-size:20px">นิภาพร จันต๊ะวงค์ (เมย์) · Quality Assurance · PDKM</p>
+        </div>
+        <i class="spr deco" data-s="hero" data-z="9" style="left:110px;bottom:26px"></i>
+        <i class="spr deco bob" data-s="trophy" data-z="8" style="right:120px;bottom:40px"></i>
+        <i class="spr deco bob d1" data-s="star" data-z="5" style="left:150px;top:120px"></i>
+        <i class="spr deco bob d2" data-s="star" data-z="4" style="right:170px;top:110px"></i>
+        <i class="spr deco bob d3" data-s="coin" data-z="5" style="right:330px;top:200px"></i>
+        <i class="spr deco bob d1" data-s="coin" data-z="5" style="left:330px;top:220px"></i>
+      </section>
+
+    </div>
   </div>
-</div>
 
-<script>
-(function () {
-  const P = { k:'#0b0b22', y:'#ffc53d', o:'#c98a12', l:'#fff1b0', w:'#ffffff', c:'#52d6ef', d:'#2b8fb0', r:'#ff6f7d', e:'#b33a4a', g:'#6be4a6', h:'#2f9e6a', p:'#8b6cf0', s:'#ffcf9e', n:'#7a4b2a', m:'#8886b8', b:'#3a3c7a' };
-  const S = {
-    trophy: ["..kkkkkkkkkkkk..","yykllyyyyyyyokyy","y.kllyyyyyyyok.y","y.kllyyyyyyyok.y",".ykllyyyyyyyoky.","..klyyyyyyyyok..","...kyyyyyyyok...","....kyyyyyok....","......kyok......","......kyok......",".....kkyokk.....","....kyyyyyyk....","...koooooooook..","...kkkkkkkkkk..."],
-    bug: ["..k......k..","...k....k...","...kkkkkk...","k.kkwkkwkk.k",".krrrrkrrrrk","kkrwrrkrrwrk",".krrrrkrrrrk","k.krrrkrrrk.","..kkkkkkkk..",".k........k."],
-    heart: [".kk.kk.","kwrkrrk","krrrrrk",".krrrk.","..krk..","...k..."],
-    coin: ["..kkkk..",".kyyyyk.","kyllyyok","kylyyyok","kylyyyok","kyyyyyok",".kyoook.","..kkkk.."],
-    star: ["....y....","...yyy...","yyyyyyyyy",".yyyyyyy.","..yyyyy..",".yyy.yyy.","yy.....yy"],
-    shield: ["kkkkkkkkkkkk","kcwcccccccdk","kcwcccccccdk","kcccccccwcdk","kccccccwccdk","kcwcccwcccdk","kccwcwccccdk","kcccwcccccdk",".kcccccccdk.",".kcccccccdk.","..kcccccdk..","...kcccdk...","....kcdk....",".....kk....."],
-    magnifier: ["..kkkk......",".kwccck.....","kwccccck....","kcccccck....","kcccccck....","kcccccck....",".kcccck.....","..kkkknn....",".......nn...","........nn..",".........nn.","..........n."],
-    book: [".kkkkk..kkkkk.","kwwwwwkkwwwwwk","kwmmmwkkwmmmwk","kwwwwwkkwwwwwk","kwmmmmkkmmmmwk","kwwwwwkkwwwwwk","kwmmmwkkwmmwwk","kwwwwwkkwwwwwk","kkkkkkkkkkkkkk","kppppppppppppk",".kkkkkkkkkkkk."],
-    clock: ["...kkkkkk...","..kwwwwwwk..",".kwwwkwwwwk.","kwwwwkwwwwwk","kwwwwkwwwwwk","kwwwwkkkkwwk","kwwwwwwwwwwk","kwwwwwwwwwwk",".kwwwwwwwwk.","..kwwwwwwk..","...kkkkkk...","..k......k.."],
-    target: ["...kkkkk...",".kkrrrrrkk.",".krwwwwwrk.","krwrrrrrwrk","krwrwwwrwrk","krwrwrwrwrk","krwrwwwrwrk","krwrrrrrwrk",".krwwwwwrk.",".kkrrrrrkk.","...kkkkk..."],
-    team: [".......kkk.......",".kkk..ksssk..kkk.","ksssk.ksssk.ksssk","ksssk..kkk..ksssk",".kkk.kccccck.kkk.","kgggkkccccckkgggk","kgggkkccccckkgggk","kgggkkccccckkgggk","kkkkkkkkkkkkkkkkk"],
-    chart: ["........kkk.","........kgk.","........kgk.","....kkk.kgk.","....kck.kgk.","....kck.kgk.","kkk.kck.kgk.","kyk.kck.kgk.","kyk.kck.kgk.","kyk.kck.kgk.","kkkkkkkkkkkk"],
-    lock: ["..kkkkkk..",".kmmmmmmk.",".kmk..kmk.",".kmk..kmk.","kkkkkkkkkk","kyyyyyyyok","kyyykkyyok","kyyykkyyok","kyyyykyyok","kyyyyyyyok","kooooooook","kkkkkkkkkk"],
-    unlock: ["..kkkkkk..",".kmmmmmmk.",".kmk..kmk.",".kmk..kmk.",".kmk......","kkkkkkkkkk","kggggggghk","kgggkkgghk","kgggkkgghk","kggggkgghk","kggggggghk","khhhhhhhhk","kkkkkkkkkk"],
-    hero: ["...kkkkkk...","..knnnnnnk..",".knnnnnnnnk.",".knsskssksk.",".kssssssssk.","..kssrrssk..","...kkkkkk...","..kcccccck..",".kcccwwccck.","ksccccccccsk","ksccccccccsk",".kcccccccck.","..kppppppk..","..kppkkppk..","..kkk..kkk.."],
-    controller: ["..kkkkkkkkkkkk..",".kmmmmmmmmmmmmk.","kmmkmmmmmmmmrmmk","kmkkkmmmmmmrmcmk","kmmkmmmmmmmmcmmk","kmmmmmmmmmmmmmmk","kmmmmkkkkkkmmmmk",".kmmk......kmmk.","..kk........kk.."],
-    cloud: ["....wwww......","..wwwwwwww....",".wwwwwwwwwwww.","wwwwwwwwwwwwww",".wwwwwwwwwwww."]
-  };
-  function svg(name, z) {
-    const rows = S[name]; if (!rows) return '';
-    const w = Math.max.apply(null, rows.map(r => r.length)), h = rows.length;
-    let out = '';
-    rows.forEach((row, y) => { for (let x = 0; x < row.length; x++) { const c = P[row[x]]; if (c) out += '<rect x="' + x + '" y="' + y + '" width="1.02" height="1.02" fill="' + c + '"/>'; } });
-    return '<svg width="' + w * z + '" height="' + h * z + '" viewBox="0 0 ' + w + ' ' + h + '" aria-hidden="true">' + out + '</svg>';
-  }
-  document.querySelectorAll('.spr[data-s]').forEach(el => { el.innerHTML = svg(el.dataset.s, +el.dataset.z || 4); });
-  // stars
-  const scene = document.querySelector('.scene');
-  let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
-  for (let i = 0; i < 40; i++) {
-    const st = document.createElement('i'); st.className = 'star';
-    st.style.left = Math.round(rnd() * 1270) + 'px'; st.style.top = Math.round(rnd() * 520) + 'px';
-    st.style.animationDelay = (rnd() * 3).toFixed(2) + 's';
-    if (rnd() > .7) { st.style.width = st.style.height = '6px'; }
-    scene.appendChild(st);
-  }
-})();
-</script>
+  <script>
+    (function () {
+      const P = { k: '#0b0b22', y: '#ffc53d', o: '#c98a12', l: '#fff1b0', w: '#ffffff', c: '#52d6ef', d: '#2b8fb0', r: '#ff6f7d', e: '#b33a4a', g: '#6be4a6', h: '#2f9e6a', p: '#8b6cf0', s: '#ffcf9e', n: '#7a4b2a', m: '#8886b8', b: '#3a3c7a' };
+      const S = {
+        trophy: ["..kkkkkkkkkkkk..", "yykllyyyyyyyokyy", "y.kllyyyyyyyok.y", "y.kllyyyyyyyok.y", ".ykllyyyyyyyoky.", "..klyyyyyyyyok..", "...kyyyyyyyok...", "....kyyyyyok....", "......kyok......", "......kyok......", ".....kkyokk.....", "....kyyyyyyk....", "...koooooooook..", "...kkkkkkkkkk..."],
+        bug: ["..k......k..", "...k....k...", "...kkkkkk...", "k.kkwkkwkk.k", ".krrrrkrrrrk", "kkrwrrkrrwrk", ".krrrrkrrrrk", "k.krrrkrrrk.", "..kkkkkkkk..", ".k........k."],
+        heart: [".kk.kk.", "kwrkrrk", "krrrrrk", ".krrrk.", "..krk..", "...k..."],
+        coin: ["..kkkk..", ".kyyyyk.", "kyllyyok", "kylyyyok", "kylyyyok", "kyyyyyok", ".kyoook.", "..kkkk.."],
+        star: ["....y....", "...yyy...", "yyyyyyyyy", ".yyyyyyy.", "..yyyyy..", ".yyy.yyy.", "yy.....yy"],
+        shield: ["kkkkkkkkkkkk", "kcwcccccccdk", "kcwcccccccdk", "kcccccccwcdk", "kccccccwccdk", "kcwcccwcccdk", "kccwcwccccdk", "kcccwcccccdk", ".kcccccccdk.", ".kcccccccdk.", "..kcccccdk..", "...kcccdk...", "....kcdk....", ".....kk....."],
+        magnifier: ["..kkkk......", ".kwccck.....", "kwccccck....", "kcccccck....", "kcccccck....", "kcccccck....", ".kcccck.....", "..kkkknn....", ".......nn...", "........nn..", ".........nn.", "..........n."],
+        book: [".kkkkk..kkkkk.", "kwwwwwkkwwwwwk", "kwmmmwkkwmmmwk", "kwwwwwkkwwwwwk", "kwmmmmkkmmmmwk", "kwwwwwkkwwwwwk", "kwmmmwkkwmmwwk", "kwwwwwkkwwwwwk", "kkkkkkkkkkkkkk", "kppppppppppppk", ".kkkkkkkkkkkk."],
+        clock: ["...kkkkkk...", "..kwwwwwwk..", ".kwwwkwwwwk.", "kwwwwkwwwwwk", "kwwwwkwwwwwk", "kwwwwkkkkwwk", "kwwwwwwwwwwk", "kwwwwwwwwwwk", ".kwwwwwwwwk.", "..kwwwwwwk..", "...kkkkkk...", "..k......k.."],
+        target: ["...kkkkk...", ".kkrrrrrkk.", ".krwwwwwrk.", "krwrrrrrwrk", "krwrwwwrwrk", "krwrwrwrwrk", "krwrwwwrwrk", "krwrrrrrwrk", ".krwwwwwrk.", ".kkrrrrrkk.", "...kkkkk..."],
+        team: [".......kkk.......", ".kkk..ksssk..kkk.", "ksssk.ksssk.ksssk", "ksssk..kkk..ksssk", ".kkk.kccccck.kkk.", "kgggkkccccckkgggk", "kgggkkccccckkgggk", "kgggkkccccckkgggk", "kkkkkkkkkkkkkkkkk"],
+        chart: ["........kkk.", "........kgk.", "........kgk.", "....kkk.kgk.", "....kck.kgk.", "....kck.kgk.", "kkk.kck.kgk.", "kyk.kck.kgk.", "kyk.kck.kgk.", "kyk.kck.kgk.", "kkkkkkkkkkkk"],
+        lock: ["..kkkkkk..", ".kmmmmmmk.", ".kmk..kmk.", ".kmk..kmk.", "kkkkkkkkkk", "kyyyyyyyok", "kyyykkyyok", "kyyykkyyok", "kyyyykyyok", "kyyyyyyyok", "kooooooook", "kkkkkkkkkk"],
+        unlock: ["..kkkkkk..", ".kmmmmmmk.", ".kmk..kmk.", ".kmk..kmk.", ".kmk......", "kkkkkkkkkk", "kggggggghk", "kgggkkgghk", "kgggkkgghk", "kggggkgghk", "kggggggghk", "khhhhhhhhk", "kkkkkkkkkk"],
+        hero: ["...kkkkkk...", "..knnnnnnk..", ".knnnnnnnnk.", ".knsskssksk.", ".kssssssssk.", "..kssrrssk..", "...kkkkkk...", "..kcccccck..", ".kcccwwccck.", "ksccccccccsk", "ksccccccccsk", ".kcccccccck.", "..kppppppk..", "..kppkkppk..", "..kkk..kkk.."],
+        controller: ["..kkkkkkkkkkkk..", ".kmmmmmmmmmmmmk.", "kmmkmmmmmmmmrmmk", "kmkkkmmmmmmrmcmk", "kmmkmmmmmmmmcmmk", "kmmmmmmmmmmmmmmk", "kmmmmkkkkkkmmmmk", ".kmmk......kmmk.", "..kk........kk.."],
+        cloud: ["....wwww......", "..wwwwwwww....", ".wwwwwwwwwwww.", "wwwwwwwwwwwwww", ".wwwwwwwwwwww."]
+      };
+      function svg(name, z) {
+        const rows = S[name]; if (!rows) return '';
+        const w = Math.max.apply(null, rows.map(r => r.length)), h = rows.length;
+        let out = '';
+        rows.forEach((row, y) => { for (let x = 0; x < row.length; x++) { const c = P[row[x]]; if (c) out += '<rect x="' + x + '" y="' + y + '" width="1.02" height="1.02" fill="' + c + '"/>'; } });
+        return '<svg width="' + w * z + '" height="' + h * z + '" viewBox="0 0 ' + w + ' ' + h + '" aria-hidden="true">' + out + '</svg>';
+      }
+      document.querySelectorAll('.spr[data-s]').forEach(el => { el.innerHTML = svg(el.dataset.s, +el.dataset.z || 4); });
+      // stars
+      const scene = document.querySelector('.scene');
+      let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+      for (let i = 0; i < 40; i++) {
+        const st = document.createElement('i'); st.className = 'star';
+        st.style.left = Math.round(rnd() * 1270) + 'px'; st.style.top = Math.round(rnd() * 520) + 'px';
+        st.style.animationDelay = (rnd() * 3).toFixed(2) + 's';
+        if (rnd() > .7) { st.style.width = st.style.height = '6px'; }
+        scene.appendChild(st);
+      }
+    })();
+  </script>
 
-<div class="notes" id="notes" hidden>
-  <span class="k" id="notesHead">SPEAKER NOTES</span>
-  <p id="notesText"></p>
-</div>
-
-<div class="controls">
-  <div class="xp"><span>XP</span><div class="bar"><div class="fill" id="fill"></div></div><span class="counter" id="counter">1 / 17</span></div>
-  <span class="hint">← → เปลี่ยนสไลด์ · N โน้ต · F เต็มจอ</span>
-  <div class="btns">
-    <button id="prev" type="button" aria-label="สไลด์ก่อนหน้า">← ก่อนหน้า</button>
-    <button id="next" type="button" aria-label="สไลด์ถัดไป">ถัดไป →</button>
-    <button id="notesBtn" type="button" aria-pressed="false">โน้ตผู้พูด</button>
-    <button id="fsBtn" type="button">เต็มจอ</button>
+  <div class="notes" id="notes" hidden>
+    <span class="k" id="notesHead">SPEAKER NOTES</span>
+    <p id="notesText"></p>
   </div>
-</div>
 
-<script>
-(function () {
-  const stage = document.getElementById('stage');
-  const viewport = document.getElementById('viewport');
-  const slides = Array.from(stage.querySelectorAll('.slide'));
-  const notes = document.getElementById('notes');
-  const notesText = document.getElementById('notesText');
-  const notesHead = document.getElementById('notesHead');
-  const notesBtn = document.getElementById('notesBtn');
-  const fill = document.getElementById('fill');
-  const counter = document.getElementById('counter');
-  let i = 0, step = 0;
+  <div class="controls">
+    <div class="xp"><span>XP</span>
+      <div class="bar">
+        <div class="fill" id="fill"></div>
+      </div><span class="counter" id="counter">1 / 17</span>
+    </div>
+    <span class="hint">← → เปลี่ยนสไลด์ · N โน้ต · F เต็มจอ</span>
+    <div class="btns">
+      <button id="prev" type="button" aria-label="สไลด์ก่อนหน้า">← ก่อนหน้า</button>
+      <button id="next" type="button" aria-label="สไลด์ถัดไป">ถัดไป →</button>
+      <button id="notesBtn" type="button" aria-pressed="false">โน้ตผู้พูด</button>
+      <button id="fsBtn" type="button">เต็มจอ</button>
+    </div>
+  </div>
 
-  const frags = s => Array.from(s.querySelectorAll('.frag'));
+  <script>
+    (function () {
+      const stage = document.getElementById('stage');
+      const viewport = document.getElementById('viewport');
+      const slides = Array.from(stage.querySelectorAll('.slide'));
+      const notes = document.getElementById('notes');
+      const notesText = document.getElementById('notesText');
+      const notesHead = document.getElementById('notesHead');
+      const notesBtn = document.getElementById('notesBtn');
+      const fill = document.getElementById('fill');
+      const counter = document.getElementById('counter');
+      let i = 0, step = 0;
 
-  function fit() {
-    const k = Math.min(viewport.clientWidth / 1280, viewport.clientHeight / 720) * 0.96;
-    stage.style.transform = 'translate(-50%, -50%) scale(' + k + ')';
-  }
+      const frags = s => Array.from(s.querySelectorAll('.frag'));
 
-  function show(n, revealAll) {
-    i = Math.max(0, Math.min(slides.length - 1, n));
-    slides.forEach((s, k) => s.classList.toggle('active', k === i));
-    const f = frags(slides[i]);
-    step = revealAll ? f.length : 0;
-    f.forEach((el, k) => el.classList.toggle('in', k < step));
-    counter.textContent = (i + 1) + ' / ' + slides.length;
-    fill.style.width = ((i + 1) / slides.length * 100) + '%';
-    const s = slides[i];
-    notesHead.textContent = 'SPEAKER NOTES · สไลด์ ' + (i + 1) + ' · ⏱ ' + s.dataset.time + ' นาที';
-    notesText.textContent = s.dataset.notes || '';
-    try { history.replaceState(null, '', '#s' + (i + 1)); } catch (e) {}
-  }
+      function fit() {
+        const k = Math.min(viewport.clientWidth / 1280, viewport.clientHeight / 720) * 0.96;
+        stage.style.transform = 'translate(-50%, -50%) scale(' + k + ')';
+      }
 
-  function next() {
-    const f = frags(slides[i]);
-    if (step < f.length) { f[step].classList.add('in'); step++; }
-    else if (i < slides.length - 1) show(i + 1, false);
-  }
-  function prev() {
-    const f = frags(slides[i]);
-    if (step > 0) { step--; f[step].classList.remove('in'); }
-    else if (i > 0) show(i - 1, true);
-  }
-  function toggleNotes() {
-    notes.hidden = !notes.hidden;
-    notesBtn.setAttribute('aria-pressed', String(!notes.hidden));
-    fit();
-  }
-  function toggleFs() {
-    try {
-      if (document.fullscreenElement) document.exitFullscreen();
-      else document.documentElement.requestFullscreen().catch(() => {});
-    } catch (e) {}
-  }
+      function show(n, revealAll) {
+        i = Math.max(0, Math.min(slides.length - 1, n));
+        slides.forEach((s, k) => s.classList.toggle('active', k === i));
+        const f = frags(slides[i]);
+        step = revealAll ? f.length : 0;
+        f.forEach((el, k) => el.classList.toggle('in', k < step));
+        counter.textContent = (i + 1) + ' / ' + slides.length;
+        fill.style.width = ((i + 1) / slides.length * 100) + '%';
+        const s = slides[i];
+        notesHead.textContent = 'SPEAKER NOTES · สไลด์ ' + (i + 1) + ' · ⏱ ' + s.dataset.time + ' นาที';
+        notesText.textContent = s.dataset.notes || '';
+        try { history.replaceState(null, '', '#s' + (i + 1)); } catch (e) { }
+      }
 
-  document.getElementById('next').addEventListener('click', next);
-  document.getElementById('prev').addEventListener('click', prev);
-  notesBtn.addEventListener('click', toggleNotes);
-  document.getElementById('fsBtn').addEventListener('click', toggleFs);
+      function next() {
+        const f = frags(slides[i]);
+        if (step < f.length) { f[step].classList.add('in'); step++; }
+        else if (i < slides.length - 1) show(i + 1, false);
+      }
+      function prev() {
+        const f = frags(slides[i]);
+        if (step > 0) { step--; f[step].classList.remove('in'); }
+        else if (i > 0) show(i - 1, true);
+      }
+      function toggleNotes() {
+        notes.hidden = !notes.hidden;
+        notesBtn.setAttribute('aria-pressed', String(!notes.hidden));
+        fit();
+      }
+      function toggleFs() {
+        try {
+          if (document.fullscreenElement) document.exitFullscreen();
+          else document.documentElement.requestFullscreen().catch(() => { });
+        } catch (e) { }
+      }
 
-  document.addEventListener('keydown', e => {
-    if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
-    switch (e.key) {
-      case 'ArrowRight': case 'PageDown': case ' ': case 'Enter': e.preventDefault(); next(); break;
-      case 'ArrowLeft': case 'PageUp': case 'Backspace': e.preventDefault(); prev(); break;
-      case 'Home': show(0, false); break;
-      case 'End': show(slides.length - 1, true); break;
-      case 'n': case 'N': toggleNotes(); break;
-      case 'f': case 'F': toggleFs(); break;
-    }
-  });
+      document.getElementById('next').addEventListener('click', next);
+      document.getElementById('prev').addEventListener('click', prev);
+      notesBtn.addEventListener('click', toggleNotes);
+      document.getElementById('fsBtn').addEventListener('click', toggleFs);
 
-  viewport.addEventListener('click', e => {
-    const r = viewport.getBoundingClientRect();
-    (e.clientX - r.left) < r.width / 3 ? prev() : next();
-  });
-  let tx = null;
-  viewport.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
-  viewport.addEventListener('touchend', e => {
-    if (tx === null) return;
-    const dx = e.changedTouches[0].clientX - tx; tx = null;
-    if (Math.abs(dx) > 40) { dx < 0 ? next() : prev(); }
-  });
+      document.addEventListener('keydown', e => {
+        if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+        switch (e.key) {
+          case 'ArrowRight': case 'PageDown': case ' ': case 'Enter': e.preventDefault(); next(); break;
+          case 'ArrowLeft': case 'PageUp': case 'Backspace': e.preventDefault(); prev(); break;
+          case 'Home': show(0, false); break;
+          case 'End': show(slides.length - 1, true); break;
+          case 'n': case 'N': toggleNotes(); break;
+          case 'f': case 'F': toggleFs(); break;
+        }
+      });
 
-  window.addEventListener('resize', fit);
-  document.addEventListener('fullscreenchange', fit);
+      viewport.addEventListener('click', e => {
+        const r = viewport.getBoundingClientRect();
+        (e.clientX - r.left) < r.width / 3 ? prev() : next();
+      });
+      let tx = null;
+      viewport.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+      viewport.addEventListener('touchend', e => {
+        if (tx === null) return;
+        const dx = e.changedTouches[0].clientX - tx; tx = null;
+        if (Math.abs(dx) > 40) { dx < 0 ? next() : prev(); }
+      });
 
-  const m = /^#s(\d+)$/.exec(location.hash);
-  show(m ? parseInt(m[1], 10) - 1 : 0, !!m);
-  fit();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
-})();
-</script>
+      window.addEventListener('resize', fit);
+      document.addEventListener('fullscreenchange', fit);
+
+      const m = /^#s(\d+)$/.exec(location.hash);
+      show(m ? parseInt(m[1], 10) - 1 : 0, !!m);
+      fit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    })();
+  </script>
 </body>
+
 </html>
