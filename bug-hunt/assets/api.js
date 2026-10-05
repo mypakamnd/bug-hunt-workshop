@@ -25,5 +25,26 @@ window.BugHuntApi = (function () {
     return res.json();
   }
 
-  return { enabled, session, insert, list };
+  // Reserve a team name for this session + round. Resolves {ok:true} or {ok:false, reason:'taken'};
+  // throws on network/server errors so the caller can ask the player to retry.
+  async function claimTeam(round, team) {
+    const name = team.trim();
+    const sameName = '?select=id&limit=1&session=eq.' + encodeURIComponent(session) +
+      '&round=eq.' + encodeURIComponent(round) + '&team=ilike.' + encodeURIComponent(name);
+    const prev = await fetch(base + '/rest/v1/findings' + sameName, { headers });
+    if (!prev.ok) throw new Error('check ' + prev.status);
+    if ((await prev.json()).length) return { ok: false, reason: 'taken' };
+    const res = await fetch(base + '/rest/v1/teams', {
+      method: 'POST',
+      headers: Object.assign({ Prefer: 'return=minimal' }, headers),
+      body: JSON.stringify({ session, round, team: name })
+    });
+    if (res.ok) return { ok: true };
+    if (res.status === 409) return { ok: false, reason: 'taken' };
+    // teams table not created yet: fall back to the findings check above
+    if (res.status === 404) return { ok: true, unchecked: true };
+    throw new Error('claim ' + res.status + ': ' + (await res.text()).slice(0, 200));
+  }
+
+  return { enabled, session, insert, list, claimTeam };
 })();

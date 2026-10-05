@@ -98,7 +98,11 @@
     catch (e) { area.value = text; area.hidden = false; area.focus(); area.select(); msg.textContent = 'คัดลอกอัตโนมัติไม่ได้ ข้อความถูกเลือกไว้แล้ว กด Ctrl/Cmd + C'; msg.className = 'msg bad'; }
   });
 
-  window.BugHuntFindings = { count: () => items.length };
+  window.BugHuntFindings = {
+    count: () => items.length,
+    // Clears only this browser's copy; answers already sent to the dashboard stay there.
+    reset: () => { items = []; save(); render(); $('fText').value = ''; $('fMsg').textContent = ''; $('copyMsg').textContent = ''; $('copyArea').hidden = true; }
+  };
   render();
   flush($('fTeam').value.trim());
 })();

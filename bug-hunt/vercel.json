@@ -5,6 +5,11 @@
       "source": "/full",
       "destination": "/workshop",
       "permanent": false
+    },
+    {
+      "source": "/join",
+      "destination": "/",
+      "permanent": false
     }
   ]
 }

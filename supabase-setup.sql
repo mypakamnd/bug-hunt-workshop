@@ -26,5 +26,29 @@ create policy "anyone can read" on public.findings
 
 grant select, insert on public.findings to anon;
 
+-- ชื่อทีม: จองได้ทีมละครั้งต่อ session + รอบ (ไม่สนตัวพิมพ์เล็กใหญ่และช่องว่างหัวท้าย)
+create table if not exists public.teams (
+  id          uuid primary key default gen_random_uuid(),
+  created_at  timestamptz not null default now(),
+  session     text not null check (char_length(session) between 1 and 80),
+  round       text not null check (round in ('icebreak', 'full')),
+  team        text not null check (char_length(btrim(team)) between 1 and 40),
+  team_key    text generated always as (lower(btrim(team))) stored,
+  unique (session, round, team_key)
+);
+
+alter table public.teams enable row level security;
+
+drop policy if exists "players can claim a team" on public.teams;
+create policy "players can claim a team" on public.teams
+  for insert to anon with check (true);
+
+drop policy if exists "anyone can read teams" on public.teams;
+create policy "anyone can read teams" on public.teams
+  for select to anon using (true);
+
+grant select, insert on public.teams to anon;
+
 -- ล้างคำตอบของรอบซ้อม (แก้ชื่อ session ให้ตรงก่อนรัน):
 -- delete from public.findings where session = 'level-up-2026-10-10';
+-- delete from public.teams    where session = 'level-up-2026-10-10';

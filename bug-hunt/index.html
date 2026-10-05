@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>QuickShift Bug Hunt</title>
+  <title>Bug Hunt Workshop Hub</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,109 +12,142 @@
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&family=Press+Start+2P&display=swap">
   <link rel="stylesheet" href="assets/style.css">
+  <style>
+    /* Projection page: two QR "doors" side by side; press 1 / 2 to enlarge one, 0 for both */
+    html, body { min-height: 100%; }
+    .join { max-width: 1280px; margin: 0 auto; padding-block: 28px 32px; padding-inline: 20px; display: grid; gap: 22px; }
+    .join-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 20px; }
+    .join-head .title span { font-size: 20px; }
+    .doors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+    body[data-show="ice"] .door[data-k="workshop"],
+    body[data-show="workshop"] .door[data-k="ice"] { display: none; }
+    body[data-show="ice"] .doors, body[data-show="workshop"] .doors { grid-template-columns: minmax(0, 1fr); max-width: 760px; margin-inline: auto; width: 100%; }
+    .door { background: var(--panel); border: 3px solid var(--line); border-radius: 14px; padding: 22px; display: grid; gap: 12px; justify-items: center; text-align: center; box-shadow: 6px 6px 0 rgba(0,0,0,.35); cursor: pointer; min-width: 0; }
+    .door:hover, .door:focus-visible { border-color: var(--gold); }
+    .door[data-k="ice"] { border-top: 8px solid var(--cyan); }
+    .door[data-k="workshop"] { border-top: 8px solid var(--gold); }
+    .round { font-family: var(--font-pixel); font-size: 12px; letter-spacing: .06em; }
+    .door[data-k="ice"] .round { color: var(--cyan); }
+    .door[data-k="workshop"] .round { color: var(--gold); }
+    .door h2 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: clamp(26px, 3.4vw, 40px); line-height: 1.2; }
+    .door .when { margin: 0; color: var(--muted); font-size: 17px; }
+    .qr { background: #ffffff; border-radius: 12px; padding: 16px; width: min(100%, 46vh, 420px); aspect-ratio: 1; display: grid; place-items: center; box-shadow: 0 0 0 4px var(--bg); }
+    body[data-show="ice"] .qr, body[data-show="workshop"] .qr { width: min(100%, 62vh, 620px); }
+    .qr svg { width: 100%; height: 100%; display: block; }
+    .qr .qr-fail { color: #1c2230; font-size: 15px; }
+    .url { font-family: var(--font-mono); font-size: clamp(15px, 1.6vw, 20px); color: var(--ink); overflow-wrap: anywhere; }
+    .switch { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+    .switch button { background: var(--panel); color: var(--muted); border: 2px solid var(--line); border-radius: 8px; padding: 8px 16px; font-family: var(--font-display); font-size: 15px; }
+    .switch button[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+    .keys { text-align: center; font-size: 13px; color: var(--muted); }
+    .hub { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 18px; margin-top: 6px; }
+    .hub-group { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; background: var(--panel); border: 2px solid var(--line); border-radius: 12px; padding: 14px; min-width: 0; }
+    .hub-label { width: 100%; font-family: var(--font-display); font-size: 14px; color: var(--muted); }
+    .hub-link { flex: 1 1 150px; display: grid; gap: 2px; text-decoration: none; color: var(--ink); background: var(--panel-2); border: 2px solid var(--line); border-radius: 10px; padding: 10px 14px; box-shadow: 3px 3px 0 rgba(0,0,0,.3); min-width: 0; }
+    .hub-link b { font-family: var(--font-display); font-weight: 500; font-size: 17px; }
+    .hub-link span { font-size: 13px; color: var(--muted); }
+    .hub-link:hover, .hub-link:focus-visible { border-color: var(--gold); transform: translate(-1px, -1px); }
+    .hub-link.ice { border-color: var(--cyan); } .hub-link.ws { border-color: var(--gold); }
+    @media (max-width: 760px) { .hub { grid-template-columns: minmax(0, 1fr); } }
+    @media (max-width: 760px) { .doors { grid-template-columns: minmax(0, 1fr); } .keys { display: none; } }
+  </style>
 </head>
 
-<body data-tab="spec">
-  <div class="timer-fixed" data-timer aria-live="off"></div>
-  <div class="wrap">
-    <header class="top">
-      <div class="title">
-        <h1>BUG HUNT</h1><span>ice breaking ก่อนเริ่ม session</span>
-      </div>
-      <div class="mission">
-        <div><b>1</b><span>อ่านว่า<strong>ระบบ QuickShift</strong> ทำอะไรได้บ้าง</span></div>
-        <div><b>2</b><span>ลองใช้แอปให้เหมือนเป็นผู้ใช้จริง</span></div>
-        <div><b>3</b><span>เจออะไร<strong>แปลก ไม่ตรง หรือสงสัย</strong> บันทึกไว้ใน "สิ่งที่เจอ"</span></div>
-        <div><b>4</b><span>มีเวลา 10 นาที ทีมที่เจอมากที่สุดชนะ 🏆</span></div>
-      </div>
+<body data-show="both">
+  <main class="join">
+    <header class="join-head">
+      <div class="title"><h1>BUG HUNT</h1><span>สแกนเพื่อเข้าเล่น</span></div>
+      <span class="tag">LEVEL UP! · SURVIVE &amp; THRIVE</span>
     </header>
 
-    <nav class="mtabs" role="tablist" aria-label="ส่วนของหน้า">
-      <div class="timer-mini" data-timer></div>
-      <button type="button" role="tab" data-t="spec">ระบบ</button>
-      <button type="button" role="tab" data-t="app">แอป</button>
-      <button type="button" role="tab" data-t="board">สิ่งที่เจอ <span id="mcount"></span></button>
+    <div class="doors">
+      <section class="door" data-k="ice" tabindex="0" aria-label="ขยาย QR รอบ Ice breaking">
+        <span class="round">ROUND 1 · ICE BREAKING</span>
+        <h2>หาให้เจอ ว่าอะไรแปลก</h2>
+        <p class="when">ก่อนเริ่ม session · 10 นาที</p>
+        <div class="qr" data-path="/ice-breaking"></div>
+        <div class="url" data-url-for="/ice-breaking"></div>
+      </section>
+      <section class="door" data-k="workshop" tabindex="0" aria-label="ขยาย QR รอบ Workshop">
+        <span class="round">ROUND 2 · WORKSHOP</span>
+        <h2>Bug หรือ Req ไม่ชัด?</h2>
+        <p class="when">หลังจบ 2 หัวข้อ · 10 นาที</p>
+        <div class="qr" data-path="/workshop"></div>
+        <div class="url" data-url-for="/workshop"></div>
+      </section>
+    </div>
+
+    <div class="switch" role="group" aria-label="เลือก QR ที่จะแสดง">
+      <button type="button" data-set="both">ทั้งสองรอบ</button>
+      <button type="button" data-set="ice">Ice breaking</button>
+      <button type="button" data-set="workshop">Workshop</button>
+    </div>
+    <p class="keys">กด 1 = Ice breaking · 2 = Workshop · 0 = ทั้งสองรอบ · F = เต็มจอ</p>
+
+    <nav class="hub" aria-label="ทุกหน้าของ workshop">
+      <div class="hub-group">
+        <span class="hub-label">ผู้เล่น</span>
+        <a class="hub-link ice" href="ice-breaking"><b>🔍 Ice breaking</b><span>รอบ 1 · ก่อนเริ่ม session</span></a>
+        <a class="hub-link ws" href="workshop"><b>🐞 Workshop</b><span>รอบ 2 · หลังจบ 2 หัวข้อ</span></a>
+      </div>
+      <div class="hub-group">
+        <span class="hub-label">ผู้พูด / ผู้จัด</span>
+        <a class="hub-link" href="slides"><b>🎮 สไลด์หัวข้อ 1</b><span>Level Up! MVQ(A)</span></a>
+        <a class="hub-link" href="slides-2"><b>👟 สไลด์หัวข้อ 2</b><span>Survive &amp; Thrive</span></a>
+        <a class="hub-link" href="dashboard"><b>📊 Dashboard</b><span>คำตอบทุกทีม · เฉลย</span></a>
+      </div>
     </nav>
 
-    <main class="bench">
-      <!-- ABOUT THE SYSTEM (no requirements in the ice-breaking round) -->
-      <section aria-labelledby="spec-h" data-sec="spec">
-        <div class="col-head">
-          <h2 id="spec-h">รู้จักระบบ</h2><span class="tag">QUICKSHIFT</span>
-        </div>
-        <article class="spec">
-          <div class="doc-meta"><span>QuickShift ·
-              แอปหางานพาร์ทไทม์รายวัน</span><span>สำหรับคนที่อยากหางานเสริมเป็นรายวัน เช่น นักศึกษา หรือฟรีแลนซ์</span>
-          </div>
-          <h3>ระบบนี้ทำอะไรได้บ้าง</h3>
-          <ol>
-            <li><code>หางาน</code><span>ดูรายการงานพาร์ทไทม์ที่เปิดรับ ค้นหา และเรียงลำดับงานได้</span></li>
-            <li><code>ดูงาน</code><span>กดเข้าไปดูรายละเอียดงาน เช่น ค่าจ้าง สถานที่ วันเริ่มงาน
-                และวันปิดรับสมัคร</span></li>
-            <li><code>สมัคร</code><span>กรอกข้อมูลของตัวเองเพื่อสมัครงานที่สนใจ</span></li>
-            <li><code>ติดตาม</code><span>ดูงานที่สมัครไว้ในแท็บ "งานที่สมัคร" และยกเลิกการสมัครได้</span></li>
-          </ol>
-          <h3>ลองเล่นแบบนี้</h3>
-          <ol>
-            <li><code>1</code><span>ลองหางานที่อยากทำ ด้วยวิธีที่คุณคิดว่าผู้ใช้จริงจะใช้</span></li>
-            <li><code>2</code><span>เลือกงาน 1–2 งาน แล้วลองสมัครดู</span></li>
-            <li><code>3</code><span>เข้าไปดูงานที่สมัครไว้ แล้วลองยกเลิก</span></li>
-            <li><code>4</code><span>อะไรที่ดูแปลก ไม่สมเหตุสมผล หรือทำให้สงสัย จดไว้ใน "สิ่งที่เจอ"</span></li>
-          </ol>
-        </article>
-      </section>
-
-      <!-- SYSTEM UNDER TEST -->
-      <section class="phone-col" aria-labelledby="app-h" data-sec="app">
-        <div class="col-head">
-          <h2 id="app-h">ระบบที่ต้องทดสอบ</h2><span class="tag">QUICKSHIFT APP</span>
-        </div>
-        <div class="phone">
-          <div class="screen" id="screen"></div>
-        </div>
-        <div class="reset-row"><button class="reset-btn" type="button" id="appReset"><span aria-hidden="true">↺</span>
-            รีเซ็ตแอป</button><span class="reset-hint">ล้างงานที่สมัครและกลับไปหน้าแรกของแอป</span></div>
-      </section>
-
-      <!-- FINDINGS -->
-      <section class="board" aria-labelledby="board-h" data-sec="board">
-        <div class="col-head">
-          <h2 id="board-h">สิ่งที่เจอ</h2><span class="tag" id="score"></span>
-        </div>
-
-        <div class="card">
-          <form class="f-form" id="fForm" data-round="icebreak" novalidate>
-            <label>ชื่อทีม / ชื่อเล่น<input id="fTeam" type="text" maxlength="40" placeholder="เช่น ทีมแมวส้ม"></label>
-            <label>เจออะไร<textarea id="fText" maxlength="600"
-                placeholder="เช่น ค้นหาแล้วไม่เจอ… / กดแล้วงงว่าทำไมเป็นแบบนี้…"></textarea></label>
-            <button class="submit" id="fSubmit" type="submit">บันทึก</button>
-            <div class="msg" id="fMsg" role="status"></div>
-          </form>
-        </div>
-
-        <div class="card">
-          <div class="col-head">
-            <h2 style="font-size:17px">รายการของฉัน</h2><button class="ghost" type="button"
-              id="copyBtn">คัดลอกทั้งหมด</button>
-          </div>
-          <p class="muted" id="syncNote" style="margin:0 0 10px;font-size:13px"></p>
-          <div class="feed" id="feed"></div>
-          <textarea id="copyArea" readonly hidden aria-label="ข้อความสำหรับคัดลอก"></textarea>
-          <div class="msg" id="copyMsg" role="status"></div>
-        </div>
-      </section>
-    </main>
     <footer class="site-foot">© 2026 Level Up!: Becoming Your Team's MVQ(A) · นิภาพร จันต๊ะวงค์ (เมย์)</footer>
-  </div>
-  <div class="gate" id="gate" hidden>
-    <div class="gate-card" id="gateBody" role="dialog" aria-modal="true" aria-label="เริ่มเกม"></div>
-  </div>
-  <script src="config.js"></script>
-  <script src="assets/api.js"></script>
-  <script src="assets/quickshift.js"></script>
-  <script src="assets/findings.js"></script>
-  <script src="assets/timer.js"></script>
-  <script src="assets/tabs.js"></script>
+  </main>
+
+  <script src="assets/vendor/qrcode.min.js"></script>
+  <script>
+    (function () {
+      // QR codes follow the address this page was opened from, so a new domain needs no edit.
+      const PROD = 'https://bug-hunt-workshop.vercel.app';
+      const base = /^https?:$/.test(location.protocol) ? location.origin : PROD;
+      const pretty = u => u.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+      document.querySelectorAll('.qr[data-path]').forEach(box => {
+        const url = base + box.dataset.path;
+        try {
+          const qr = qrcode(0, 'M');
+          qr.addData(url);
+          qr.make();
+          box.innerHTML = qr.createSvgTag({ cellSize: 8, margin: 0, scalable: true, alt: 'QR ไปที่ ' + url });
+        } catch (e) {
+          const p = document.createElement('p'); p.className = 'qr-fail'; p.textContent = 'สร้าง QR ไม่สำเร็จ ใช้ลิงก์ด้านล่างแทน';
+          box.replaceChildren(p);
+        }
+        document.querySelector('[data-url-for="' + box.dataset.path + '"]').textContent = pretty(url);
+      });
+
+      const buttons = Array.from(document.querySelectorAll('.switch button'));
+      function show(k) {
+        document.body.dataset.show = k;
+        buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.set === k)));
+        try { history.replaceState(null, '', k === 'both' ? location.pathname : '#' + k); } catch (e) {}
+      }
+      buttons.forEach(b => b.addEventListener('click', () => show(b.dataset.set)));
+      document.querySelectorAll('.door').forEach(d => {
+        const pick = () => show(document.body.dataset.show === d.dataset.k ? 'both' : d.dataset.k);
+        d.addEventListener('click', pick);
+        d.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+      });
+      document.addEventListener('keydown', e => {
+        if (e.target.closest && e.target.closest('button, .door') && (e.key === 'Enter' || e.key === ' ')) return;
+        if (e.key === '1') show('ice');
+        else if (e.key === '2') show('workshop');
+        else if (e.key === '0' || e.key === 'Escape') show('both');
+        else if (e.key === 'f' || e.key === 'F') {
+          try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); } catch (err) {}
+        }
+      });
+      const h = location.hash.slice(1);
+      show(h === 'ice' || h === 'workshop' ? h : 'both');
+    })();
+  </script>
 </body>
 
 </html>

@@ -225,3 +225,20 @@ body[data-game="over"] [data-sec="app"] .screen { filter: grayscale(.8); opacity
 @media (prefers-reduced-motion: reduce) { .reset-btn { transition: none; } }
 .reset-btn { width: 100%; max-width: 390px; justify-content: center; padding: 12px 22px; }
 @media (max-width: 860px) { .reset-btn { max-width: none; } }
+
+/* play again */
+.restart-btn { width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--gold); color: var(--bg); border: 0; border-radius: 10px; padding: 12px 18px; font-family: var(--font-display); font-weight: 600; font-size: 17px; box-shadow: 4px 4px 0 #6b3fd1; }
+.restart-btn span { font-size: 20px; line-height: 1; }
+.restart-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 #6b3fd1; }
+.gate-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.gate-btn.ghost-btn { background: transparent; color: var(--ink); border: 2px solid var(--line); box-shadow: none; }
+.gate-btn.ghost-btn:hover { border-color: var(--gold); color: var(--gold); transform: none; }
+
+/* team name on the start gate */
+.gate-field { display: grid; gap: 8px; width: min(420px, 100%); justify-items: center; }
+.gate-field label { font-family: var(--font-display); font-size: 16px; color: var(--muted); }
+.gate-field input { width: 100%; background: var(--bg); color: var(--ink); border: 2px solid var(--line); border-radius: 10px; padding: 11px 14px; font-size: 18px; text-align: center; }
+.gate-field input:focus { border-color: var(--gold); outline: none; }
+.gate-msg { margin: 0; min-height: 1.4em; font-size: 14px; color: var(--muted); }
+.gate-msg.bad { color: var(--red); }
+#fTeam[readonly] { opacity: .75; cursor: not-allowed; }

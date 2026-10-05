@@ -6,7 +6,8 @@
 
 | URL | ไฟล์ | ใช้เมื่อไร | ผู้เล่นบันทึกอะไร |
 |---|---|---|---|
-| `/` | `index.html` | Ice breaking ก่อนเริ่ม session | ชื่อทีม + "เจออะไร" |
+| `/` | `index.html` | หน้าหลัก ฉายขึ้นจอให้ผู้เข้าร่วมสแกน | QR Code เข้ารอบ Ice breaking และ Workshop (กด 1 / 2 / 0 สลับ, F เต็มจอ) และปุ่มไปทุกหน้า |
+| `/ice-breaking` | `ice-breaking.html` | Ice breaking ก่อนเริ่ม session | ชื่อทีม + "เจออะไร" |
 | `/workshop` | `workshop.html` | หลังจบ session | ชื่อทีม + Bug / Req ไม่ชัด + REQ ข้อไหน + รายละเอียด |
 | `/dashboard` | `dashboard.html` | ผู้จัดเปิดดูหรือฉายขึ้นจอ | ดูว่าใครส่งอะไร แยกรอบ กรองตามทีม/ประเภท คัดลอก CSV และปุ่ม 🔑 เฉลย (ต้องใช้รหัส) |
 | `/slides` | `slides.html` | หัวข้อ 1 | สไลด์ Level Up! 17 หน้า (← → เปลี่ยนสไลด์, N โน้ตผู้พูด, F เต็มจอ) |
@@ -19,11 +20,11 @@
 cd bug-hunt
 vercel --prod
 ```
-`vercel.json` เปิด `cleanUrls` ไว้ จึงเข้า `/workshop` และ `/dashboard` ได้โดยไม่ต้องพิมพ์ `.html` ส่วนลิงก์เก่า `/full` จะ redirect ไป `/workshop` ให้เอง
+`vercel.json` เปิด `cleanUrls` ไว้ จึงเข้า `/workshop` และ `/dashboard` ได้โดยไม่ต้องพิมพ์ `.html` ส่วนลิงก์เก่า `/full` จะ redirect ไป `/workshop` และ `/join` ไป `/` ให้เอง
 
 ## เชื่อมฐานข้อมูล (Supabase) เพื่อให้ dashboard เห็นคำตอบ
 1. สร้างโปรเจกต์ฟรีที่ supabase.com
-2. SQL Editor → รัน `supabase-setup.sql`
+2. SQL Editor → รัน `supabase-setup.sql` (รันซ้ำได้ ไม่ลบข้อมูลเดิม) จะได้ตาราง `findings` เก็บคำตอบ และ `teams` กันชื่อทีมซ้ำ
 3. Project Settings → API → คัดลอก **Project URL** และ **anon / publishable key**
 4. ใส่ใน `bug-hunt/config.js` แล้ว deploy ใหม่
 5. จัดรอบใหม่ให้เปลี่ยน `session` ใน `config.js` คำตอบแต่ละรอบจะแยกกัน
