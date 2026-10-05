@@ -1,5 +1,6 @@
 /* ---------------- Findings form (both game pages) ----------------
  * The form's data-round ("icebreak" | "full") decides which fields exist.
+ * "full" is the stored value for the Workshop round (/workshop); it stays "full" to match the database.
  * Every entry is kept in this browser; when Supabase is configured it is
  * also sent to the facilitator dashboard, and unsent entries retry later.
  */
@@ -89,7 +90,7 @@
   $('copyBtn').addEventListener('click', async () => {
     const team = $('fTeam').value.trim() || 'ไม่ระบุทีม';
     const head = full
-      ? 'Bug Hunt (Full) · ' + team + ' (🐞 ' + items.filter(i => i.kind === 'bug').length + ' · ❓ ' + items.filter(i => i.kind === 'req').length + ')'
+      ? 'Bug Hunt (Workshop) · ' + team + ' (🐞 ' + items.filter(i => i.kind === 'bug').length + ' · ❓ ' + items.filter(i => i.kind === 'req').length + ')'
       : 'Bug Hunt · ' + team + ' (เจอ ' + items.length + ' อย่าง)';
     const lines = [head].concat(items.map((it, i) => (i + 1) + '. ' + (full ? '[' + (it.kind === 'req' ? 'REQ ไม่ชัด' : 'BUG') + '] ' + it.req + ': ' : '') + it.detail));
     const text = lines.join('\n'), area = $('copyArea'), msg = $('copyMsg');

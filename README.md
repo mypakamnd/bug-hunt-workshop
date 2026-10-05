@@ -7,7 +7,7 @@
 | URL | ไฟล์ | ใช้เมื่อไร | ผู้เล่นบันทึกอะไร |
 |---|---|---|---|
 | `/` | `index.html` | Ice breaking ก่อนเริ่ม session | ชื่อทีม + "เจออะไร" |
-| `/full` | `full.html` | หลังจบ session | ชื่อทีม + Bug / Req ไม่ชัด + REQ ข้อไหน + รายละเอียด |
+| `/workshop` | `workshop.html` | หลังจบ session | ชื่อทีม + Bug / Req ไม่ชัด + REQ ข้อไหน + รายละเอียด |
 | `/dashboard` | `dashboard.html` | ผู้จัดเปิดดูหรือฉายขึ้นจอ | ดูว่าใครส่งอะไร แยกรอบ กรองตามทีม/ประเภท คัดลอก CSV และปุ่ม 🔑 เฉลย (ต้องใช้รหัส) |
 | `/slides` | `slides.html` | ระหว่าง session | สไลด์ Level Up! 17 หน้า (← → เปลี่ยนสไลด์, N โน้ตผู้พูด, F เต็มจอ) |
 
@@ -18,7 +18,7 @@
 cd bug-hunt
 vercel --prod
 ```
-`vercel.json` เปิด `cleanUrls` ไว้ จึงเข้า `/full` และ `/dashboard` ได้โดยไม่ต้องพิมพ์ `.html`
+`vercel.json` เปิด `cleanUrls` ไว้ จึงเข้า `/workshop` และ `/dashboard` ได้โดยไม่ต้องพิมพ์ `.html` ส่วนลิงก์เก่า `/full` จะ redirect ไป `/workshop` ให้เอง
 
 ## เชื่อมฐานข้อมูล (Supabase) เพื่อให้ dashboard เห็นคำตอบ
 1. สร้างโปรเจกต์ฟรีที่ supabase.com

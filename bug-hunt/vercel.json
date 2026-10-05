@@ -1,3 +1,10 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/full",
+      "destination": "/workshop",
+      "permanent": false
+    }
+  ]
 }
