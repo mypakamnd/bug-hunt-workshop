@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Bug Hunt Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&family=Press+Start+2P&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.dash-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; margin-bottom: 18px; }
+.dash-top .title span { font-size: 18px; }
+.live { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.live .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
+.live .dot.on { background: var(--green); box-shadow: 0 0 8px var(--green); }
+.live .dot.err { background: var(--red); }
+.rounds { display: inline-flex; gap: 6px; background: var(--panel); border: 2px solid var(--line); border-radius: 10px; padding: 4px; }
+.rounds button { background: none; border: 0; color: var(--muted); border-radius: 7px; padding: 8px 14px; font-family: var(--font-display); font-size: 15px; }
+.rounds button[aria-selected="true"] { background: var(--gold); color: var(--bg); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-block: 16px; }
+.stat { background: var(--panel); border: 2px solid var(--line); border-radius: 10px; padding: 12px 16px; }
+.stat .n { font-family: var(--font-pixel); font-size: 26px; color: var(--gold); font-variant-numeric: tabular-nums; line-height: 1.4; }
+.stat .n.bug { color: var(--red); } .stat .n.req { color: var(--cyan); }
+.stat .k { font-size: 13px; color: var(--muted); }
+.dash { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 860px) { .dash { grid-template-columns: minmax(0, 1fr); } }
+.lb-row { grid-template-columns: 28px minmax(0, 1fr) auto; cursor: pointer; border-radius: 6px; padding: 4px 6px; }
+.lb-row:hover, .lb-row.sel { background: var(--panel-2); }
+.lb-row .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.filters select, .filters input { background: var(--bg); color: var(--ink); border: 2px solid var(--line); border-radius: 8px; padding: 7px 10px; font-size: 14px; min-width: 0; }
+.filters input { flex: 1 1 180px; }
+.feed { max-height: none; }
+.item .h .tm { margin-left: auto; font-family: var(--font-mono); }
+.item .team { color: var(--ink); font-weight: 600; }
+.setup { max-width: 760px; }
+.setup ol { padding-left: 20px; display: grid; gap: 6px; }
+.setup code { font-family: var(--font-mono); font-size: 13px; color: var(--cyan); }
+.toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="dash-top">
+    <div class="title"><h1>BUG HUNT</h1><span>Dashboard ผู้จัด · <span id="sess"></span></span></div>
+    <div class="toolbar">
+      <div class="live"><span class="dot" id="dot"></span><span id="liveText">กำลังโหลด…</span></div>
+      <button class="ghost" type="button" id="refreshBtn">รีเฟรช</button>
+      <button class="ghost" type="button" id="csvBtn">คัดลอก CSV</button>
+    </div>
+  </header>
+
+  <section class="card setup" id="setup" hidden>
+    <h2 style="margin:0 0 8px;font-family:var(--font-display);font-weight:500;color:var(--gold)">ยังไม่ได้เชื่อมฐานข้อมูล</h2>
+    <p style="margin:0 0 8px">ตอนนี้หน้าเกมเก็บคำตอบไว้ในเครื่องผู้เล่นแต่ละคน dashboard จึงยังไม่มีข้อมูล เชื่อม Supabase ตามนี้:</p>
+    <ol>
+      <li>สร้างโปรเจกต์ฟรีที่ supabase.com</li>
+      <li>เปิด SQL Editor แล้วรันไฟล์ <code>supabase-setup.sql</code></li>
+      <li>เปิด Project Settings → API คัดลอก Project URL และ anon / publishable key</li>
+      <li>ใส่ทั้งสองค่าใน <code>bug-hunt/config.js</code> แล้ว deploy ใหม่</li>
+    </ol>
+  </section>
+
+  <div id="main" hidden>
+    <div class="rounds" role="tablist" aria-label="รอบ">
+      <button type="button" role="tab" data-r="icebreak">Ice breaking</button>
+      <button type="button" role="tab" data-r="full">Full version</button>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="dash">
+      <section class="card" aria-labelledby="lb-h">
+        <div class="col-head"><h2 id="lb-h" style="font-size:17px">Leaderboard</h2><span class="tag">กดชื่อเพื่อกรอง</span></div>
+        <div class="lb" id="lb"></div>
+      </section>
+      <section class="card" aria-labelledby="feed-h">
+        <div class="col-head"><h2 id="feed-h" style="font-size:17px">ทุกรายการ</h2><span class="tag" id="shown"></span></div>
+        <div class="filters">
+          <select id="fTeam" aria-label="กรองตามทีม"></select>
+          <select id="fKind" aria-label="กรองตามประเภท">
+            <option value="">ทุกประเภท</option><option value="bug">🐞 Bug</option><option value="req">❓ Req ไม่ชัด</option>
+          </select>
+          <input id="fSearch" type="search" placeholder="ค้นหาข้อความ" aria-label="ค้นหาข้อความ">
+        </div>
+        <div class="feed" id="feed"></div>
+        <textarea id="copyArea" readonly hidden aria-label="CSV สำหรับคัดลอก"></textarea>
+        <div class="msg" id="copyMsg" role="status"></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="assets/api.js"></script>
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const api = window.BugHuntApi;
+  $('sess').textContent = api.session;
+  if (!api.enabled) { $('setup').hidden = false; $('liveText').textContent = 'ยังไม่ได้ตั้งค่า'; return; }
+  $('main').hidden = false;
+
+  let rows = [], round = 'icebreak', teamSel = '';
+  try { round = localStorage.getItem('bh-dash-round') || 'icebreak'; } catch (e) {}
+  const node = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+  const tkey = t => (t || '').trim().toLowerCase();
+
+  function stat(n, k, cls) { const d = node('div', 'stat'); d.append(node('div', 'n' + (cls ? ' ' + cls : ''), String(n)), node('div', 'k', k)); return d; }
+
+  function render() {
+    const full = round === 'full';
+    document.querySelectorAll('.rounds button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.r === round)));
+    $('fKind').hidden = !full;
+    const data = rows.filter(r => r.round === round);
+
+    // teams
+    const teams = new Map();
+    data.forEach(r => {
+      const k = tkey(r.team); const t = teams.get(k) || { key: k, name: (r.team || '').trim() || 'ไม่ระบุ', total: 0, bug: 0, req: 0 };
+      t.total++; if (r.kind === 'bug') t.bug++; if (r.kind === 'req') t.req++; teams.set(k, t);
+    });
+    const ranked = [...teams.values()].sort((a, b) => b.total - a.total || a.name.localeCompare(b.name));
+    if (teamSel && !teams.has(teamSel)) teamSel = '';
+
+    // stats
+    const st = $('stats'); st.replaceChildren(stat(data.length, 'รายการทั้งหมด'), stat(teams.size, 'ทีม'));
+    if (full) st.append(stat(data.filter(r => r.kind === 'bug').length, 'Bug', 'bug'), stat(data.filter(r => r.kind === 'req').length, 'Req ไม่ชัด', 'req'));
+
+    // leaderboard
+    const lb = $('lb'); lb.replaceChildren();
+    if (!ranked.length) lb.append(node('p', 'muted', 'ยังไม่มีทีมส่งคำตอบในรอบนี้'));
+    ranked.forEach((t, i) => {
+      const r = node('div', 'lb-row' + (teamSel === t.key ? ' sel' : ''));
+      r.tabIndex = 0; r.setAttribute('role', 'button');
+      const sc = node('span', 'sc'); const b = node('b', null, String(t.total)); sc.append(b);
+      if (full) sc.append(document.createTextNode(' · 🐞' + t.bug + ' ❓' + t.req));
+      r.append(node('span', 'rk', String(i + 1)), node('span', 'nm', t.name), sc);
+      const pick = () => { teamSel = teamSel === t.key ? '' : t.key; render(); };
+      r.addEventListener('click', pick);
+      r.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+      lb.append(r);
+    });
+
+    // team filter options
+    const sel = $('fTeam'); const cur = teamSel; sel.replaceChildren();
+    const all = node('option', null, 'ทุกทีม'); all.value = ''; sel.append(all);
+    ranked.forEach(t => { const o = node('option', null, t.name); o.value = t.key; sel.append(o); });
+    sel.value = cur;
+
+    // feed
+    const kind = full ? $('fKind').value : '';
+    const q = $('fSearch').value.trim().toLowerCase();
+    const shown = data.filter(r => (!teamSel || tkey(r.team) === teamSel) && (!kind || r.kind === kind) && (!q || (r.detail || '').toLowerCase().includes(q) || (r.req || '').toLowerCase().includes(q)));
+    $('shown').textContent = shown.length + ' / ' + data.length;
+    const feed = $('feed'); feed.replaceChildren();
+    if (!shown.length) feed.append(node('p', 'muted', data.length ? 'ไม่มีรายการที่ตรงกับตัวกรอง' : 'ยังไม่มีคำตอบในรอบนี้ คำตอบจะขึ้นเองทุก 5 วินาที'));
+    shown.forEach(r => {
+      const box = node('div', 'item ' + (full ? (r.kind === 'req' ? 'req' : 'bug') : 'plain'));
+      const h = node('div', 'h');
+      h.append(node('span', 'team', (r.team || '').trim() || 'ไม่ระบุ'));
+      if (full) h.append(node('span', 'chip ' + (r.kind === 'req' ? 'req' : 'bug'), r.kind === 'req' ? 'REQ ไม่ชัด' : 'BUG'), node('span', 'chip ref', r.req || '-'));
+      h.append(node('span', 'tm', new Date(r.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' })));
+      box.append(h, node('p', null, r.detail || ''));
+      feed.append(box);
+    });
+  }
+
+  async function refresh() {
+    try {
+      rows = await api.list();
+      $('dot').className = 'dot on';
+      $('liveText').textContent = 'อัปเดตล่าสุด ' + new Date().toLocaleTimeString('th-TH') + ' · รีเฟรชทุก 5 วินาที';
+      render();
+    } catch (e) {
+      console.warn(e);
+      $('dot').className = 'dot err';
+      $('liveText').textContent = 'โหลดข้อมูลไม่สำเร็จ ตรวจ config.js และตาราง findings แล้วกดรีเฟรช';
+    }
+  }
+
+  document.querySelectorAll('.rounds button').forEach(b => b.addEventListener('click', () => {
+    round = b.dataset.r; teamSel = ''; try { localStorage.setItem('bh-dash-round', round); } catch (e) {} render();
+  }));
+  $('fTeam').addEventListener('change', e => { teamSel = e.target.value; render(); });
+  $('fKind').addEventListener('change', render);
+  $('fSearch').addEventListener('input', render);
+  $('refreshBtn').addEventListener('click', refresh);
+
+  $('csvBtn').addEventListener('click', async () => {
+    const esc = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+    const lines = [['time', 'round', 'team', 'kind', 'req', 'detail'].join(',')]
+      .concat(rows.map(r => [r.created_at, r.round, r.team, r.kind, r.req, r.detail].map(esc).join(',')));
+    const text = lines.join('\n'), area = $('copyArea'), msg = $('copyMsg');
+    try { await navigator.clipboard.writeText(text); msg.textContent = 'คัดลอก CSV ' + rows.length + ' รายการแล้ว วางใน Google Sheets ได้เลย'; msg.className = 'msg ok'; area.hidden = true; }
+    catch (e) { area.value = text; area.hidden = false; area.focus(); area.select(); msg.textContent = 'คัดลอกอัตโนมัติไม่ได้ ข้อความถูกเลือกไว้แล้ว กด Ctrl/Cmd + C'; msg.className = 'msg bad'; }
+  });
+
+  render();
+  refresh();
+  setInterval(() => { if (!document.hidden) refresh(); }, 5000);
+})();
+</script>
+</body>
+</html>

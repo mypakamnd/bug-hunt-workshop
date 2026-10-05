@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QuickShift Bug Hunt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&family=Press+Start+2P&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-tab="spec">
+<div class="wrap">
+  <header class="top">
+    <div class="title"><h1>BUG HUNT</h1><span>ice breaking ก่อนเริ่ม session</span></div>
+    <div class="mission">
+      <div><b>1</b><span>อ่าน <strong>Requirement</strong> ของแอป QuickShift</span></div>
+      <div><b>2</b><span>ลองใช้แอปให้เหมือนเป็นผู้ใช้จริง</span></div>
+      <div><b>3</b><span>เจออะไร<strong>แปลก ไม่ตรง หรือสงสัย</strong> บันทึกไว้ใน "สิ่งที่เจอ"</span></div>
+      <div><b>4</b><span>มีเวลา 10 นาที ทีมที่เจอมากที่สุดชนะ 🏆</span></div>
+    </div>
+  </header>
+
+  <nav class="mtabs" role="tablist" aria-label="ส่วนของหน้า">
+    <button type="button" role="tab" data-t="spec">Requirement</button>
+    <button type="button" role="tab" data-t="app">แอป</button>
+    <button type="button" role="tab" data-t="board">สิ่งที่เจอ <span id="mcount"></span></button>
+  </nav>
+
+  <main class="bench">
+    <!-- SPEC -->
+    <section aria-labelledby="spec-h" data-sec="spec">
+      <div class="col-head"><h2 id="spec-h">Requirement</h2><span class="tag">PRD v0.3</span></div>
+      <article class="spec">
+        <div class="doc-meta"><span>Product: QuickShift (หางานพาร์ทไทม์รายวัน)</span><span>Feature: ค้นหาและสมัครงาน · Status: Ready for test</span></div>
+        <h3>หน้ารายการงาน</h3>
+        <ol>
+          <li><code>REQ-01</code><span>แสดงงานทั้งหมด โดยเรียงจากงานล่าสุดก่อน</span></li>
+          <li><code>REQ-02</code><span>ผู้ใช้ค้นหางานได้จากชื่องานหรือสถานที่</span></li>
+          <li><code>REQ-03</code><span>ผู้ใช้เรียงงานตามค่าจ้างจากมากไปน้อยได้</span></li>
+          <li><code>REQ-04</code><span>แสดงจำนวนงานที่ตรงกับผลการค้นหา</span></li>
+          <li><code>REQ-05</code><span>ค่าจ้างทุกงานแสดงเป็นบาทต่อวัน</span></li>
+          <li><code>REQ-06</code><span>งานที่เริ่มเร็ว ๆ นี้ให้แสดงป้าย "ด่วน"</span></li>
+        </ol>
+        <h3>รายละเอียดงานและการสมัคร</h3>
+        <ol>
+          <li><code>REQ-07</code><span>งานที่ปิดรับสมัครแล้วต้องสมัครไม่ได้ และไม่ควรทำให้ผู้ใช้สับสน</span></li>
+          <li><code>REQ-08</code><span>ต้องกรอกชื่อ-นามสกุล</span></li>
+          <li><code>REQ-09</code><span>ผู้สมัครต้องมีอายุ 18 ปีขึ้นไป</span></li>
+          <li><code>REQ-10</code><span>เบอร์โทรศัพท์ต้องถูกต้อง</span></li>
+          <li><code>REQ-11</code><span>วันที่เริ่มงานได้ต้องไม่เป็นวันในอดีต</span></li>
+          <li><code>REQ-12</code><span>แนบ resume ได้ ขนาดไฟล์ต้องไม่ใหญ่เกินไป</span></li>
+          <li><code>REQ-13</code><span>สมัครงานเดิมซ้ำไม่ได้</span></li>
+          <li><code>REQ-14</code><span>เมื่อสมัครสำเร็จ ระบบจะแจ้งเตือนผู้ใช้</span></li>
+        </ol>
+        <h3>งานที่สมัคร</h3>
+        <ol>
+          <li><code>REQ-15</code><span>แสดงจำนวนงานที่สมัครไว้บนแท็บ</span></li>
+          <li><code>REQ-16</code><span>ผู้ใช้ยกเลิกการสมัครได้</span></li>
+          <li><code>REQ-17</code><span>ระบบต้องใช้งานง่ายและโหลดเร็ว</span></li>
+        </ol>
+      </article>
+    </section>
+
+    <!-- SYSTEM UNDER TEST -->
+    <section class="phone-col" aria-labelledby="app-h" data-sec="app">
+      <div class="col-head"><h2 id="app-h">ระบบที่ต้องทดสอบ</h2><span class="tag">QUICKSHIFT APP</span></div>
+      <div class="phone"><div class="screen" id="screen"></div></div>
+      <div class="reset-row"><button class="ghost" type="button" id="appReset">รีเซ็ตแอป</button></div>
+    </section>
+
+    <!-- FINDINGS -->
+    <section class="board" aria-labelledby="board-h" data-sec="board">
+      <div class="col-head"><h2 id="board-h">สิ่งที่เจอ</h2><span class="tag" id="score"></span></div>
+
+      <div class="card">
+        <form class="f-form" id="fForm" data-round="icebreak" novalidate>
+          <label>ชื่อทีม / ชื่อเล่น<input id="fTeam" type="text" maxlength="40" placeholder="เช่น ทีมแมวส้ม"></label>
+          <label>เจออะไร<textarea id="fText" maxlength="600" placeholder="เช่น ค้นหาแล้วไม่เจอ… / requirement ข้อนี้อ่านแล้วงง…"></textarea></label>
+          <button class="submit" id="fSubmit" type="submit">บันทึก</button>
+          <div class="msg" id="fMsg" role="status"></div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="col-head"><h2 style="font-size:17px">รายการของฉัน</h2><button class="ghost" type="button" id="copyBtn">คัดลอกทั้งหมด</button></div>
+        <p class="muted" id="syncNote" style="margin:0 0 10px;font-size:13px"></p>
+        <div class="feed" id="feed"></div>
+        <textarea id="copyArea" readonly hidden aria-label="ข้อความสำหรับคัดลอก"></textarea>
+        <div class="msg" id="copyMsg" role="status"></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="config.js"></script>
+<script src="assets/api.js"></script>
+<script src="assets/quickshift.js"></script>
+<script src="assets/findings.js"></script>
+<script src="assets/tabs.js"></script>
+</body>
+</html>
