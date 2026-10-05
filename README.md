@@ -9,7 +9,8 @@
 | `/` | `index.html` | Ice breaking ก่อนเริ่ม session | ชื่อทีม + "เจออะไร" |
 | `/workshop` | `workshop.html` | หลังจบ session | ชื่อทีม + Bug / Req ไม่ชัด + REQ ข้อไหน + รายละเอียด |
 | `/dashboard` | `dashboard.html` | ผู้จัดเปิดดูหรือฉายขึ้นจอ | ดูว่าใครส่งอะไร แยกรอบ กรองตามทีม/ประเภท คัดลอก CSV และปุ่ม 🔑 เฉลย (ต้องใช้รหัส) |
-| `/slides` | `slides.html` | ระหว่าง session | สไลด์ Level Up! 17 หน้า (← → เปลี่ยนสไลด์, N โน้ตผู้พูด, F เต็มจอ) |
+| `/slides` | `slides.html` | หัวข้อ 1 | สไลด์ Level Up! 17 หน้า (← → เปลี่ยนสไลด์, N โน้ตผู้พูด, F เต็มจอ) |
+| `/slides-2` | `slides-2.html` | หัวข้อ 2 | สไลด์ Survive & Thrive: QA 2.0 in AI Age 25 หน้า ธีมรองเท้าวิ่ง ตัวอย่างใช้แอป QuickShift |
 
 ทั้งสองเกมใช้แอปและ requirement ชุดเดียวกัน (`assets/quickshift.js`) ผู้เล่นจึงเจอบั๊กเดิมได้อีกครั้งด้วยมุมมองใหม่หลัง session
 

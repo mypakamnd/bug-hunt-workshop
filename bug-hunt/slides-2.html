@@ -1,0 +1,2167 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <title>Survive &amp; Thrive Slides</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Press+Start+2P&display=swap">
+  <style>
+    /* Layout: fixed 1280×720 arcade "screen" scaled to fit; HUD strip on top of each slide, controls + optional speaker notes below. Deliberately single dark theme (night arcade). */
+    :root {
+      --bg: #0f1030;
+      --screen: #16173d;
+      --panel: #212255;
+      --line: #3a3c7a;
+      --ink: #f4f1ff;
+      --muted: #a8a6d6;
+      --gold: #ffc53d;
+      --cyan: #52d6ef;
+      --red: #ff6f7d;
+      --green: #6be4a6;
+      --amber: #ffa94d;
+      --font-display: "Mitr", "IBM Plex Sans Thai", system-ui, sans-serif;
+      --font-body: "IBM Plex Sans Thai", system-ui, sans-serif;
+      --font-pixel: "Press Start 2P", ui-monospace, monospace;
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto auto;
+      overflow: hidden;
+    }
+
+    .viewport {
+      position: relative;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .stage {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 1280px;
+      height: 720px;
+      transform-origin: center;
+      background: var(--screen);
+      border-radius: 10px;
+      box-shadow: 0 0 0 4px var(--line), 0 20px 60px rgba(0, 0, 0, .45);
+      overflow: hidden;
+      background-image: radial-gradient(rgba(255, 255, 255, .05) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 48px 72px 44px;
+      display: none;
+      flex-direction: column;
+      gap: 22px;
+      font-size: 24px;
+      line-height: 1.5;
+    }
+
+    .slide.active {
+      display: flex;
+      animation: enter .35s ease-out;
+    }
+
+    @keyframes enter {
+      from {
+        opacity: .4;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .frag {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .3s, transform .3s;
+    }
+
+    .frag.in {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slide.active {
+        animation: none;
+      }
+
+      .frag {
+        transition: none;
+        transform: none;
+      }
+    }
+
+    /* HUD */
+    .hud {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-family: var(--font-pixel);
+      font-size: 12px;
+      letter-spacing: .04em;
+      color: var(--muted);
+    }
+
+    .hud .tag {
+      color: var(--gold);
+    }
+
+    .levels {
+      display: flex;
+      gap: 6px;
+    }
+
+    .levels span {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      font-family: var(--font-pixel);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .levels span.on {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--bg);
+      box-shadow: 0 0 18px rgba(255, 197, 61, .5);
+    }
+
+    .levels span.done {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    h1,
+    h2 {
+      font-family: var(--font-display);
+      font-weight: 600;
+      margin: 0;
+      line-height: 1.2;
+      text-wrap: balance;
+    }
+
+    h2 {
+      font-size: 46px;
+    }
+
+    .lvl-title h2 {
+      font-size: 42px;
+    }
+
+    h2 .sub {
+      display: block;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--muted);
+      font-family: var(--font-body);
+      margin-top: 6px;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .gold {
+      color: var(--gold);
+    }
+
+    .cyan {
+      color: var(--cyan);
+    }
+
+    .pixel {
+      font-family: var(--font-pixel);
+    }
+
+    .card {
+      background: var(--panel);
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      padding: 20px 24px;
+      box-shadow: 5px 5px 0 rgba(0, 0, 0, .35);
+      min-width: 0;
+    }
+
+    .card.gold {
+      border-color: var(--gold);
+      color: var(--ink);
+    }
+
+    .card.cyan {
+      border-color: var(--cyan);
+    }
+
+    .card h3 {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 26px;
+      margin: 0 0 8px;
+    }
+
+    .label {
+      font-family: var(--font-pixel);
+      font-size: 11px;
+      letter-spacing: .06em;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .cols {
+      display: grid;
+      gap: 24px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .c2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .c3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .lvl {
+      grid-template-columns: 1.15fr 1fr;
+    }
+
+    ul.clean {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    ul.clean li {
+      padding-left: 30px;
+      position: relative;
+    }
+
+    ul.clean li::before {
+      content: "▸";
+      position: absolute;
+      left: 4px;
+      color: var(--gold);
+    }
+
+    .quote {
+      font-family: var(--font-display);
+      font-size: 27px;
+      color: var(--ink);
+      border-left: 5px solid var(--gold);
+      padding-left: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 197, 61, .12);
+      border: 2px dashed var(--gold);
+      border-radius: 999px;
+      padding: 8px 20px;
+      font-size: 20px;
+      color: var(--gold);
+      align-self: flex-start;
+    }
+
+    .anti {
+      border-color: var(--red);
+    }
+
+    .anti .label {
+      color: var(--red);
+    }
+
+    .center {
+      margin: auto;
+      text-align: center;
+      display: grid;
+      gap: 20px;
+      justify-items: center;
+    }
+
+    .strike {
+      text-decoration: line-through;
+      text-decoration-color: var(--red);
+      text-decoration-thickness: 3px;
+      color: var(--muted);
+    }
+
+    .lock {
+      font-family: var(--font-pixel);
+      font-size: 11px;
+      border: 2px solid var(--muted);
+      color: var(--muted);
+      border-radius: 4px;
+      padding: 4px 8px;
+      vertical-align: middle;
+    }
+
+    /* title slide */
+    .title-wrap {
+      margin: auto 0;
+      display: grid;
+      gap: 22px;
+    }
+
+    .title-big {
+      font-family: var(--font-pixel);
+      font-size: 76px;
+      line-height: 1.15;
+      color: var(--gold);
+      text-shadow: 6px 6px 0 #6b3fd1;
+    }
+
+    .title-sub {
+      font-family: var(--font-display);
+      font-size: 46px;
+      font-weight: 500;
+    }
+
+    .title-sub .a {
+      color: var(--cyan);
+    }
+
+    .blink {
+      font-family: var(--font-pixel);
+      font-size: 14px;
+      color: var(--muted);
+      animation: blink 1.2s steps(2) infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: .2;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .blink {
+        animation: none;
+      }
+    }
+
+    /* table */
+    table.t {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 22px;
+    }
+
+    table.t th,
+    table.t td {
+      padding: 12px 18px;
+      border-bottom: 2px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    table.t th {
+      font-family: var(--font-display);
+      font-weight: 500;
+      color: var(--muted);
+      font-size: 22px;
+    }
+
+    table.t td:first-child {
+      color: var(--muted);
+      width: 18%;
+    }
+
+    table.t .hl {
+      background: rgba(82, 214, 239, .1);
+      color: var(--ink);
+    }
+
+    table.t th.hl {
+      color: var(--cyan);
+      border-top: 2px solid var(--cyan);
+    }
+
+    .big-emoji {
+      font-size: 64px;
+      line-height: 1;
+    }
+
+    .vote {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .answer {
+      font-family: var(--font-pixel);
+      font-size: 15px;
+      padding: 10px 14px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .answer.t {
+      background: rgba(255, 111, 125, .15);
+      color: var(--red);
+      border: 2px solid var(--red);
+    }
+
+    .answer.q {
+      background: rgba(82, 214, 239, .15);
+      color: var(--cyan);
+      border: 2px solid var(--cyan);
+    }
+
+    /* mvp slide */
+    .acronym {
+      display: grid;
+      gap: 12px;
+    }
+
+    .acr-row {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      align-items: center;
+      gap: 16px;
+      font-size: 24px;
+    }
+
+    .acr-row b {
+      font-family: var(--font-pixel);
+      font-size: 34px;
+      color: var(--gold);
+      text-align: center;
+    }
+
+    .acr-row.a b {
+      color: var(--cyan);
+    }
+
+    /* map */
+    .map {
+      position: relative;
+      margin-block: auto;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      align-items: start;
+      gap: 12px;
+    }
+
+    .map::before {
+      content: "";
+      position: absolute;
+      left: 40px;
+      right: 40px;
+      top: 112px;
+      border-top: 4px dashed var(--line);
+      z-index: 0;
+    }
+
+    .node {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      text-align: center;
+    }
+
+    .node .tile {
+      width: 92px;
+      height: 92px;
+      display: grid;
+      place-items: center;
+      background: var(--panel);
+      border: 3px solid var(--gold);
+      border-radius: 8px;
+      font-family: var(--font-pixel);
+      font-size: 34px;
+      color: var(--gold);
+      box-shadow: 5px 5px 0 rgba(0, 0, 0, .35);
+    }
+
+    .node .nm {
+      font-family: var(--font-display);
+      font-size: 22px;
+    }
+
+    .node .tr {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.35;
+      max-width: 170px;
+    }
+
+    .node.end .tile {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      font-size: 13px;
+      width: 92px;
+      height: 92px;
+    }
+
+    .node.start .tile {
+      border-color: var(--muted);
+      color: var(--muted);
+      font-size: 13px;
+      width: 92px;
+      height: 92px;
+    }
+
+    .scope {
+      display: none;
+    }
+
+    /* level visuals */
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      font-size: 19px;
+    }
+
+    .chip {
+      background: var(--bg);
+      border: 2px solid var(--line);
+      border-radius: 6px;
+      padding: 8px 12px;
+    }
+
+    .chip.k {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .arrow {
+      color: var(--gold);
+      font-family: var(--font-pixel);
+      font-size: 14px;
+    }
+
+    .bars {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      align-items: end;
+      height: 96px;
+      border-bottom: 2px solid var(--line);
+    }
+
+    .bars div {
+      background: var(--line);
+      border-radius: 4px 4px 0 0;
+    }
+
+    .bars div.qa {
+      background: var(--gold);
+    }
+
+    .bar-labels {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      font-size: 16px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: 40px repeat(3, 1fr);
+      grid-template-rows: repeat(3, 70px) 34px;
+      gap: 6px;
+      font-size: 16px;
+    }
+
+    .matrix .cell {
+      border-radius: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 4px;
+    }
+
+    .lo {
+      background: rgba(107, 228, 166, .16);
+    }
+
+    .md {
+      background: rgba(255, 169, 77, .18);
+    }
+
+    .hi {
+      background: rgba(255, 111, 125, .22);
+    }
+
+    .matrix .ax {
+      color: var(--muted);
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+    }
+
+    .matrix .ax.y {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      grid-row: 1 / 4;
+    }
+
+    .pin {
+      background: var(--ink);
+      color: var(--bg);
+      border-radius: 999px;
+      padding: 3px 12px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .report {
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    .report .bad {
+      color: var(--red);
+    }
+
+    .report .good {
+      color: var(--green);
+    }
+
+    .tiles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .tile-s {
+      background: var(--bg);
+      border: 2px solid var(--line);
+      border-radius: 6px;
+      padding: 10px 14px;
+    }
+
+    .tile-s .n {
+      font-family: var(--font-pixel);
+      font-size: 22px;
+      color: var(--green);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tile-s .n.w {
+      color: var(--amber);
+    }
+
+    .tile-s .k {
+      font-size: 15px;
+      color: var(--muted);
+    }
+
+    .example {
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* recap */
+    table.t.recap td:first-child {
+      color: var(--gold);
+      font-family: var(--font-display);
+      width: 26%;
+      white-space: nowrap;
+    }
+
+    .steps-q {
+      display: grid;
+      gap: 14px;
+    }
+
+    .steps-q .s {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 16px;
+      align-items: center;
+      font-size: 26px;
+    }
+
+    .steps-q .s b {
+      font-family: var(--font-pixel);
+      font-size: 22px;
+      width: 56px;
+      height: 56px;
+      display: grid;
+      place-items: center;
+      background: var(--gold);
+      color: var(--bg);
+      border-radius: 6px;
+    }
+
+    .closing {
+      font-family: var(--font-display);
+      font-size: 44px;
+      line-height: 1.4;
+      max-width: 1000px;
+      text-wrap: balance;
+    }
+
+    .unlock {
+      font-family: var(--font-pixel);
+      font-size: 18px;
+      color: var(--muted);
+    }
+
+    .unlock-big {
+      font-family: var(--font-pixel);
+      font-size: 72px;
+      color: var(--gold);
+      text-shadow: 6px 6px 0 #6b3fd1;
+    }
+
+    .unlock-big .a {
+      color: var(--cyan);
+    }
+
+
+    /* pixel sprites + scenery */
+    .spr {
+      display: inline-block;
+      line-height: 0;
+      vertical-align: middle;
+      flex: none;
+    }
+
+    .spr svg {
+      display: block;
+      shape-rendering: crispEdges;
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .scene .star {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--ink);
+      opacity: .5;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    .scene .hills {
+      position: absolute;
+      left: 0;
+      bottom: 26px;
+      width: 100%;
+      height: 120px;
+    }
+
+    .scene .ground {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 26px;
+      background: linear-gradient(#4fb37e 0 6px, #2b6b4f 6px 9px, #3a2b5c 9px);
+      background-size: 100% 100%;
+    }
+
+    .scene .ground::after {
+      content: "";
+      position: absolute;
+      inset: 9px 0 0;
+      background: repeating-linear-gradient(90deg, transparent 0 30px, rgba(0, 0, 0, .25) 30px 32px), repeating-linear-gradient(0deg, transparent 0 7px, rgba(0, 0, 0, .18) 7px 8px);
+    }
+
+    .scene .cloud {
+      position: absolute;
+      opacity: .18;
+    }
+
+    @keyframes twinkle {
+      50% {
+        opacity: .1;
+      }
+    }
+
+    .slide {
+      z-index: 1;
+      padding-bottom: 60px;
+    }
+
+    .deco {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .bob {
+      animation: bob 2.4s ease-in-out infinite;
+    }
+
+    .bob.d1 {
+      animation-delay: .4s;
+    }
+
+    .bob.d2 {
+      animation-delay: .8s;
+    }
+
+    .bob.d3 {
+      animation-delay: 1.2s;
+    }
+
+    @keyframes bob {
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .bob,
+      .scene .star {
+        animation: none;
+      }
+    }
+
+    .lvl-title {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .lvl-icon {
+      width: 96px;
+      height: 96px;
+      display: grid;
+      place-items: center;
+      background: var(--panel);
+      border: 3px solid var(--gold);
+      border-radius: 8px;
+      box-shadow: 5px 5px 0 rgba(0, 0, 0, .35);
+      flex: none;
+    }
+
+    .hearts {
+      display: flex;
+      gap: 4px;
+    }
+
+    .label-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .label-row .label {
+      margin: 0;
+    }
+
+    .node .ic {
+      height: 56px;
+      display: grid;
+      place-items: end center;
+    }
+
+    /* controls */
+    .notes {
+      background: var(--screen);
+      border-top: 2px solid var(--line);
+      padding-block: 14px;
+      padding-inline: max(16px, 4vw);
+      font-size: 15px;
+      line-height: 1.6;
+      max-height: 28vh;
+      overflow-y: auto;
+    }
+
+    .notes .k {
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .notes p {
+      max-width: 90ch;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px 16px;
+      padding-block: 10px calc(10px + env(safe-area-inset-bottom, 0px));
+      padding-inline: 16px;
+      background: var(--bg);
+      border-top: 1px solid var(--line);
+    }
+
+    .xp {
+      flex: 1 1 200px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      color: var(--muted);
+      min-width: 0;
+    }
+
+    .xp .bar {
+      flex: 1;
+      height: 10px;
+      border: 2px solid var(--line);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .xp .fill {
+      height: 100%;
+      background: var(--gold);
+      width: 0;
+      transition: width .3s;
+    }
+
+    .btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font-family: var(--font-body);
+      font-size: 14px;
+      background: var(--panel);
+      color: var(--ink);
+      border: 2px solid var(--line);
+      border-radius: 6px;
+      padding: 7px 14px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      border-color: var(--gold);
+    }
+
+    button:focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 2px;
+    }
+
+    button[aria-pressed="true"] {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .counter {
+      font-family: var(--font-pixel);
+      font-size: 11px;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 640px) {
+      .hint {
+        display: none;
+      }
+    }
+
+    /* stage 2: running track + new components */
+    .scene .ground.track {
+      height: 34px;
+      background: linear-gradient(#ffffff 0 3px, #c2453b 3px 100%);
+    }
+
+    .scene .ground.track::after {
+      inset: 15px 0 auto;
+      height: 3px;
+      background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .75) 0 28px, transparent 28px 56px);
+    }
+
+    .slide {
+      padding-bottom: 66px;
+    }
+
+    .race {
+      display: flex;
+      gap: 6px;
+    }
+
+    .race span {
+      min-width: 62px;
+      height: 34px;
+      padding: 0 8px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .race span.done {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .race span.on {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--bg);
+      box-shadow: 0 0 18px rgba(255, 197, 61, .5);
+    }
+
+    .runner .label {
+      font-family: var(--font-display);
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    .label.cyan {
+      color: var(--cyan);
+    }
+
+    .label.red {
+      color: var(--red);
+    }
+
+    .label.gold {
+      color: var(--gold);
+    }
+
+    .red {
+      color: var(--red);
+    }
+
+    .green {
+      color: var(--green);
+    }
+
+    .card.runner.a {
+      border-color: var(--cyan);
+    }
+
+    .card.runner.b {
+      border-color: var(--red);
+    }
+
+    .center-card {
+      display: grid;
+      justify-items: center;
+      text-align: center;
+      gap: 8px;
+    }
+
+    .center-card h3 {
+      margin: 4px 0 0;
+    }
+
+    .center-text {
+      text-align: center;
+    }
+
+    .formula {
+      font-family: var(--font-display);
+      font-size: 50px;
+      text-align: center;
+      margin-block: 6px;
+    }
+
+    .ac-def {
+      padding: 12px 20px;
+      font-size: 21px;
+      border-color: var(--gold);
+      flex: 0;
+    }
+
+    .speed {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+    }
+
+    .fake li b {
+      text-decoration: line-through;
+      text-decoration-color: var(--red);
+      text-decoration-thickness: 3px;
+    }
+
+    .nums {
+      display: flex;
+      gap: 10px;
+      margin-block: 6px 8px;
+    }
+
+    .nums span {
+      font-family: var(--font-pixel);
+      font-size: 22px;
+      padding: 10px 12px;
+      border: 2px solid var(--line);
+      border-radius: 6px;
+      color: var(--muted);
+    }
+
+    .nums span.on {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .pipe {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      position: relative;
+      margin-block: auto;
+    }
+
+    .pipe::before {
+      content: "";
+      position: absolute;
+      left: 12%;
+      right: 12%;
+      top: 46px;
+      border-top: 4px dashed var(--line);
+    }
+
+    .pipe .node .tile {
+      width: 92px;
+      height: 92px;
+    }
+
+    .pipe .node.end .tile {
+      border-color: var(--cyan);
+    }
+
+    .pipe .node .tr {
+      max-width: 220px;
+    }
+
+    .small-list {
+      font-size: 20px;
+      gap: 10px;
+    }
+
+    .checks {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .checks .card {
+      display: grid;
+      gap: 8px;
+      font-size: 21px;
+    }
+
+    .checks b {
+      font-size: 26px;
+    }
+
+    table.t.sheet {
+      font-size: 17px;
+    }
+
+    table.t.sheet td,
+    table.t.sheet th {
+      padding: 9px 12px;
+    }
+
+    table.t.sheet td:first-child {
+      width: auto;
+    }
+
+    table.t.matrix-t td,
+    table.t.matrix-t th {
+      text-align: center;
+    }
+
+    table.t.matrix-t td:first-child {
+      text-align: left;
+      color: var(--ink);
+      width: 30%;
+    }
+
+    table.t.matrix-t td.hl {
+      font-family: var(--font-pixel);
+      font-size: 16px;
+      color: var(--cyan);
+    }
+
+    table.t.detail-t td:first-child {
+      width: 20%;
+      color: var(--gold);
+      font-family: var(--font-display);
+    }
+
+    .chip-pos {
+      font-family: var(--font-pixel);
+      font-size: 13px;
+      color: var(--green);
+      border: 2px solid var(--green);
+      border-radius: 4px;
+      padding: 4px 8px;
+    }
+
+    .rules {
+      display: grid;
+      gap: 12px;
+    }
+
+    .rules div {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 16px;
+      align-items: center;
+      background: var(--panel);
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      padding: 12px 18px;
+      font-size: 21px;
+    }
+
+    .rules b {
+      font-family: var(--font-pixel);
+      font-size: 20px;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      background: var(--gold);
+      color: var(--bg);
+      border-radius: 6px;
+    }
+
+    .rules em {
+      display: block;
+      font-style: normal;
+      color: var(--muted);
+      font-size: 17px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="viewport" id="viewport">
+    <div class="stage" id="stage">
+      <div class="scene" aria-hidden="true">
+        <i class="spr cloud" data-s="cloud" data-z="8" style="position:absolute;left:560px;top:28px"></i>
+        <i class="spr cloud" data-s="cloud" data-z="6" style="position:absolute;left:1010px;top:200px"></i>
+        <svg class="hills" viewBox="0 0 1280 120" preserveAspectRatio="none">
+          <path fill="#24255c"
+            d="M0 120V80h40V64h40V48h48V40h56v16h40v16h48v16h56V64h40V40h48V24h64v16h40v24h48v16h56V56h48V40h56V32h64v16h40v24h48v24h48V72h56V56h48V48h64v24h40v48z" />
+          <path fill="#1d1e4d"
+            d="M0 120V96h64V88h96v8h80v-8h112V80h96v16h104v-8h120V96h96v-8h120v8h96V88h104v8h96v24z" />
+        </svg>
+        <div class="ground track"></div>
+      </div>
+
+      <!-- 1 -->
+      <section class="slide"
+        data-notes="หัวข้อแรกเราคุยกันว่าจะ Level Up จาก Tester ไปเป็น MVQ(A) ได้ยังไง หัวข้อนี้จะถามต่อว่า แล้วในยุคที่ทุกคนมี AI อยู่ในมือ MVQ(A) จะอยู่รอดและเติบโตต่อได้ยังไง หัวข้อนี้ชื่อ Survive and Thrive: QA 2.0 in AI Age"
+        data-time="0.5">
+        <div class="hud"><span class="tag">PLAYER 1 · STAGE 2</span><span>QA WORKSHOP</span></div>
+        <div class="title-wrap">
+          <div class="title-big" style="font-size:60px">SURVIVE &amp;<br>THRIVE</div>
+          <div class="title-sub">QA 2.0 in <span class="a">AI Age</span></div>
+          <div style="display:grid;gap:4px">
+            <p style="font-family:var(--font-display);font-size:28px">นิภาพร จันต๊ะวงค์ <span class="gold">(เมย์)</span>
+            </p>
+            <p class="muted" style="font-size:20px">Quality Assurance · PDKM · 10/10/2026</p>
+          </div>
+        </div>
+        <div class="blink">PRESS → TO START</div>
+        <i class="spr deco" data-s="hero" data-z="10" style="right:330px;bottom:34px"></i>
+        <i class="spr deco" data-s="heroB" data-z="10" style="right:130px;bottom:34px"></i>
+        <i class="spr deco bob" data-s="shoe" data-z="7" style="right:300px;top:120px"></i>
+        <i class="spr deco bob d2" data-s="robot" data-z="6" style="right:120px;top:150px"></i>
+      </section>
+
+      <!-- 2 -->
+      <section class="slide"
+        data-notes="คำถามที่เมย์ได้ยินบ่อยที่สุดช่วงนี้คือ AI จะมาแทน QA ไหม [หยุด 2 วินาที] วันนี้ AI เขียน test case ได้ในไม่กี่วินาที และทุกคนในห้องนี้ก็เข้าถึง AI ตัวเดียวกันหมด แต่เมย์อยากเปลี่ยนคำถามนิดหนึ่ง ถ้าทุกคนมี AI เหมือนกัน แล้วอะไรที่ทำให้เราต่างกัน วันนี้เราจะตอบคำถามนี้ด้วยรองเท้าวิ่งหนึ่งคู่"
+        data-time="1.5">
+        <div class="hud"><span class="tag">WARM UP</span><span>01 / HOOK</span></div>
+        <div class="center" style="gap:22px;width:100%">
+          <i class="spr bob" data-s="robot" data-z="6"></i>
+          <h2 style="font-size:54px">"AI จะมาแทน QA ไหม?"</h2>
+          <div class="cols c3" style="flex:none;width:100%">
+            <div class="card frag">
+              <p>ทุกคนเข้าถึง AI ตัวเดียวกัน</p>
+            </div>
+            <div class="card frag">
+              <p>เขียน test case ได้ในไม่กี่วินาที</p>
+            </div>
+            <div class="card gold frag">
+              <p class="gold">แล้วอะไรทำให้เราต่างกัน?</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section class="slide"
+        data-notes="ลองนึกภาพนักวิ่ง 2 คนที่ได้รองเท้าวิ่งคาร์บอนรุ่นเดียวกัน คู่ละหลายพัน นักวิ่ง A วิ่งท่าถูก รู้จักจังหวะตัวเอง และซ้อมทุกสัปดาห์ นักวิ่ง B เพิ่งซื้อรองเท้าคู่นี้มา และคิดว่ารองเท้าดีแล้วก็น่าจะวิ่งได้ไว รองเท้าคู่นี้ก็คือ AI ที่ทุกคนมีอยู่ในมือตอนนี้ ใน 20 นาทีต่อจากนี้เราจะตามดูทั้งสองคนวิ่งมาราธอนเดียวกัน"
+        data-time="2">
+        <div class="hud"><span class="tag">WARM UP</span><span>02 / TWO RUNNERS</span></div>
+        <h2>รองเท้าคู่เดียวกัน นักวิ่ง 2 คน</h2>
+        <div class="cols c2">
+          <div class="card runner a center-card"><i class="spr " data-s="hero" data-z="8"></i>
+            <h3 class="cyan">นักวิ่ง A</h3>
+            <p>Skill + รองเท้าดี + <b>ฝึกฝนบ่อย</b></p>
+          </div>
+          <div class="card runner b center-card"><i class="spr " data-s="heroB" data-z="8"></i>
+            <h3 style="color:var(--red)">นักวิ่ง B</h3>
+            <p>รองเท้าดี แต่<b>ไม่ฝึก</b></p>
+          </div>
+        </div>
+        <div class="quote" style="display:flex;align-items:center;gap:16px"><i class="spr " data-s="shoe"
+            data-z="4"></i><span>"รองเท้าดีทำให้วิ่งเร็วขึ้น แต่ไม่ได้วิ่งแทนเรา" · รองเท้า = AI</span></div>
+      </section>
+
+      <!-- 4 -->
+      <section class="slide"
+        data-notes="เมย์ขอเรียก QA ในยุคนี้ว่า QA 2.0 สิ่งที่เปลี่ยนไม่ใช่ว่าเราเลิกเขียน test case แต่เวลาที่เคยหมดไปกับการพิมพ์ จะย้ายไปอยู่ที่การคิด การออกแบบ และการตรวจงานของ AI วันนี้แบ่งเป็น 2 ช่วง ช่วงแรกคือ Survive ทำยังไงให้วิ่งถึงเส้นชัย ช่วงที่สองคือ Thrive ทำยังไงให้วิ่งได้ดีกว่าเดิม"
+        data-time="1">
+        <div class="hud"><span class="tag">WARM UP</span><span>03 / QA 2.0</span></div>
+        <h2>QA 1.0 → QA 2.0</h2>
+        <table class="t">
+          <tr>
+            <th></th>
+            <th>QA 1.0</th>
+            <th class="hl">QA 2.0</th>
+          </tr>
+          <tr>
+            <td>ใครเขียน test case</td>
+            <td>QA เขียนเองทุกข้อ</td>
+            <td class="hl">AI ร่าง · QA ออกแบบและตรวจ</td>
+          </tr>
+          <tr>
+            <td>เวลาส่วนใหญ่หมดไปกับ</td>
+            <td>พิมพ์</td>
+            <td class="hl">คิด · ออกแบบ · ตรวจ</td>
+          </tr>
+          <tr>
+            <td>คุณค่าอยู่ที่</td>
+            <td>จำนวน case</td>
+            <td class="hl">ความครอบคลุมที่ไล่กลับได้</td>
+          </tr>
+        </table>
+        <div class="cols c2" style="flex:none">
+          <div class="card"><span class="label">ช่วงที่ 1</span>
+            <h3>SURVIVE · วิ่งให้ถึงเส้นชัย</h3>
+          </div>
+          <div class="card gold"><span class="label gold">ช่วงที่ 2</span>
+            <h3>THRIVE · วิ่งให้ดีกว่าเดิม</h3>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section class="slide"
+        data-notes="ทั้งหัวข้อนี้มีสูตรเดียวที่อยากให้จำ ผลลัพธ์เท่ากับ Skill คูณรองเท้าคูณการฝึก สังเกตว่าเป็นการคูณ ไม่ใช่การบวก ถ้าเป็นการบวก รองเท้าดีมาก ๆ ก็พอชดเชย skill ที่ไม่มีได้ แต่พอเป็นการคูณ ตัวไหนเป็นศูนย์ ผลลัพธ์ก็เป็นศูนย์ และในโลกของ AI บางทีมันแย่กว่าศูนย์ เพราะ AI ตอบผิดได้อย่างมั่นใจ"
+        data-time="2">
+        <div class="hud"><span class="tag">SURVIVE</span><span>04 / FORMULA</span></div>
+        <h2>สูตรของนักวิ่ง</h2>
+        <div class="formula">ผลลัพธ์ = <span class="cyan">Skill</span> × <span class="gold">รองเท้า</span> × <span
+            class="green">การฝึก</span></div>
+        <div class="cols c3" style="flex:none">
+          <div class="card center-card"><i class="spr " data-s="book" data-z="5"></i>
+            <h3 class="cyan">Skill</h3>
+            <p class="muted">ท่าวิ่ง = พื้นฐาน QA</p>
+          </div>
+          <div class="card center-card"><i class="spr " data-s="shoe" data-z="5"></i>
+            <h3 class="gold">รองเท้า</h3>
+            <p class="muted">= AI</p>
+          </div>
+          <div class="card center-card"><i class="spr " data-s="stopwatch" data-z="5"></i>
+            <h3 class="green">การฝึก</h3>
+            <p class="muted">ใช้ซ้ำจนรู้ทาง</p>
+          </div>
+        </div>
+        <p class="muted center-text" style="font-size:22px">ตัวไหนเป็น <b class="gold">0</b> ผลลัพธ์ก็เป็น <b
+            class="gold">0</b></p>
+      </section>
+
+      <!-- 6 -->
+      <section class="slide"
+        data-notes="ขอให้รู้จักทั้งสองคนมากขึ้นอีกนิด นักวิ่ง A อ่าน AC เป็น รู้เทคนิคการออกแบบ test เช่น boundary กับ decision table และใช้ AI ทุกวันจนรู้ว่ามันพลาดตรงไหนบ่อย ส่วนนักวิ่ง B ไม่ได้ขี้เกียจ เขาตั้งใจทำงาน แต่เขาเชื่อว่าส่ง requirement ให้ AI แล้วมันก็จะเขียนให้ครบเอง ลองถามตัวเองในใจว่าตอนนี้เราใกล้คนไหนมากกว่ากัน"
+        data-time="2">
+        <div class="hud"><span class="tag">SURVIVE</span><span>05 / RUNNERS</span></div>
+        <h2>รู้จักนักวิ่งของเรา</h2>
+        <div class="cols c2">
+          <div class="card runner a">
+            <div class="label-row"><i class="spr " data-s="hero" data-z="3"></i><span class="label cyan">นักวิ่ง A ·
+                SKILL + รองเท้า + ฝึก</span></div>
+            <ul class="clean">
+              <li>อ่าน AC เป็น</li>
+              <li>รู้เทคนิค boundary / decision table</li>
+              <li>ใช้ AI ทุกวันจนรู้จุดอ่อนของมัน</li>
+            </ul>
+          </div>
+          <div class="card runner b">
+            <div class="label-row"><i class="spr " data-s="heroB" data-z="3"></i><span class="label red">นักวิ่ง B ·
+                รองเท้าอย่างเดียว</span></div>
+            <ul class="clean">
+              <li>"ส่ง requirement ให้ AI เดี๋ยวมันเขียนให้"</li>
+              <li>ไม่เคยตรวจผลลัพธ์</li>
+              <li>เชื่อเพราะดูครบดี</li>
+            </ul>
+          </div>
+        </div>
+        <p class="muted center-text" style="font-size:22px">ตอนนี้เราใกล้คนไหนมากกว่ากัน?</p>
+      </section>
+
+      <!-- 7 -->
+      <section class="slide"
+        data-notes="ปืนดังแล้ว ที่กิโลเมตรศูนย์ นักวิ่ง A ยังไม่ออกตัว เขาอ่านแผนที่ก่อน คือเปิด AC อ่านเอง AC ย่อมาจาก Acceptance Criteria หรือเกณฑ์การยอมรับ คือเงื่อนไขที่ฟีเจอร์ต้องทำได้ถึงจะถือว่าเสร็จ และเป็นฐานที่ QA ใช้เขียน test case แล้วเจอว่าข้อนี้ไม่ชัด ก็ถามทีมก่อน ส่วนนักวิ่ง B ออกตัวทันที copy requirement ไปวางแล้วพิมพ์ว่าเขียน test case ให้หน่อย สิ่งที่ต้องรู้คือ AI ไม่ค่อยถามกลับว่าข้อนี้หมายความว่าอะไร มันจะเลือกความหมายที่น่าจะเป็นที่สุดแล้ววิ่งต่อ ถ้าแผนที่ผิด มันก็พาเราไปผิดทางได้เร็วมาก"
+        data-time="2.5">
+        <div class="hud"><span class="tag">SURVIVE · RACE</span>
+          <div class="race"><span class="on">กม. 0</span><span class="">กม. 5</span><span class="">CHECK</span><span
+              class="">กม. 30</span><span class="">FINISH</span></div>
+        </div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr " data-s="map" data-z="5"></i></div>
+          <h2>กม. 0: อ่านแผนที่ก่อนออกตัว</h2>
+        </div>
+        <div class="card ac-def"><b class="gold">AC</b> = <b>Acceptance Criteria</b> · เกณฑ์การยอมรับ:
+          เงื่อนไขที่ฟีเจอร์ต้องทำได้ถึงจะถือว่าเสร็จ</div>
+        <div class="cols c2">
+          <div class="card runner a">
+            <div class="label-row"><i class="spr " data-s="hero" data-z="3"></i><span class="label cyan">นักวิ่ง A ·
+                SKILL + รองเท้า + ฝึก</span></div>
+            <ul class="clean">
+              <li>อ่าน AC เอง</li>
+              <li>เจอข้อที่ไม่ชัด ถามทีมก่อนออกตัว</li>
+            </ul>
+          </div>
+          <div class="card runner b">
+            <div class="label-row"><i class="spr " data-s="heroB" data-z="3"></i><span class="label red">นักวิ่ง B ·
+                รองเท้าอย่างเดียว</span></div>
+            <ul class="clean">
+              <li>copy requirement ไปวาง</li>
+              <li>พิมพ์ "เขียน test case ให้หน่อย"</li>
+            </ul>
+          </div>
+        </div>
+        <div class="quote">"AI วิ่งตามแผนที่ที่เราให้ ถ้าแผนที่ผิด มันก็พาไปผิดทางอย่างรวดเร็ว"</div>
+      </section>
+
+      <!-- 8 -->
+      <section class="slide"
+        data-notes="กิโลเมตรที่ 5 ทั้งสองคนดูเก่งพอกัน เพราะรองเท้าทำงานเต็มที่ AI ให้ test case มา 200 ข้อในสองนาที นักวิ่ง B ดีใจ รับไปทั้งหมดเพราะดูครบดี นักวิ่ง A ก็ได้ 200 ข้อเหมือนกัน แต่เขาคัดออกเหลือเฉพาะข้อที่มีความเสี่ยงจริง ตามที่เราคุยกันในด่าน Validate ของหัวข้อแรก 200 ข้อที่ไม่มีใครรันจริง ไม่ได้ทำให้ระบบปลอดภัยขึ้นเลย"
+        data-time="2.5">
+        <div class="hud"><span class="tag">SURVIVE · RACE</span>
+          <div class="race"><span class="done">กม. 0</span><span class="on">กม. 5</span><span class="">CHECK</span><span
+              class="">กม. 30</span><span class="">FINISH</span></div>
+        </div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr " data-s="stopwatch" data-z="5"></i></div>
+          <h2>กม. 5: ความเร็วช่วงแรก</h2>
+        </div>
+        <div class="speed"><span class="pixel gold" style="font-size:64px">200</span><span style="font-size:26px">test
+            cases ใน <b class="gold">2 นาที</b></span><i class="spr " data-s="robot" data-z="4"></i></div>
+        <div class="cols c2">
+          <div class="card runner a">
+            <div class="label-row"><i class="spr " data-s="hero" data-z="3"></i><span class="label cyan">นักวิ่ง A ·
+                SKILL + รองเท้า + ฝึก</span></div>
+            <ul class="clean">
+              <li>คัดเหลือเฉพาะ case ที่มีความเสี่ยงจริง</li>
+              <li>ใช้ด่าน Validate จากหัวข้อแรก</li>
+            </ul>
+          </div>
+          <div class="card runner b">
+            <div class="label-row"><i class="spr " data-s="heroB" data-z="3"></i><span class="label red">นักวิ่ง B ·
+                รองเท้าอย่างเดียว</span></div>
+            <ul class="clean">
+              <li>รับไปทั้ง 200 case</li>
+              <li>เพราะดูครบดี</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9 -->
+      <section class="slide"
+        data-notes="ที่จุดเช็กพอยต์ กรรมการตรวจว่าวิ่งถูกเส้นทางไหม ตรงนี้นักวิ่ง B เริ่มมีปัญหา เพราะ AI ชอบเดาอยู่ 3 อย่าง หนึ่ง ปุ่มหรือช่องที่ไม่มีอยู่ในหน้าจอจริง สอง ค่าจำกัดที่ spec ไม่ได้บอก สาม ชื่อเรียกที่ไม่ตรงกับหน้าจอ ลองนึกถึงแอป QuickShift ที่ทุกคนเล่นตอนเช้า ถ้าส่งแค่ requirement ของฟอร์มสมัครงานให้ AI โดยไม่ส่งหน้าจอไปด้วย มันเขียน case มาว่าตรวจสอบการกรอกอีเมล ตรวจสอบการอัปโหลดรูปโปรไฟล์ และชื่อต้องไม่เกิน 50 ตัวอักษร ทั้งที่ฟอร์มจริงไม่มีช่องอีเมล ไม่มีรูปโปรไฟล์ และ requirement ไม่ได้บอกความยาวชื่อเลย ทุกข้อดูน่าเชื่อมาก นักวิ่ง A รอดเพราะเขาเทียบกับ Flow และ UI ทุกข้อ ส่วนนักวิ่ง B ไม่รู้เลยว่าผิด เพราะไม่ได้เทียบ"
+        data-time="3">
+        <div class="hud"><span class="tag">SURVIVE · RACE</span>
+          <div class="race"><span class="done">กม. 0</span><span class="done">กม. 5</span><span
+              class="on">CHECK</span><span class="">กม. 30</span><span class="">FINISH</span></div>
+        </div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr " data-s="robot" data-z="5"></i></div>
+          <h2>จุดเช็กพอยต์: AI แต่งเรื่องเอง</h2>
+        </div>
+        <div class="cols lvl">
+          <div class="card"><span class="label">AI เขียนจาก requirement ของ QuickShift (ไม่มี UI)</span>
+            <ul class="clean fake">
+              <li>ตรวจสอบการกรอก<b>อีเมล</b></li>
+              <li>ตรวจสอบการ<b>อัปโหลดรูปโปรไฟล์</b></li>
+              <li>ชื่อต้อง<b>ไม่เกิน 50 ตัวอักษร</b></li>
+            </ul>
+            <p class="red frag" style="margin-top:12px;font-size:20px">❌ ฟอร์มจริงไม่มีสักอย่าง</p>
+          </div>
+          <div style="display:grid;gap:14px;align-content:start">
+            <div class="card runner a"><span class="label cyan">นักวิ่ง A</span>
+              <p style="font-size:20px">เทียบกับ Flow + UI ทุกข้อ</p>
+            </div>
+            <div class="card runner b"><span class="label red">นักวิ่ง B</span>
+              <p style="font-size:20px">ไม่รู้ว่าผิด เพราะไม่ได้เทียบ</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 -->
+      <section class="slide"
+        data-notes="กิโลเมตรที่ 30 นักวิ่งมาราธอนรู้ดีว่าตรงนี้คือกำแพง สำหรับ QA กำแพงคือ edge case AI มักพลาดค่าขอบ เช่นฟอร์มสมัครงานของ QuickShift บอกว่าผู้สมัครต้องมีอายุ 18 ปีขึ้นไป เราต้องเทส 17 18 และ 19 มักพลาดสถานะที่ข้อมูลอยู่ได้จริง และมักลืม case ที่ผลลัพธ์คือไม่มีอะไรเปลี่ยน ซึ่งเป็นที่ที่ regression ซ่อนอยู่ นักวิ่ง A ผ่านกำแพงนี้ได้เพราะมีพื้นฐานเติมส่วนที่ AI ขาด นักวิ่ง B ทำได้แค่ถาม AI ซ้ำไปเรื่อย ๆ"
+        data-time="3">
+        <div class="hud"><span class="tag">SURVIVE · RACE</span>
+          <div class="race"><span class="done">กม. 0</span><span class="done">กม. 5</span><span
+              class="done">CHECK</span><span class="on">กม. 30</span><span class="">FINISH</span></div>
+        </div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr " data-s="wall" data-z="4"></i></div>
+          <h2>กม. 30: ชนกำแพง</h2>
+        </div>
+        <div class="cols c3" style="flex:none">
+          <div class="card"><span class="label">BOUNDARY</span>
+            <div class="nums"><span>17</span><span class="on">18</span><span>19</span></div>
+            <p class="muted" style="font-size:18px">"อายุ 18 ปีขึ้นไป"</p>
+          </div>
+          <div class="card"><span class="label">STATE</span>
+            <p style="font-size:20px">สถานะที่ข้อมูลอยู่ได้จริง เช่น งานเปิดรับ / ปิดรับ</p>
+          </div>
+          <div class="card"><span class="label">NO-OP</span>
+            <p style="font-size:20px">"ไม่มีอะไรเปลี่ยน" ก็เป็น case</p>
+          </div>
+        </div>
+        <div class="cols c2">
+          <div class="card runner a">
+            <div class="label-row"><i class="spr " data-s="hero" data-z="3"></i><span class="label cyan">นักวิ่ง A ·
+                SKILL + รองเท้า + ฝึก</span></div>
+            <ul class="clean">
+              <li>มีเทคนิคพื้นฐานเติมส่วนที่ AI ขาด</li>
+            </ul>
+          </div>
+          <div class="card runner b">
+            <div class="label-row"><i class="spr " data-s="heroB" data-z="3"></i><span class="label red">นักวิ่ง B ·
+                รองเท้าอย่างเดียว</span></div>
+            <ul class="clean">
+              <li>ทำได้แค่ถาม AI ซ้ำ</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11 -->
+      <section class="slide"
+        data-notes="ถึงเส้นชัย ลองดูผลกัน นักวิ่ง A มี test case น้อยกว่า แต่ทุกข้อไล่กลับไปหา AC ได้ บั๊กที่หลุดไปถึง production น้อย และทีมเชื่อใจงานของเขา นักวิ่ง B มี case เยอะกว่า แต่บอกไม่ได้ว่าข้อไหนมาจาก AC ไหน บั๊กยังหลุด และที่แย่ที่สุดคือทีมเริ่มไม่เชื่อ test case ของเขา"
+        data-time="2">
+        <div class="hud"><span class="tag">SURVIVE · RACE</span>
+          <div class="race"><span class="done">กม. 0</span><span class="done">กม. 5</span><span
+              class="done">CHECK</span><span class="done">กม. 30</span><span class="on">FINISH</span></div>
+        </div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr " data-s="flag" data-z="5"></i></div>
+          <h2>เส้นชัย</h2>
+        </div>
+        <table class="t">
+          <tr>
+            <th></th>
+            <th class="hl">นักวิ่ง A</th>
+            <th>นักวิ่ง B</th>
+          </tr>
+          <tr>
+            <td>จำนวน case</td>
+            <td class="hl">น้อยกว่า</td>
+            <td>เยอะกว่า</td>
+          </tr>
+          <tr>
+            <td>ไล่กลับไปหา AC ได้</td>
+            <td class="hl">ทุกข้อ</td>
+            <td>ไม่รู้</td>
+          </tr>
+          <tr>
+            <td>บั๊กบน production</td>
+            <td class="hl">น้อย</td>
+            <td>ยังหลุด</td>
+          </tr>
+          <tr>
+            <td>ความเชื่อใจจากทีม</td>
+            <td class="hl">สูง</td>
+            <td>ลดลง</td>
+          </tr>
+        </table>
+      </section>
+
+      <!-- 12 -->
+      <section class="slide"
+        data-notes="สรุปช่วง Survive สิ่งที่รองเท้าซ้อมแทนเราไม่ได้มีสามอย่าง skill คือ L-E-V-E-L จากหัวข้อแรกบวกกับเทคนิคออกแบบ test รองเท้าคือการเลือก AI ให้เหมาะกับงาน และการฝึกคือการใช้มันทุกวันจนรู้ว่ามันพลาดตรงไหน [พูดช้า] AI ไม่ได้มาแทน QA แต่ QA ที่ใช้ AI เป็น จะมาแทน QA ที่ใช้ไม่เป็น แล้วถ้าเราอยากไปไกลกว่าแค่รอด ไปดูช่วง Thrive กัน"
+        data-time="2">
+        <div class="hud"><span class="tag">SURVIVE CLEAR</span><span>11 / TAKEAWAY</span></div>
+        <h2>สิ่งที่รองเท้าซ้อมแทนเราไม่ได้</h2>
+        <div class="cols c3" style="flex:none">
+          <div class="card center-card"><i class="spr " data-s="book" data-z="5"></i>
+            <h3 class="cyan">Skill</h3>
+            <p class="muted">L-E-V-E-L + เทคนิคออกแบบ test</p>
+          </div>
+          <div class="card center-card"><i class="spr " data-s="shoe" data-z="5"></i>
+            <h3 class="gold">รองเท้า</h3>
+            <p class="muted">เลือก AI ให้เหมาะกับงาน</p>
+          </div>
+          <div class="card center-card"><i class="spr " data-s="stopwatch" data-z="5"></i>
+            <h3 class="green">การฝึก</h3>
+            <p class="muted">ใช้ทุกวัน จนรู้ว่ามันพลาดตรงไหน</p>
+          </div>
+        </div>
+        <div class="quote">"AI ไม่ได้แทน QA แต่ QA ที่ใช้ AI เป็น จะแทน QA ที่ใช้ไม่เป็น"</div>
+      </section>
+
+      <!-- 13 -->
+      <section class="slide"
+        data-notes="เข้าช่วง Thrive ประโยคแรกที่อยากให้จำคือ AI ไม่ได้ขาดความเก่ง แต่ขาด context มันไม่เคยเห็นระบบของเรา ไม่เคยคุยกับ PO และไม่รู้ว่าลูกค้าของเราใช้งานยังไง ถ้า test case ที่ได้ออกมาไม่ดี ก่อนจะบอกว่า AI ห่วย ให้ดูก่อนว่าเราป้อนอะไรให้มัน"
+        data-time="2">
+        <div class="hud"><span class="tag">THRIVE</span><span>12 / CONTEXT</span></div>
+        <div class="center" style="gap:24px">
+          <i class="spr bob" data-s="robot" data-z="8"></i>
+          <p class="closing">"AI ไม่ได้ขาดความเก่ง<br>แต่<span class="gold">ขาด context</span>"</p>
+          <p class="muted" style="font-size:22px">คุณภาพของ test case ไม่ได้เริ่มที่ AI แต่เริ่มที่ input ที่เราให้มัน
+          </p>
+        </div>
+      </section>
+
+      <!-- 14 -->
+      <section class="slide"
+        data-notes="นี่คือเส้นทางที่เมย์ใช้จริงในงาน แบ่งเป็น 4 ขั้น เริ่มจาก AC Card ซึ่งเป็น input ที่ดี ต่อด้วยระดับที่ 1 คือออกแบบ test case ออกมาเป็น Traceability Record ระดับที่ 2 คือให้ AI เขียนรายละเอียด และปิดด้วย QA Review AI ช่วยได้ทุกขั้น แต่ขั้นแรกกับขั้นสุดท้ายต้องมีคนเป็นเจ้าของ"
+        data-time="2">
+        <div class="hud"><span class="tag">THRIVE</span><span>13 / PIPELINE</span></div>
+        <h2>เส้นทางทำเอกสารแบบ QA 2.0</h2>
+        <div class="pipe">
+          <div class="node">
+            <div class="tile"><i class="spr " data-s="book" data-z="4"></i></div>
+            <div class="nm">AC Card</div>
+            <div class="tr">input ที่ดี</div>
+          </div>
+          <div class="node">
+            <div class="tile"><i class="spr " data-s="map" data-z="4"></i></div>
+            <div class="nm">ระดับ 1</div>
+            <div class="tr">Traceability<br>Test Case ID + Name</div>
+          </div>
+          <div class="node">
+            <div class="tile"><i class="spr " data-s="robot" data-z="4"></i></div>
+            <div class="nm">ระดับ 2</div>
+            <div class="tr">Generate Detail<br>Step · Data · Expected</div>
+          </div>
+          <div class="node end">
+            <div class="tile"><i class="spr " data-s="magnifier" data-z="4"></i></div>
+            <div class="nm">QA Review</div>
+            <div class="tr">คนตรวจ</div>
+          </div>
+        </div>
+        <p class="muted center-text" style="font-size:20px">AI ช่วยได้ทุกขั้น แต่<b
+            class="gold">คนต้องเป็นเจ้าของขั้นแรกและขั้นสุดท้าย</b></p>
+      </section>
+
+      <!-- 15 -->
+      <section class="slide"
+        data-notes="ขั้นแรกคือ input เมย์ใช้ AC Card ที่มี 12 หมวด กฎสำคัญที่สุดคือห้ามปล่อยช่องว่าง ถ้าหมวดไหนไม่เกี่ยวให้เขียนว่าไม่เกี่ยวพร้อมเหตุผล เพราะช่องว่างแปลได้สองแบบ คือไม่เกี่ยว หรือลืมคิด ลองนึกว่าถ้าแอป QuickShift ที่เล่นตอนเช้ามี AC Card หมวด C นิยามค่าจะบังคับให้ถามว่างานด่วนคือเริ่มภายในกี่วัน หมวด D ทางเข้าจะถามว่าสมัครได้จากหน้าไหนบ้าง และหมวด K ความขัดแย้งจะเจอว่า requirement บอกให้แสดงงานทั้งหมด แต่อีกข้อบอกว่างานที่ปิดรับไม่ควรทำให้สับสน สี่หมวด C D E K นี่แหละที่การ์ดทั่วไปมักไม่มี [จำคำถามเหล่านี้ไว้ จะได้ใช้ใน workshop]"
+        data-time="3">
+        <div class="hud"><span class="tag">THRIVE · STEP 0</span><span>14 / AC CARD</span></div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr " data-s="book" data-z="5"></i></div>
+          <h2>AC Card · input ที่ดี</h2>
+        </div>
+        <div class="cols c2">
+          <div class="card"><span class="label">12 หมวด A–L</span>
+            <p style="font-size:19px;line-height:1.7">ระบุงาน · พฤติกรรม · นิยามค่า · ทางเข้า · ของที่แชร์ได้ ·
+              ขอบเขตข้อมูล · ความล้มเหลว · ชนกัน · ของเดิม · ร่องรอย · ความขัดแย้ง · ไฟล์แนบ</p>
+          </div>
+          <div class="card gold"><span class="label gold">ถ้า QuickShift มี AC Card</span>
+            <ul class="clean small-list">
+              <li><b>C</b> นิยามค่า: "งานด่วน" คือเริ่มภายในกี่วัน?</li>
+              <li><b>D</b> ทางเข้า: สมัครได้จากหน้าไหนบ้าง?</li>
+              <li><b>K</b> ขัดแย้ง: "แสดงงานทั้งหมด" รวมงานที่ปิดรับไหม?</li>
+            </ul>
+          </div>
+        </div>
+        <div class="quote">"ห้ามปล่อยช่องว่าง: ช่องว่างแปลได้ทั้ง ไม่เกี่ยว และ ลืมคิด"</div>
+      </section>
+
+      <!-- 16 -->
+      <section class="slide"
+        data-notes="ก่อนให้ AI เริ่มทำงาน เมย์ตั้งให้มันเช็ก 4 อย่างทุกครั้ง เหมือนนักวิ่งเช็กของก่อนออกตัว project ไหน งานอะไร tab ไหน และมี Flow กับ UI ไหม ข้อสุดท้ายสำคัญที่สุด ถ้าไม่มี Flow มันจะไม่รู้ว่าต้องแตกกี่ทาง ถ้าไม่มี UI มันจะแต่งชื่อปุ่มขึ้นมาเอง และกฎคือห้ามเดา ห้ามใช้คำตอบจากครั้งก่อน ต้องถามใหม่ทุกครั้ง"
+        data-time="2">
+        <div class="hud"><span class="tag">THRIVE · STEP 0</span><span>15 / PREFLIGHT</span></div>
+        <h2>ก่อนให้ AI เริ่ม: Preflight 4 ข้อ</h2>
+        <div class="checks">
+          <div class="card"><b class="pixel gold">1</b><span>Project</span></div>
+          <div class="card"><b class="pixel gold">2</b><span>งานอะไร: ชื่อ case หรือ detail</span></div>
+          <div class="card"><b class="pixel gold">3</b><span>Tab ไหน</span></div>
+          <div class="card gold"><b class="pixel gold">4</b><span>Flow + UI</span></div>
+        </div>
+        <div class="cols c2" style="flex:none">
+          <div class="card anti"><span class="label">ไม่มี FLOW</span>
+            <p style="font-size:20px">ไม่รู้ว่าต้องแตกกี่ทาง</p>
+          </div>
+          <div class="card anti"><span class="label">ไม่มี UI</span>
+            <p style="font-size:20px">AI แต่งชื่อปุ่มเอง</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 17 -->
+      <section class="slide"
+        data-notes="ระดับที่ 1 คือการออกแบบ ผลลัพธ์คือ Traceability Record ซึ่งทีมเมย์ใช้จริงทุกฟีเจอร์ วันนี้ขอใช้แอป QuickShift เป็นตัวอย่าง แต่ละแถวไล่จาก Story ID ไป Feature ไป Group ไป Scenario แล้วจึงเป็น Test Case ID กับชื่อ เช่น Story QS-101 ค้นหาและสมัครงาน แบ่งเป็นกลุ่มค้นหางานกับกลุ่มสมัครงาน ประโยชน์คือเวลามีคนถามว่าเรื่องนี้เทสหรือยัง เราตอบได้ทันทีว่าเทสแล้ว ข้อไหน และไล่กลับไปหา Story ได้"
+        data-time="3">
+        <div class="hud"><span class="tag">THRIVE · LEVEL 1</span><span>16 / TRACEABILITY</span></div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr " data-s="map" data-z="5"></i></div>
+          <h2>Traceability_Record ของ QuickShift</h2>
+        </div>
+        <table class="t sheet">
+          <tr>
+            <th>Story ID</th>
+            <th>Feature</th>
+            <th>Group</th>
+            <th>Scenario</th>
+            <th>Test Case</th>
+          </tr>
+          <tr>
+            <td class="gold">QS-101</td>
+            <td>Job Search &amp; Apply</td>
+            <td>ค้นหางาน</td>
+            <td>QS101-SC01<br><span class="muted">ตรวจสอบการค้นหางาน</span></td>
+            <td><b>TC001</b> ตรวจสอบการแสดงผลหน้ารายการงาน</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><b>TC002</b> ตรวจสอบการค้นหางานสำเร็จ กรณีค้นหาด้วยชื่องาน และเรียงตามล่าสุด</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td>สมัครงาน</td>
+            <td>QS101-SC02<br><span class="muted">ตรวจสอบการสมัครงาน</span></td>
+            <td><b>TC001</b> ตรวจสอบการแสดงผลหน้าใบสมัคร</td>
+          </tr>
+        </table>
+        <p class="muted" style="font-size:18px">Story → Feature → Group → Scenario → Test Case ·
+          โครงเดียวกับที่ทีมใช้จริง</p>
+      </section>
+
+      <!-- 18 -->
+      <section class="slide"
+        data-notes="ทีนี้มาดูว่าชื่อ case ได้มาจากไหน ไม่ได้มาจากการนึกเอา แต่มาจาก matrix หน้าค้นหาของ QuickShift มีสองอย่างที่ผู้ใช้เลือกได้ มิติแรกคือคำค้น ค้นด้วยชื่องาน ด้วยสถานที่ คำที่ไม่ตรงกับงานใดเลย หรือไม่กรอกอะไร มิติที่สองคือการเรียง ล่าสุด หรือค่าจ้างสูงสุด [build ทีละแถว] 4 คูณ 2 ได้ 8 ช่อง ทุกช่องคือ test case หนึ่งข้อ แล้วค่อยเติมการแสดงผลหน้ารายการกับหน้ารายละเอียดงาน รวมเป็น 10 ข้อ สังเกตว่าตัวเลขพบกี่งานไม่ได้แยกเป็น case ของตัวเอง แต่อยู่ใน Expected ของทุกข้อ ถ้าให้ AI ทำโดยไม่บอกมิติ มันมักให้มาแค่ค้นหาสำเร็จหนึ่งข้อกับไม่สำเร็จหนึ่งข้อ [อยากรู้ว่าช่องไหนพังบ้าง เดี๋ยวได้ลองใน workshop]"
+        data-time="4">
+        <div class="hud"><span class="tag">THRIVE · LEVEL 1</span><span>17 / TEST MATRIX</span></div>
+        <h2>Test Matrix: การค้นหางานของ QuickShift</h2>
+        <table class="t matrix-t">
+          <tr>
+            <th>คำค้น / เรียงตาม</th>
+            <th class="hl">ล่าสุด</th>
+            <th class="hl">ค่าจ้างสูงสุด</th>
+          </tr>
+          <tr class="frag">
+            <td>ชื่องาน</td>
+            <td class="hl">TC002</td>
+            <td class="hl">TC003</td>
+          </tr>
+          <tr class="frag">
+            <td>สถานที่</td>
+            <td class="hl">TC004</td>
+            <td class="hl">TC005</td>
+          </tr>
+          <tr class="frag">
+            <td>ไม่ตรงกับงานใด</td>
+            <td class="hl">TC006</td>
+            <td class="hl">TC007</td>
+          </tr>
+          <tr class="frag">
+            <td>ไม่กรอกคำค้น</td>
+            <td class="hl">TC008</td>
+            <td class="hl">TC009</td>
+          </tr>
+        </table>
+        <p class="frag" style="font-size:21px"><b class="gold">4 × 2 = 8</b> + แสดงผลหน้ารายการ + หน้ารายละเอียดงาน = <b
+            class="gold">10 case</b> · "พบ X งาน" อยู่ใน Expected ของทุกข้อ</p>
+      </section>
+
+      <!-- 19 -->
+      <section class="slide"
+        data-notes="ทำไม AI ถึงแตก matrix ได้ครบ เพราะเราเขียนกฎให้มัน นี่คือ 5 ข้อจากชุดกฎที่ทีมใช้จริง หนึ่ง ทุกจุดตัดสินใจต้องได้อย่างน้อยสอง case เช่นงานนี้ปิดรับหรือยัง ต้องมีทั้งกรณีเปิดรับและกรณีปิดรับ สอง ทุกค่าขอบต้องเป็น case ของตัวเอง เช่นอายุ 18 ต้องเทสทั้ง 17 และ 18 สาม ตัวอย่างตัวเลขที่เขียนอยู่ใน flow คือ case ที่มีค่าที่สุด สี่ ห้ามแต่ง UI ห้า case ที่ผลลัพธ์คือไม่มีอะไรเปลี่ยนต้องมีเสมอ เช่นยกเลิกการสมัครงานหนึ่ง งานอื่นที่สมัครไว้ต้องยังอยู่ครบ สังเกตว่ากฎทั้งหมดนี้คือ skill ของ QA ที่เราเขียนลงไปให้ AI ใช้"
+        data-time="3">
+        <div class="hud"><span class="tag">THRIVE · LEVEL 1</span><span>18 / RULES</span></div>
+        <h2>กฎที่สอน AI ให้แตก Flow เป็น case</h2>
+        <div class="rules">
+          <div><b>1</b><span>ทุกจุดตัดสินใจ = อย่างน้อย 2 case <em>งานปิดรับหรือยัง? → เปิดรับ / ปิดรับ</em></span>
+          </div>
+          <div><b>2</b><span>ทุกค่าขอบ = case ของตัวเอง <em>อายุ 18 → 17 / 18</em></span></div>
+          <div><b>3</b><span>ตัวอย่างตัวเลขใน flow = case ที่มีค่าที่สุด ห้ามตัด</span></div>
+          <div><b>4</b><span>ห้ามแต่ง UI <em>Flow กับ UI ไม่ตรงกัน ใช้ชื่อตาม UI แล้วรายงาน</em></span></div>
+          <div><b>5</b><span>"ไม่มีอะไรเปลี่ยน" ก็เป็น case <em>ยกเลิกงานหนึ่ง งานอื่นต้องยังอยู่</em></span></div>
+        </div>
+      </section>
+
+      <!-- 20 -->
+      <section class="slide"
+        data-notes="ระดับที่ 2 คือให้ AI เขียนรายละเอียด มันอ่านชื่อ test case กับหน้าจอ แล้วเขียน Test Type ขั้นตอน ข้อมูลที่ใช้ และผลที่คาดหวัง ตัวอย่างนี้คือ TC002 ค้นหาด้วยชื่องานแล้วเรียงตามล่าสุด สังเกตว่าพอชื่อ case ชัดแล้ว AI แทบไม่ต้องเดาอะไรเลย และ Expected ข้อสองบอกชัดว่าต้องขึ้นว่าพบ 2 งาน ไม่ใช่แค่ระบบแสดงผลถูกต้อง [ถ้ามีเวลา เปิดแอปลองตามขั้นตอนให้ดู] นี่คือเหตุผลที่ระดับ 1 ต้องดีก่อน"
+        data-time="3">
+        <div class="hud"><span class="tag">THRIVE · LEVEL 2</span><span>19 / GENERATE DETAIL</span></div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr " data-s="robot" data-z="5"></i></div>
+          <h2>Generate Detail · TC002</h2>
+        </div>
+        <table class="t detail-t">
+          <tr>
+            <td>Test Type</td>
+            <td><span class="chip-pos">POSITIVE</span></td>
+          </tr>
+          <tr>
+            <td>Test Step</td>
+            <td>1. เปิดแอป QuickShift<br>2. กรอกคำค้น "พนักงาน"<br>3. เลือกเรียงตาม "ล่าสุด"</td>
+          </tr>
+          <tr>
+            <td>Test Data</td>
+            <td>คำค้น: พนักงาน</td>
+          </tr>
+          <tr>
+            <td>Expected</td>
+            <td>1. แสดงเฉพาะงานที่ชื่อมีคำว่า "พนักงาน" (2 งาน)<br>2. แสดง <b class="gold">"พบ 2 งาน"</b><br>3.
+              เรียงจากวันที่โพสต์ล่าสุดก่อน</td>
+          </tr>
+        </table>
+      </section>
+
+      <!-- 21 -->
+      <section class="slide"
+        data-notes="ทุกครั้งที่ AI ทำเสร็จ เมย์ให้มันปิดงานด้วย Recommend Cases ตัวอย่างจากหน้าค้นหาของ QuickShift มันจะบอกว่ายังขาดการค้นด้วยคำบางส่วน ซึ่งเพิ่มได้เลย แต่มีข้อหนึ่งที่ต้องถามก่อน คือ requirement บอกว่าเรียงงานล่าสุดก่อน แต่ไม่ได้บอกว่าล่าสุดตามวันโพสต์หรือวันเริ่มงาน และมันต้องบอกด้วยว่าสมมติอะไรไปบ้าง จากนั้นเป็นหน้าที่ของ QA ตรวจว่า Expected วัดผลได้จริงไหม Test Data มีค่าขอบไหม ทุก AC มี case ไหม และเราเห็นด้วยกับสิ่งที่ AI สมมติหรือเปล่า"
+        data-time="3">
+        <div class="hud"><span class="tag">THRIVE · REVIEW</span><span>20 / RECOMMEND + REVIEW</span></div>
+        <h2>ปิดงานทุกครั้ง: Recommend Cases + QA Review</h2>
+        <div class="cols c2">
+          <div class="card">
+            <div class="label-row"><i class="spr " data-s="robot" data-z="3"></i><span class="label">AI รายงาน</span>
+            </div>
+            <ul class="clean small-list">
+              <li><b class="green">เพิ่มได้เลย:</b> ค้นหาด้วยคำบางส่วนของชื่องาน</li>
+              <li><b class="gold">ต้องถามก่อน:</b> "ล่าสุด" เรียงตามวันโพสต์หรือวันเริ่มงาน?</li>
+              <li><b class="cyan">สิ่งที่ AI สมมติ:</b> ค้นหาไม่สนตัวพิมพ์เล็กใหญ่</li>
+            </ul>
+          </div>
+          <div class="card gold">
+            <div class="label-row"><i class="spr " data-s="magnifier" data-z="3"></i><span class="label gold">QA
+                ตรวจ</span></div>
+            <ul class="clean small-list">
+              <li>Expected วัดผลได้จริงไหม</li>
+              <li>Test Data มีค่าขอบไหม</li>
+              <li>ทุก AC มี case อย่างน้อย 1 ข้อไหม</li>
+              <li>เห็นด้วยกับสิ่งที่ AI สมมติไหม</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 22 -->
+      <section class="slide"
+        data-notes="สรุปช่วง Thrive AI เขียนได้เร็วกว่าเราแน่นอน แต่เราต้องเป็นคนที่รู้ว่ามันเขียนถูกหรือเปล่า AI ให้ความเร็ว QA ให้ทิศทางและมาตรฐาน นี่คือตำแหน่งที่ QA 2.0 ควรยืน"
+        data-time="1">
+        <div class="hud"><span class="tag">THRIVE CLEAR</span><span>21 / TAKEAWAY</span></div>
+        <div class="center" style="gap:24px">
+          <p class="closing">"AI เขียนได้เร็วกว่าเรา<br>แต่<span class="gold">เราต้องรู้ว่ามันเขียนถูกหรือเปล่า</span>"
+          </p>
+          <div class="cols c2" style="flex:none;width:820px">
+            <div class="card center-card"><i class="spr " data-s="robot" data-z="4"></i>
+              <h3>AI = ความเร็ว</h3>
+            </div>
+            <div class="card gold center-card"><i class="spr " data-s="hero" data-z="4"></i>
+              <h3 class="gold">QA = ทิศทาง + มาตรฐาน</h3>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 23 -->
+      <section class="slide"
+        data-notes="นักวิ่ง A ไม่ได้เก่งเพราะโชคดี เขามีตารางซ้อม QA 2.0 ก็ต้องมี ทุกวันใช้ AI กับงานจริงอย่างน้อยหนึ่งงาน ทุกสัปดาห์จดว่า AI พลาดตรงไหน แล้วเพิ่มเป็นกฎให้มัน ซึ่งชุดกฎที่เมย์เล่าเมื่อกี้ก็เกิดจากการทำแบบนี้ซ้ำ ๆ และทุกเดือนกลับไปทบทวนพื้นฐาน เพราะ skill คือตัวคูณที่สำคัญที่สุดในสูตร"
+        data-time="2">
+        <div class="hud"><span class="tag">TRAINING</span><span>22 / PLAN</span></div>
+        <h2>ตารางซ้อมของ QA 2.0</h2>
+        <div class="cols c3" style="flex:none">
+          <div class="card center-card"><i class="spr " data-s="shoe" data-z="5"></i><span class="label">ทุกวัน</span>
+            <p>ใช้ AI กับงานจริงอย่างน้อย 1 งาน</p>
+          </div>
+          <div class="card center-card"><i class="spr " data-s="book" data-z="5"></i><span
+              class="label">ทุกสัปดาห์</span>
+            <p>จดว่า AI พลาดตรงไหน แล้วเพิ่มเป็นกฎ</p>
+          </div>
+          <div class="card center-card"><i class="spr " data-s="target" data-z="5"></i><span
+              class="label">ทุกเดือน</span>
+            <p>ทบทวน boundary · decision table · state</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 24 -->
+      <section class="slide"
+        data-notes="อยากฝากไว้ประโยคเดียว [พูดช้า] รองเท้าดีไม่ได้ทำให้วิ่งมาราธอนจบ คนที่ซ้อมต่างหากที่วิ่งจบ [หยุด 2 วินาที]"
+        data-time="1">
+        <div class="hud"><span class="tag">FINAL WORDS</span><span></span></div>
+        <div class="center" style="gap:22px">
+          <i class="spr bob" data-s="shoe" data-z="7"></i>
+          <p class="closing">"รองเท้าดีไม่ได้ทำให้วิ่งมาราธอนจบ<br><span class="gold">คนที่ซ้อมต่างหากที่วิ่งจบ</span>"
+          </p>
+          <p class="muted" style="font-size:24px">Skill × AI × การฝึก = QA 2.0</p>
+        </div>
+      </section>
+
+      <!-- 25 -->
+      <section class="slide"
+        data-notes="ใครมีคำถามเชิญได้เลย [ตอบคำถาม] ตอนเช้าเราเล่น QuickShift โดยไม่มี requirement ตอนนี้เรามีทั้ง L-E-V-E-L, test matrix และคำถามจาก AC Card แล้ว workshop ต่อจากนี้คือกลับไปที่แอปเดิมอีกครั้ง ลองดูว่ารอบนี้เราจะเจออะไรมากกว่าเดิม สแกน QR นี้ได้เลย"
+        data-time="3">
+        <div class="hud"><span class="tag">FINISH LINE</span><span>🏁</span></div>
+        <div class="center" style="gap:18px">
+          <i class="spr " data-s="flag" data-z="7"></i>
+          <h2 style="font-size:46px">Q &amp; A</h2>
+          <div class="card gold" style="max-width:860px">
+            <p style="font-size:24px">ต่อด้วย <b class="gold">Workshop</b>: กลับไปที่ QuickShift อีกครั้ง พร้อม
+              requirement และ skill ใหม่</p>
+            <p class="pixel cyan" style="font-size:16px;margin-top:10px">bug-hunt-workshop.vercel.app/workshop</p>
+          </div>
+        </div>
+        <i class="spr deco" data-s="hero" data-z="8" style="left:110px;bottom:34px"></i>
+        <i class="spr deco bob" data-s="trophy" data-z="7" style="right:130px;bottom:44px"></i>
+      </section>
+
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const P = { a: '#ff8a3d', t: '#c2453b', k: '#0b0b22', y: '#ffc53d', o: '#c98a12', l: '#fff1b0', w: '#ffffff', c: '#52d6ef', d: '#2b8fb0', r: '#ff6f7d', e: '#b33a4a', g: '#6be4a6', h: '#2f9e6a', p: '#8b6cf0', s: '#ffcf9e', n: '#7a4b2a', m: '#8886b8', b: '#3a3c7a' };
+      const S = {
+        trophy: ["..kkkkkkkkkkkk..", "yykllyyyyyyyokyy", "y.kllyyyyyyyok.y", "y.kllyyyyyyyok.y", ".ykllyyyyyyyoky.", "..klyyyyyyyyok..", "...kyyyyyyyok...", "....kyyyyyok....", "......kyok......", "......kyok......", ".....kkyokk.....", "....kyyyyyyk....", "...koooooooook..", "...kkkkkkkkkk..."],
+        bug: ["..k......k..", "...k....k...", "...kkkkkk...", "k.kkwkkwkk.k", ".krrrrkrrrrk", "kkrwrrkrrwrk", ".krrrrkrrrrk", "k.krrrkrrrk.", "..kkkkkkkk..", ".k........k."],
+        heart: [".kk.kk.", "kwrkrrk", "krrrrrk", ".krrrk.", "..krk..", "...k..."],
+        coin: ["..kkkk..", ".kyyyyk.", "kyllyyok", "kylyyyok", "kylyyyok", "kyyyyyok", ".kyoook.", "..kkkk.."],
+        star: ["....y....", "...yyy...", "yyyyyyyyy", ".yyyyyyy.", "..yyyyy..", ".yyy.yyy.", "yy.....yy"],
+        shield: ["kkkkkkkkkkkk", "kcwcccccccdk", "kcwcccccccdk", "kcccccccwcdk", "kccccccwccdk", "kcwcccwcccdk", "kccwcwccccdk", "kcccwcccccdk", ".kcccccccdk.", ".kcccccccdk.", "..kcccccdk..", "...kcccdk...", "....kcdk....", ".....kk....."],
+        magnifier: ["..kkkk......", ".kwccck.....", "kwccccck....", "kcccccck....", "kcccccck....", "kcccccck....", ".kcccck.....", "..kkkknn....", ".......nn...", "........nn..", ".........nn.", "..........n."],
+        book: [".kkkkk..kkkkk.", "kwwwwwkkwwwwwk", "kwmmmwkkwmmmwk", "kwwwwwkkwwwwwk", "kwmmmmkkmmmmwk", "kwwwwwkkwwwwwk", "kwmmmwkkwmmwwk", "kwwwwwkkwwwwwk", "kkkkkkkkkkkkkk", "kppppppppppppk", ".kkkkkkkkkkkk."],
+        clock: ["...kkkkkk...", "..kwwwwwwk..", ".kwwwkwwwwk.", "kwwwwkwwwwwk", "kwwwwkwwwwwk", "kwwwwkkkkwwk", "kwwwwwwwwwwk", "kwwwwwwwwwwk", ".kwwwwwwwwk.", "..kwwwwwwk..", "...kkkkkk...", "..k......k.."],
+        target: ["...kkkkk...", ".kkrrrrrkk.", ".krwwwwwrk.", "krwrrrrrwrk", "krwrwwwrwrk", "krwrwrwrwrk", "krwrwwwrwrk", "krwrrrrrwrk", ".krwwwwwrk.", ".kkrrrrrkk.", "...kkkkk..."],
+        team: [".......kkk.......", ".kkk..ksssk..kkk.", "ksssk.ksssk.ksssk", "ksssk..kkk..ksssk", ".kkk.kccccck.kkk.", "kgggkkccccckkgggk", "kgggkkccccckkgggk", "kgggkkccccckkgggk", "kkkkkkkkkkkkkkkkk"],
+        chart: ["........kkk.", "........kgk.", "........kgk.", "....kkk.kgk.", "....kck.kgk.", "....kck.kgk.", "kkk.kck.kgk.", "kyk.kck.kgk.", "kyk.kck.kgk.", "kyk.kck.kgk.", "kkkkkkkkkkkk"],
+        lock: ["..kkkkkk..", ".kmmmmmmk.", ".kmk..kmk.", ".kmk..kmk.", "kkkkkkkkkk", "kyyyyyyyok", "kyyykkyyok", "kyyykkyyok", "kyyyykyyok", "kyyyyyyyok", "kooooooook", "kkkkkkkkkk"],
+        unlock: ["..kkkkkk..", ".kmmmmmmk.", ".kmk..kmk.", ".kmk..kmk.", ".kmk......", "kkkkkkkkkk", "kggggggghk", "kgggkkgghk", "kgggkkgghk", "kggggkgghk", "kggggggghk", "khhhhhhhhk", "kkkkkkkkkk"],
+        hero: ["...kkkkkk...", "..knnnnnnk..", ".knnnnnnnnk.", ".knsskssksk.", ".kssssssssk.", "..kssrrssk..", "...kkkkkk...", "..kcccccck..", ".kcccwwccck.", "ksccccccccsk", "ksccccccccsk", ".kcccccccck.", "..kppppppk..", "..kppkkppk..", "..kkk..kkk.."],
+        controller: ["..kkkkkkkkkkkk..", ".kmmmmmmmmmmmmk.", "kmmkmmmmmmmmrmmk", "kmkkkmmmmmmrmcmk", "kmmkmmmmmmmmcmmk", "kmmmmmmmmmmmmmmk", "kmmmmkkkkkkmmmmk", ".kmmk......kmmk.", "..kk........kk.."],
+
+        shoe: ["....kkkkk.......", "...kcwcwck......", "..kccwcwcck.....", "..kcccccccckkk..", ".kcccyyyyycccck.", "kcccccccccccccck", "kwwwwwwwwwwwwwwk", ".kkkkkkkkkkkkkk."],
+        robot: [".....kk.....", ".....ky.....", "..kkkkkkkk..", ".kmmmmmmmmk.", ".kmcmmmmcmk.", ".kmmmmmmmmk.", ".kmmkkkkmmk.", "..kkkkkkkk..", ".kkmmmmmmkk.", "kmkmmyymmkmk", "kmkmmmmmmkmk", "..kmmkkmmk..", "..kkk..kkk.."],
+        flag: ["mm........", "mmwkwkwkwk", "mmkwkwkwkw", "mmwkwkwkwk", "mmkwkwkwkw", "mm........", "mm........", "mm........", "mm........", "mm........", "mm........", "mm........"],
+        stopwatch: ["....kkkk....", ".....kk.....", "...kkkkkk...", "..kwwwwwwk..", ".kwwwkwwwwk.", "kwwwwkwwwwwk", "kwwwwkwwwwwk", "kwwwwwkwwwwk", "kwwwwwwkwwwk", ".kwwwwwwwwk.", "..kwwwwwwk..", "...kkkkkk..."],
+        wall: ["kkkkkkkkkkkkkkkk", "krrrrrrkrrrrrrrk", "krrrrrrkrrrrrrrk", "kkkkkkkkkkkkkkkk", "krrrkrrrrrrkrrrk", "krrrkrrrrrrkrrrk", "kkkkkkkkkkkkkkkk", "krrrrrrkrrrrrrrk", "krrrrrrkrrrrrrrk", "kkkkkkkkkkkkkkkk"],
+        map: ["kkkkkkkkkkkkkk", "kllllllllllllk", "klrllllllllllk", "kllrlllllllllk", "klllrrlllllllk", "klllllrllllllk", "klllllllrlrllk", "kllllllllrlllk", "klllllllrlrllk", "kllllllllllllk", "kkkkkkkkkkkkkk"],
+        cloud: ["....wwww......", "..wwwwwwww....", ".wwwwwwwwwwww.", "wwwwwwwwwwwwww", ".wwwwwwwwwwww."]
+      };
+      S.heroB = S.hero.map(r => r.replace(/c/g, 'a').replace(/n/g, 'e'));
+      function svg(name, z) {
+        const rows = S[name]; if (!rows) return '';
+        const w = Math.max.apply(null, rows.map(r => r.length)), h = rows.length;
+        let out = '';
+        rows.forEach((row, y) => { for (let x = 0; x < row.length; x++) { const c = P[row[x]]; if (c) out += '<rect x="' + x + '" y="' + y + '" width="1.02" height="1.02" fill="' + c + '"/>'; } });
+        return '<svg width="' + w * z + '" height="' + h * z + '" viewBox="0 0 ' + w + ' ' + h + '" aria-hidden="true">' + out + '</svg>';
+      }
+      document.querySelectorAll('.spr[data-s]').forEach(el => { el.innerHTML = svg(el.dataset.s, +el.dataset.z || 4); });
+      // stars
+      const scene = document.querySelector('.scene');
+      let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+      for (let i = 0; i < 40; i++) {
+        const st = document.createElement('i'); st.className = 'star';
+        st.style.left = Math.round(rnd() * 1270) + 'px'; st.style.top = Math.round(rnd() * 520) + 'px';
+        st.style.animationDelay = (rnd() * 3).toFixed(2) + 's';
+        if (rnd() > .7) { st.style.width = st.style.height = '6px'; }
+        scene.appendChild(st);
+      }
+    })();
+  </script>
+
+  <div class="notes" id="notes" hidden>
+    <span class="k" id="notesHead">SPEAKER NOTES</span>
+    <p id="notesText"></p>
+  </div>
+
+  <div class="controls">
+    <div class="xp"><span>XP</span>
+      <div class="bar">
+        <div class="fill" id="fill"></div>
+      </div><span class="counter" id="counter">1 / 17</span>
+    </div>
+    <span class="hint">← → เปลี่ยนสไลด์ · N โน้ต · F เต็มจอ</span>
+    <div class="btns">
+      <button id="prev" type="button" aria-label="สไลด์ก่อนหน้า">← ก่อนหน้า</button>
+      <button id="next" type="button" aria-label="สไลด์ถัดไป">ถัดไป →</button>
+      <button id="notesBtn" type="button" aria-pressed="false">โน้ตผู้พูด</button>
+      <button id="fsBtn" type="button">เต็มจอ</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const stage = document.getElementById('stage');
+      const viewport = document.getElementById('viewport');
+      const slides = Array.from(stage.querySelectorAll('.slide'));
+      const notes = document.getElementById('notes');
+      const notesText = document.getElementById('notesText');
+      const notesHead = document.getElementById('notesHead');
+      const notesBtn = document.getElementById('notesBtn');
+      const fill = document.getElementById('fill');
+      const counter = document.getElementById('counter');
+      let i = 0, step = 0;
+
+      const frags = s => Array.from(s.querySelectorAll('.frag'));
+
+      function fit() {
+        const k = Math.min(viewport.clientWidth / 1280, viewport.clientHeight / 720) * 0.96;
+        stage.style.transform = 'translate(-50%, -50%) scale(' + k + ')';
+      }
+
+      function show(n, revealAll) {
+        i = Math.max(0, Math.min(slides.length - 1, n));
+        slides.forEach((s, k) => s.classList.toggle('active', k === i));
+        const f = frags(slides[i]);
+        step = revealAll ? f.length : 0;
+        f.forEach((el, k) => el.classList.toggle('in', k < step));
+        counter.textContent = (i + 1) + ' / ' + slides.length;
+        fill.style.width = ((i + 1) / slides.length * 100) + '%';
+        const s = slides[i];
+        notesHead.textContent = 'SPEAKER NOTES · สไลด์ ' + (i + 1) + ' · ⏱ ' + s.dataset.time + ' นาที';
+        notesText.textContent = s.dataset.notes || '';
+        try { history.replaceState(null, '', '#s' + (i + 1)); } catch (e) { }
+      }
+
+      function next() {
+        const f = frags(slides[i]);
+        if (step < f.length) { f[step].classList.add('in'); step++; }
+        else if (i < slides.length - 1) show(i + 1, false);
+      }
+      function prev() {
+        const f = frags(slides[i]);
+        if (step > 0) { step--; f[step].classList.remove('in'); }
+        else if (i > 0) show(i - 1, true);
+      }
+      function toggleNotes() {
+        notes.hidden = !notes.hidden;
+        notesBtn.setAttribute('aria-pressed', String(!notes.hidden));
+        fit();
+      }
+      function toggleFs() {
+        try {
+          if (document.fullscreenElement) document.exitFullscreen();
+          else document.documentElement.requestFullscreen().catch(() => { });
+        } catch (e) { }
+      }
+
+      document.getElementById('next').addEventListener('click', next);
+      document.getElementById('prev').addEventListener('click', prev);
+      notesBtn.addEventListener('click', toggleNotes);
+      document.getElementById('fsBtn').addEventListener('click', toggleFs);
+
+      document.addEventListener('keydown', e => {
+        if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+        switch (e.key) {
+          case 'ArrowRight': case 'PageDown': case ' ': case 'Enter': e.preventDefault(); next(); break;
+          case 'ArrowLeft': case 'PageUp': case 'Backspace': e.preventDefault(); prev(); break;
+          case 'Home': show(0, false); break;
+          case 'End': show(slides.length - 1, true); break;
+          case 'n': case 'N': toggleNotes(); break;
+          case 'f': case 'F': toggleFs(); break;
+        }
+      });
+
+      viewport.addEventListener('click', e => {
+        const r = viewport.getBoundingClientRect();
+        (e.clientX - r.left) < r.width / 3 ? prev() : next();
+      });
+      let tx = null;
+      viewport.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+      viewport.addEventListener('touchend', e => {
+        if (tx === null) return;
+        const dx = e.changedTouches[0].clientX - tx; tx = null;
+        if (Math.abs(dx) > 40) { dx < 0 ? next() : prev(); }
+      });
+
+      window.addEventListener('resize', fit);
+      document.addEventListener('fullscreenchange', fit);
+
+      const m = /^#s(\d+)$/.exec(location.hash);
+      show(m ? parseInt(m[1], 10) - 1 : 0, !!m);
+      fit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    })();
+  </script>
+</body>
+
+</html>
