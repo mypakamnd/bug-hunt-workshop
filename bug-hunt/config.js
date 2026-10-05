@@ -8,7 +8,7 @@
  * session = ชื่อรอบของ workshop เปลี่ยนเมื่อจัดรอบใหม่ คำตอบของแต่ละรอบจะแยกกันใน dashboard
  */
 window.BUG_HUNT_CONFIG = {
-  supabaseUrl: '',
-  supabaseAnonKey: '',
+  supabaseUrl: 'https://fkohbdoiiizljhzdqnbm.supabase.co',
+  supabaseAnonKey: 'sb_publishable_IFkyyv4s71Vdykikg_kgfw_Y8SYMygh',
   session: 'level-up-2026-10-10'
 };
