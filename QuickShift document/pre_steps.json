@@ -1,0 +1,6 @@
+{
+  "_comment": "Pre-steps (setup prefix) prepended to every Test Step in a tab, for the QuickShift MOBILE APP. Same schema as daywork_app/pre_steps.json: key by exact tab name or feature code (F01, F02, ...); value is a flat list (whole tab) or an object keyed by scenario code (SC01, SC02, ...) with a 'default'. App default opener is 'เปิดแอป QuickShift'. F02 starts from the opener only, because its cases start from different jobs (open vs closed).",
+  "F01": ["เปิดแอป QuickShift"],
+  "F02": ["เปิดแอป QuickShift"],
+  "F03": ["เปิดแอป QuickShift", "กดแท็บ \"งานที่สมัคร\""]
+}

@@ -11,7 +11,9 @@
 | `/workshop` | `workshop.html` | หลังจบ session | ชื่อทีม + Bug / Req ไม่ชัด + REQ ข้อไหน + รายละเอียด |
 | `/dashboard` | `dashboard.html` | ผู้จัดเปิดดูหรือฉายขึ้นจอ | ดูว่าใครส่งอะไร แยกรอบ กรองตามทีม/ประเภท คัดลอก CSV และปุ่ม 🔑 เฉลย (ต้องใช้รหัส) |
 | `/slides` | `slides.html` | หัวข้อ 1 | สไลด์ Level Up! 17 หน้า (← → เปลี่ยนสไลด์, N โน้ตผู้พูด, F เต็มจอ) |
-| `/slides-2` | `slides-2.html` | หัวข้อ 2 | สไลด์ Survive & Thrive: QA 2.0 in AI Age 25 หน้า ธีมรองเท้าวิ่ง ตัวอย่างใช้แอป QuickShift |
+| `/slides-2` | `slides-2.html` | หัวข้อ 2 | สไลด์ Survive & Thrive: QA 2.0 in AI Age 27 หน้า ธีมรองเท้าวิ่ง ตัวอย่างใช้แอป QuickShift |
+
+**รหัสเข้าหน้า:** `/workshop` และ `/dashboard` ต้องใส่รหัสก่อนเข้า (คนละรหัสกัน) รหัส Workshop ตั้งใน `config.js` → `accessCodes` (เก็บเป็น SHA-256) ส่วนรหัส Dashboard ตั้งใน `dashboard.html` ไม่มีตัวรหัสจริงอยู่ใน repo
 
 ทั้งสองเกมใช้แอปและ requirement ชุดเดียวกัน (`assets/quickshift.js`) ผู้เล่นจึงเจอบั๊กเดิมได้อีกครั้งด้วยมุมมองใหม่หลัง session
 

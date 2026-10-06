@@ -49,6 +49,16 @@
     .hub-link span { font-size: 13px; color: var(--muted); }
     .hub-link:hover, .hub-link:focus-visible { border-color: var(--gold); transform: translate(-1px, -1px); }
     .hub-link.ice { border-color: var(--cyan); } .hub-link.ws { border-color: var(--gold); }
+    .door.locked .qr, .door.locked .url { display: none; }
+    .door.locked { align-content: start; }
+    .qr-lock { display: grid; gap: 10px; justify-items: center; width: min(100%, 360px); padding: 26px 20px; border: 2px dashed var(--gold); border-radius: 12px; background: rgba(255,197,61,.06); }
+    .qr-lock p { margin: 0; }
+    .qr-lock-title { font-family: var(--font-display); font-size: 22px; color: var(--gold); }
+    .qr-lock-note { font-size: 15px; color: var(--muted); }
+    .qr-lock input { width: 100%; background: var(--bg); color: var(--ink); border: 2px solid var(--line); border-radius: 10px; padding: 10px 14px; font-size: 17px; text-align: center; }
+    .qr-lock input:focus { border-color: var(--gold); outline: none; }
+    .qr-lock button { background: var(--gold); color: var(--bg); border: 0; border-radius: 10px; padding: 10px 24px; font-family: var(--font-display); font-weight: 600; font-size: 17px; cursor: pointer; }
+    .qr-lock-msg { min-height: 1.3em; font-size: 14px; color: var(--red); }
     @media (max-width: 760px) { .hub { grid-template-columns: minmax(0, 1fr); } }
     @media (max-width: 760px) { .doors { grid-template-columns: minmax(0, 1fr); } .keys { display: none; } }
   </style>
@@ -75,6 +85,13 @@
         <p class="when">หลังจบ 2 หัวข้อ · 30 นาที</p>
         <div class="qr" data-path="/workshop"></div>
         <div class="url" data-url-for="/workshop"></div>
+        <form class="qr-lock" id="wsLock" hidden autocomplete="off">
+          <p class="qr-lock-title">🔒 QR และลิงก์ถูกซ่อนไว้</p>
+          <p class="qr-lock-note">ใส่รหัสรอบ Workshop เพื่อแสดง</p>
+          <input id="wsCode" type="password" placeholder="รหัสรอบ Workshop" aria-label="รหัสรอบ Workshop">
+          <button type="submit">แสดง QR</button>
+          <p class="qr-lock-msg" id="wsMsg" role="status"></p>
+        </form>
       </section>
     </div>
 
@@ -89,19 +106,20 @@
       <div class="hub-group">
         <span class="hub-label">ผู้เล่น</span>
         <a class="hub-link ice" href="ice-breaking"><b>🔍 Ice breaking</b><span>รอบ 1 · ก่อนเริ่ม session</span></a>
-        <a class="hub-link ws" href="workshop"><b>🐞 Workshop</b><span>รอบ 2 · หลังจบ 2 หัวข้อ</span></a>
+        <a class="hub-link ws" href="workshop"><b>🐞 Workshop</b><span>รอบ 2 · หลังจบ 2 หัวข้อ · 🔒 ใช้รหัส</span></a>
       </div>
       <div class="hub-group">
         <span class="hub-label">ผู้พูด / ผู้จัด</span>
         <a class="hub-link" href="slides"><b>🎮 สไลด์หัวข้อ 1</b><span>Level Up! MVQ(A)</span></a>
         <a class="hub-link" href="slides-2"><b>👟 สไลด์หัวข้อ 2</b><span>Survive &amp; Thrive</span></a>
-        <a class="hub-link" href="dashboard"><b>📊 Dashboard</b><span>คำตอบทุกทีม · เฉลย</span></a>
+        <a class="hub-link" href="dashboard"><b>📊 Dashboard</b><span>คำตอบทุกทีม · เฉลย · 🔒 ใช้รหัส</span></a>
       </div>
     </nav>
 
     <footer class="site-foot">© 2026 Level Up!: Becoming Your Team's MVQ(A) · นิภาพร จันต๊ะวงค์ (เมย์)</footer>
   </main>
 
+  <script src="config.js"></script>
   <script src="assets/vendor/qrcode.min.js"></script>
   <script>
     (function () {
@@ -137,6 +155,7 @@
         d.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
       });
       document.addEventListener('keydown', e => {
+        if (e.target.closest && e.target.closest('input, textarea')) return;
         if (e.target.closest && e.target.closest('button, .door') && (e.key === 'Enter' || e.key === ' ')) return;
         if (e.key === '1') show('ice');
         else if (e.key === '2') show('workshop');
@@ -145,6 +164,31 @@
           try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); } catch (err) {}
         }
       });
+      // Workshop QR + link stay hidden until the round's access code is entered (same code as /workshop).
+      (function () {
+        const cfg = window.BUG_HUNT_CONFIG || {};
+        const hash = cfg.accessCodes && cfg.accessCodes.full;
+        if (!hash) return;
+        const KEY = 'bh-code-full-' + (cfg.session || 'default');
+        let ok = false; try { ok = localStorage.getItem(KEY) === hash; } catch (e) { }
+        if (ok) return;
+        const door = document.querySelector('.door[data-k="workshop"]');
+        const form = document.getElementById('wsLock'), input = document.getElementById('wsCode'), msg = document.getElementById('wsMsg');
+        door.classList.add('locked');
+        form.hidden = false;
+        ['click', 'keydown'].forEach(t => form.addEventListener(t, e => e.stopPropagation()));
+        form.addEventListener('submit', async e => {
+          e.preventDefault();
+          if (!window.crypto || !crypto.subtle) { msg.textContent = 'เปิดผ่าน https เพื่อใช้รหัส'; return; }
+          const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input.value.trim()));
+          const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+          if (hex !== hash) { msg.textContent = 'รหัสไม่ถูกต้อง'; input.select(); return; }
+          try { localStorage.setItem(KEY, hash); } catch (err) { }
+          door.classList.remove('locked');
+          form.hidden = true;
+        });
+      })();
+
       const h = location.hash.slice(1);
       show(h === 'ice' || h === 'workshop' ? h : 'both');
     })();

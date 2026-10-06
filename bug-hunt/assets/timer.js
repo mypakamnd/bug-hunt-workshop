@@ -227,9 +227,41 @@
 
   if (restartBtn) restartBtn.addEventListener('click', confirmRestart);
 
-  lockTeam();
-  // No team on this device (first visit, or a game started before names were required): ask first.
-  if (!endAt || !store.get(CLAIM_KEY)) { endAt = 0; set(0); showReady(); }
-  else if (endAt > Date.now()) play();
-  else over(false);
+  function init() {
+    lockTeam();
+    // No team on this device (first visit, or a game started before names were required): ask first.
+    if (!endAt || !store.get(CLAIM_KEY)) { endAt = 0; set(0); showReady(); }
+    else if (endAt > Date.now()) play();
+    else over(false);
+  }
+
+  // Access code (config.accessCodes[round] = SHA-256 hex). Unlocked once per browser for this session.
+  const codeHash = cfg.accessCodes && cfg.accessCodes[round];
+  const CODE_KEY = 'bh-code-' + round + '-' + (cfg.session || 'default');
+  if (!codeHash || store.get(CODE_KEY) === codeHash) { init(); return; }
+  document.body.dataset.game = 'closed';
+  wrap.inert = true;
+  setPills('🔒 ใส่รหัส', 'over');
+  const cform = node('form', 'gate-field'); cform.noValidate = true;
+  const cin = node('input'); cin.type = 'password'; cin.autocomplete = 'off'; cin.placeholder = 'รหัสเข้ารอบ'; cin.setAttribute('aria-label', 'รหัสเข้ารอบ');
+  const cmsg = node('p', 'gate-msg', '');
+  const cbtn = node('button', 'gate-btn', 'เข้าเล่น ▶'); cbtn.type = 'submit';
+  cform.append(cin, cmsg, cbtn);
+  const home = node('a', 'gate-btn ghost-btn', 'กลับหน้าหลัก'); home.href = '/';
+  cform.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!window.crypto || !crypto.subtle) { cmsg.textContent = 'เปิดผ่าน https เพื่อใช้รหัส'; cmsg.className = 'gate-msg bad'; return; }
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(cin.value.trim()));
+    const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    if (hex !== codeHash) { cmsg.textContent = 'รหัสไม่ถูกต้อง'; cmsg.className = 'gate-msg bad'; cin.select(); return; }
+    store.set(CODE_KEY, codeHash);
+    init();
+  });
+  gateBody.replaceChildren(
+    node('div', 'gate-title', 'ใส่รหัสเข้ารอบ'),
+    node('p', 'gate-sub', document.querySelector('.title span').textContent),
+    node('p', 'gate-note', 'ผู้จัดจะบอกรหัสเมื่อเปิดรอบนี้'),
+    cform, home);
+  overlay.hidden = false;
+  cin.focus();
 })();

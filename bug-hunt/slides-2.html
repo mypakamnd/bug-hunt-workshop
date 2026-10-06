@@ -1295,6 +1295,35 @@
       color: var(--muted);
       font-size: 17px;
     }
+    table.t.tech { font-size: 19px; }
+    table.t.tech td, table.t.tech th { padding: 9px 16px; }
+    table.t.tech td:first-child { color: var(--gold); font-family: var(--font-display); width: 42%; }
+    table.t.tech td:first-child .muted { font-family: var(--font-body); font-size: 16px; }
+    .tech-sum { font-size: 20px; text-align: center; }
+    .ac-h { font-size: 40px; }
+    .ac-h .sub { font-size: 18px; }
+    .ac-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .ac-tile { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; align-items: start; background: var(--panel); border: 2px solid var(--line); border-radius: 8px; padding: 10px 12px; min-height: 112px; }
+    .ac-tile > b { font-family: var(--font-pixel); font-size: 14px; width: 34px; height: 34px; display: grid; place-items: center; background: var(--line); color: var(--ink); border-radius: 6px; }
+    .ac-tile.key { border-color: var(--gold); background: linear-gradient(rgba(255,197,61,.07), rgba(255,197,61,.07)), var(--panel); }
+    .ac-tile.key > b { background: var(--gold); color: var(--bg); }
+    .ac-name { display: block; font-family: var(--font-display); font-size: 18px; color: var(--ink); line-height: 1.3; }
+    .ac-tile.key .ac-name { color: var(--gold); }
+    .ac-desc { display: block; font-size: 14px; color: var(--muted); line-height: 1.45; margin-top: 2px; }
+    .ac-qs { display: block; font-size: 13.5px; color: var(--cyan); line-height: 1.4; margin-top: 4px; }
+    .tm-cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); flex: none; align-items: start; }
+    .tm-steps { display: grid; gap: 12px; }
+    .tm-steps div { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 14px; align-items: center; background: var(--panel); border: 2px solid var(--line); border-radius: 8px; padding: 12px 16px; }
+    .tm-steps b { font-family: var(--font-pixel); font-size: 18px; width: 42px; height: 42px; display: grid; place-items: center; background: var(--gold); color: var(--bg); border-radius: 6px; }
+    .tm-steps strong { display: block; font-family: var(--font-display); font-weight: 500; font-size: 21px; }
+    .tm-steps em { display: block; font-style: normal; font-size: 16px; color: var(--muted); }
+    .tm-demo { padding: 14px 18px; }
+    .tm-demo .label { font-family: var(--font-display); font-size: 16px; letter-spacing: 0; }
+    table.t.tm-mini { font-size: 18px; }
+    table.t.tm-mini td, table.t.tm-mini th { padding: 7px 12px; }
+    table.t.tm-mini td.hl { font-size: 13px; }
+    .tm-total { margin-top: 10px; font-size: 18px; }
+    .tm-foot { text-align: center; font-size: 17px; }
   </style>
 </head>
 
@@ -1655,7 +1684,7 @@
 
       <!-- 12 -->
       <section class="slide"
-        data-notes="สรุปช่วง Survive สิ่งที่รองเท้าซ้อมแทนเราไม่ได้มีสามอย่าง skill คือ L-E-V-E-L จากหัวข้อแรกบวกกับเทคนิคออกแบบ test รองเท้าคือการเลือก AI ให้เหมาะกับงาน และการฝึกคือการใช้มันทุกวันจนรู้ว่ามันพลาดตรงไหน [พูดช้า] AI ไม่ได้มาแทน QA แต่ QA ที่ใช้ AI เป็น จะมาแทน QA ที่ใช้ไม่เป็น แล้วถ้าเราอยากไปไกลกว่าแค่รอด ไปดูช่วง Thrive กัน"
+        data-notes="สรุปช่วง Survive สิ่งที่รองเท้าซ้อมแทนเราไม่ได้มีสามอย่าง skill คือ L-E-V-E-L จากหัวข้อแรกบวกกับเทคนิคออกแบบ test รองเท้าคือการเลือก AI ให้เหมาะกับงาน และการฝึกคือการใช้มันทุกวันจนรู้ว่ามันพลาดตรงไหน [พูดช้า] AI ไม่ได้มาแทนที่ QA แต่จะแทนที่ QA ที่หยุดพัฒนาตัวเอง ไม่ว่าจะเก่งแค่ไหนในวันนี้ ถ้าหยุดเรียนรู้ รองเท้าคู่ใหม่ก็ช่วยไม่ได้ แล้วถ้าเราอยากไปไกลกว่าแค่รอด ไปดูช่วง Thrive กัน"
         data-time="2">
         <div class="hud"><span class="tag">SURVIVE CLEAR</span><span>11 / TAKEAWAY</span></div>
         <h2>สิ่งที่รองเท้าซ้อมแทนเราไม่ได้</h2>
@@ -1673,7 +1702,7 @@
             <p class="muted">ใช้ทุกวัน จนรู้ว่ามันพลาดตรงไหน</p>
           </div>
         </div>
-        <div class="quote">"AI ไม่ได้แทน QA แต่ QA ที่ใช้ AI เป็น จะแทน QA ที่ใช้ไม่เป็น"</div>
+        <div class="quote">"AI ไม่ได้มาแทนที่ QA แต่จะแทนที่ QA ที่หยุดพัฒนาตัวเอง<br>ไม่ว่าจะเก่งแค่ไหนในวันนี้ ถ้าหยุดเรียนรู้ รองเท้าคู่ใหม่ก็ช่วยไม่ได้"</div>
       </section>
 
       <!-- 13 -->
@@ -1722,28 +1751,23 @@
       </section>
 
       <!-- 15 -->
-      <section class="slide"
-        data-notes="ขั้นแรกคือ input เมย์ใช้ AC Card ที่มี 12 หมวด กฎสำคัญที่สุดคือห้ามปล่อยช่องว่าง ถ้าหมวดไหนไม่เกี่ยวให้เขียนว่าไม่เกี่ยวพร้อมเหตุผล เพราะช่องว่างแปลได้สองแบบ คือไม่เกี่ยว หรือลืมคิด ลองนึกว่าถ้าแอป QuickShift ที่เล่นตอนเช้ามี AC Card หมวด C นิยามค่าจะบังคับให้ถามว่างานด่วนคือเริ่มภายในกี่วัน หมวด D ทางเข้าจะถามว่าสมัครได้จากหน้าไหนบ้าง และหมวด K ความขัดแย้งจะเจอว่า requirement บอกให้แสดงงานทั้งหมด แต่อีกข้อบอกว่างานที่ปิดรับไม่ควรทำให้สับสน สี่หมวด C D E K นี่แหละที่การ์ดทั่วไปมักไม่มี [จำคำถามเหล่านี้ไว้ จะได้ใช้ใน workshop]"
-        data-time="3">
+      <section class="slide" data-notes="ขั้นแรกคือ input เมย์ใช้ AC Card ที่มี 12 หมวด ไล่จาก A ถึง L A ระบุงาน คือชื่อฟีเจอร์ในภาษาที่ผู้ใช้เข้าใจ และทุก role ที่แตะฟีเจอร์นี้ B พฤติกรรม คือตอนนี้เป็นยังไง ต้องการให้เป็นยังไง และอะไรที่ต้องไม่เปลี่ยน C นิยามค่า คือทุกค่าที่ฟีเจอร์อ้างถึงต้องมีความหมายชัด D ทางเข้า คือทุกทางที่ผู้ใช้มาถึงฟีเจอร์นี้ได้ E ของที่แชร์ต่อได้ เช่นลิงก์หรือโค้ด หมดอายุเมื่อไร ใช้ได้กี่ครั้ง F ขอบเขตข้อมูล คือตอนไม่มีข้อมูลและค่าสูงสุดต่ำสุด G ความล้มเหลว คืออะไรพังได้และผู้ใช้ควรเห็นอะไร H ทำพร้อมกัน คือถ้าสองคนแก้ของเดียวกันจะเกิดอะไร I ของเดิม คือข้อมูลและ flow เดิมที่ห้ามพัง J ร่องรอย คือ event และ log ที่ต้องทิ้งไว้ K ตรวจความขัดแย้ง คือฟีเจอร์นี้ขัดกับกฎเดิมไหม และ L ไฟล์แนบ คือ Flow chart กับ Design [ชี้กรอบสีทอง] สี่หมวด C D E K นี่แหละที่การ์ดทั่วไปมักไม่มี และเป็นต้นเหตุที่ทำให้ AC ขาดหรือขัดกันเอง ลองนึกว่าถ้า QuickShift มี AC Card หมวด C จะบังคับให้ถามว่างานด่วนคือเริ่มภายในกี่วัน หมวด D จะถามว่าสมัครได้จากหน้าไหนบ้าง และหมวด K จะเจอว่า requirement บอกให้แสดงงานทั้งหมด แต่อีกข้อบอกว่างานที่ปิดรับไม่ควรทำให้สับสน กฎสำคัญที่สุดของการ์ดคือห้ามปล่อยช่องว่าง ถ้าไม่เกี่ยวให้เขียนว่าไม่เกี่ยวพร้อมเหตุผล เพราะช่องว่างแปลได้ทั้งไม่เกี่ยวและลืมคิด [จำคำถามเหล่านี้ไว้ จะได้ใช้ใน workshop]" data-time="3">
         <div class="hud"><span class="tag">THRIVE · STEP 0</span><span>14 / AC CARD</span></div>
-        <div class="lvl-title">
-          <div class="lvl-icon"><i class="spr " data-s="book" data-z="5"></i></div>
-          <h2>AC Card · input ที่ดี</h2>
+        <h2 class="ac-h">AC Card · 12 หมวด A–L <span class="sub">ห้ามปล่อยช่องว่าง: ไม่เกี่ยวก็ต้องเขียนว่า "ไม่เกี่ยว: เหตุผล" · <span class="gold">กรอบทอง = หมวดที่การ์ดทั่วไปมักไม่มี</span></span></h2>
+        <div class="ac-grid">
+          <div class="ac-tile"><b>A</b><div><span class="ac-name">ระบุงาน</span><span class="ac-desc">ชื่อฟีเจอร์ในภาษาผู้ใช้ · ทุก role ที่แตะฟีเจอร์ · ความรุนแรงถ้าพัง</span></div></div>
+          <div class="ac-tile"><b>B</b><div><span class="ac-name">พฤติกรรม</span><span class="ac-desc">ตอนนี้เป็นยังไง → ต้องการให้เป็นยังไง · สิ่งที่ต้องไม่เปลี่ยน · ดูตรงไหนถึงเรียกว่าสำเร็จ</span></div></div>
+          <div class="ac-tile key"><b>C</b><div><span class="ac-name">นิยามค่า</span><span class="ac-desc">ทุกค่าที่ฟีเจอร์อ้างถึง ต้องมีความหมายชัด (กฎธุรกิจหลัก)</span><span class="ac-qs">QuickShift: "งานด่วน" คือเริ่มภายในกี่วัน?</span></div></div>
+          <div class="ac-tile key"><b>D</b><div><span class="ac-name">ทางเข้า</span><span class="ac-desc">ทุกทางที่ผู้ใช้มาถึงฟีเจอร์ได้ และ platform ที่ต้องตรวจ</span><span class="ac-qs">QuickShift: สมัครได้จากหน้าไหนบ้าง?</span></div></div>
+          <div class="ac-tile key"><b>E</b><div><span class="ac-name">ของที่แชร์ต่อได้</span><span class="ac-desc">ลิงก์ / โค้ดที่ส่งต่อได้: หมดอายุเมื่อไร · ใช้ได้กี่ครั้ง · เพิกถอนได้ไหม · ถูกเดาได้ไหม</span></div></div>
+          <div class="ac-tile"><b>F</b><div><span class="ac-name">ขอบเขตข้อมูล</span><span class="ac-desc">หน้าตาตอนไม่มีข้อมูล · ค่าสูงสุด–ต่ำสุด · ปริมาณที่ต้องรับไหว</span></div></div>
+          <div class="ac-tile"><b>G</b><div><span class="ac-name">ความล้มเหลว</span><span class="ac-desc">อะไรพังได้บ้าง และผู้ใช้ควรเห็นอะไรตอนพัง</span></div></div>
+          <div class="ac-tile"><b>H</b><div><span class="ac-name">ทำพร้อมกัน</span><span class="ac-desc">ใครแก้ของชิ้นเดียวกันได้ · ถ้าชนกันควรได้ผลอะไร</span></div></div>
+          <div class="ac-tile"><b>I</b><div><span class="ac-name">ของเดิม</span><span class="ac-desc">ข้อมูลเดิม · flow เดิม · ลิงก์เดิม ที่ห้ามพัง</span></div></div>
+          <div class="ac-tile"><b>J</b><div><span class="ac-name">ร่องรอย</span><span class="ac-desc">event ที่ต้องเกิด · สิ่งที่ต้องบันทึกไว้ตามรอยย้อนหลัง</span></div></div>
+          <div class="ac-tile key"><b>K</b><div><span class="ac-name">ตรวจความขัดแย้ง</span><span class="ac-desc">ขัดกับกฎที่มีอยู่แล้วไหม · ถ้าขัด ใครตัดสิน</span><span class="ac-qs">QuickShift: "แสดงงานทั้งหมด" รวมงานที่ปิดรับไหม?</span></div></div>
+          <div class="ac-tile"><b>L</b><div><span class="ac-name">ไฟล์แนบ</span><span class="ac-desc">Flow chart และไฟล์ Design</span></div></div>
         </div>
-        <div class="cols c2">
-          <div class="card"><span class="label">12 หมวด A–L</span>
-            <p style="font-size:19px;line-height:1.7">ระบุงาน · พฤติกรรม · นิยามค่า · ทางเข้า · ของที่แชร์ได้ ·
-              ขอบเขตข้อมูล · ความล้มเหลว · ชนกัน · ของเดิม · ร่องรอย · ความขัดแย้ง · ไฟล์แนบ</p>
-          </div>
-          <div class="card gold"><span class="label gold">ถ้า QuickShift มี AC Card</span>
-            <ul class="clean small-list">
-              <li><b>C</b> นิยามค่า: "งานด่วน" คือเริ่มภายในกี่วัน?</li>
-              <li><b>D</b> ทางเข้า: สมัครได้จากหน้าไหนบ้าง?</li>
-              <li><b>K</b> ขัดแย้ง: "แสดงงานทั้งหมด" รวมงานที่ปิดรับไหม?</li>
-            </ul>
-          </div>
-        </div>
-        <div class="quote">"ห้ามปล่อยช่องว่าง: ช่องว่างแปลได้ทั้ง ไม่เกี่ยว และ ลืมคิด"</div>
       </section>
 
       <!-- 16 -->
@@ -1811,10 +1835,34 @@
           โครงเดียวกับที่ทีมใช้จริง</p>
       </section>
 
+      <!-- 17b -->
+      <section class="slide" data-notes="ก่อนไปดู matrix ของ QuickShift ขอเล่าก่อนว่า Test Matrix คืออะไร Test Matrix คือตารางที่เอาสิ่งที่ผู้ใช้เลือกหรือเปลี่ยนได้ มาไขว้กัน ทุกช่องในตารางคือ test case หนึ่งข้อ ทำได้ 3 ขั้น หนึ่ง หามิติ คือสิ่งที่เปลี่ยนแล้วผลลัพธ์อาจต่างกัน สอง แบ่งค่าของแต่ละมิติเป็นกลุ่ม สาม เอามาไขว้กัน จำนวน case คือจำนวนค่าของแต่ละมิติคูณกัน ลองดูตัวอย่างง่าย ๆ สั่งกาแฟ มีขนาด เล็ก กลาง ใหญ่ กับแบบ ร้อน เย็น [ชี้ตาราง] 3 คูณ 2 ได้ 6 case ถ้าเราเขียน case จากความจำ มักลืมช่องอย่างใหญ่ร้อน เพราะคนไม่ค่อยสั่ง แต่ในตารางช่องที่ว่างจะเห็นทันที ข้อดีคือ ไม่ลืมการผสม เห็นช่องที่ยังไม่มี case ทันที และ AI ทำตามได้แม่นเพราะเป็นกติกาที่ชัด ในทางทฤษฎีเรียกว่า Combinatorial Testing ถ้ามิติเยอะเกินไปค่อยเปลี่ยนไปใช้ Pairwise ทีนี้มาดูของจริงกัน" data-time="2">
+        <div class="hud"><span class="tag">THRIVE · LEVEL 1</span><span>WHAT IS A TEST MATRIX?</span></div>
+        <h2>Test Matrix คืออะไร?</h2>
+        <div class="quote">ตารางที่เอา <span class="gold">สิ่งที่ผู้ใช้เลือกหรือเปลี่ยนได้</span> มาไขว้กัน · <span class="gold">ทุกช่อง = 1 test case</span></div>
+        <div class="cols tm-cols">
+          <div class="tm-steps">
+            <div><b>1</b><span><strong>หามิติ</strong><em>สิ่งที่เปลี่ยนแล้วผลลัพธ์อาจต่าง เช่น ขนาด, แบบ</em></span></div>
+            <div><b>2</b><span><strong>แบ่งค่าแต่ละมิติเป็นกลุ่ม</strong><em>ขนาด: เล็ก / กลาง / ใหญ่ · แบบ: ร้อน / เย็น</em></span></div>
+            <div><b>3</b><span><strong>ไขว้กัน ทุกช่องคือ 1 case</strong><em>จำนวน case = ค่ามิติแรก × ค่ามิติที่สอง</em></span></div>
+          </div>
+          <div class="card tm-demo"><span class="label">ตัวอย่าง: สั่งกาแฟ</span>
+            <table class="t matrix-t tm-mini">
+              <tr><th>ขนาด / แบบ</th><th class="hl">ร้อน</th><th class="hl">เย็น</th></tr>
+              <tr><td>เล็ก</td><td class="hl">case 1</td><td class="hl">case 2</td></tr>
+              <tr><td>กลาง</td><td class="hl">case 3</td><td class="hl">case 4</td></tr>
+              <tr><td>ใหญ่</td><td class="hl">case 5</td><td class="hl">case 6</td></tr>
+            </table>
+            <p class="tm-total"><b class="gold">3 × 2 = 6 case</b> · ช่องที่ยังไม่มี case จะเห็นทันที</p>
+          </div>
+        </div>
+        <p class="muted tm-foot">ชื่อเทคนิค: Combinatorial Testing · มิติเยอะเกินไปใช้ Pairwise</p>
+      </section>
+
       <!-- 18 -->
       <section class="slide"
-        data-notes="ทีนี้มาดูว่าชื่อ case ได้มาจากไหน ไม่ได้มาจากการนึกเอา แต่มาจาก matrix หน้าค้นหาของ QuickShift มีสองอย่างที่ผู้ใช้เลือกได้ มิติแรกคือคำค้น ค้นด้วยชื่องาน ด้วยสถานที่ คำที่ไม่ตรงกับงานใดเลย หรือไม่กรอกอะไร มิติที่สองคือการเรียง ล่าสุด หรือค่าจ้างสูงสุด [build ทีละแถว] 4 คูณ 2 ได้ 8 ช่อง ทุกช่องคือ test case หนึ่งข้อ แล้วค่อยเติมการแสดงผลหน้ารายการกับหน้ารายละเอียดงาน รวมเป็น 10 ข้อ สังเกตว่าตัวเลขพบกี่งานไม่ได้แยกเป็น case ของตัวเอง แต่อยู่ใน Expected ของทุกข้อ ถ้าให้ AI ทำโดยไม่บอกมิติ มันมักให้มาแค่ค้นหาสำเร็จหนึ่งข้อกับไม่สำเร็จหนึ่งข้อ [อยากรู้ว่าช่องไหนพังบ้าง เดี๋ยวได้ลองใน workshop]"
-        data-time="4">
+        data-notes="ทีนี้มาดูของจริง ชื่อ case ไม่ได้มาจากการนึกเอา แต่มาจาก matrix หน้าค้นหาของ QuickShift มีสองอย่างที่ผู้ใช้เลือกได้ มิติแรกคือคำค้น ค้นด้วยชื่องาน ด้วยสถานที่ คำที่ไม่ตรงกับงานใดเลย หรือไม่กรอกอะไร มิติที่สองคือการเรียง ล่าสุด หรือค่าจ้างสูงสุด [build ทีละแถว] 4 คูณ 2 ได้ 8 ช่อง ทุกช่องคือ test case หนึ่งข้อ แล้วค่อยเติมการแสดงผลหน้ารายการกับหน้ารายละเอียดงาน รวมเป็น 10 ข้อ สังเกตว่าตัวเลขพบกี่งานไม่ได้แยกเป็น case ของตัวเอง แต่อยู่ใน Expected ของทุกข้อ ถ้าให้ AI ทำโดยไม่บอกมิติ มันมักให้มาแค่ค้นหาสำเร็จหนึ่งข้อกับไม่สำเร็จหนึ่งข้อ [อยากรู้ว่าช่องไหนพังบ้าง เดี๋ยวได้ลองใน workshop]"
+        data-time="3">
         <div class="hud"><span class="tag">THRIVE · LEVEL 1</span><span>17 / TEST MATRIX</span></div>
         <h2>Test Matrix: การค้นหางานของ QuickShift</h2>
         <table class="t matrix-t">
@@ -1862,6 +1910,23 @@
           <div><b>4</b><span>ห้ามแต่ง UI <em>Flow กับ UI ไม่ตรงกัน ใช้ชื่อตาม UI แล้วรายงาน</em></span></div>
           <div><b>5</b><span>"ไม่มีอะไรเปลี่ยน" ก็เป็น case <em>ยกเลิกงานหนึ่ง งานอื่นต้องยังอยู่</em></span></div>
         </div>
+      </section>
+
+      <!-- 19b -->
+      <section class="slide" data-notes="กฎทั้ง 5 ข้อที่เราสอน AI ไม่ได้คิดขึ้นเอง แต่มาจากเทคนิคออกแบบ test case มาตรฐานที่ QA ใช้กันมานาน Test Matrix ที่เห็นเมื่อกี้คือ Combinatorial Testing แบบครบทุกคู่ค่า แถวของ matrix แต่ละแถวคือ Equivalence Partitioning คือกลุ่มข้อมูลที่ระบบปฏิบัติเหมือนกัน ค่าขอบอย่างอายุ 17 กับ 18 คือ Boundary Value Analysis ทุกทางแยกใน flow ต้องได้สอง case คือ Decision Coverage สถานะงานเปิดรับกับปิดรับคือ State Transition Testing ส่วน Recommend Cases คือ Checklist กับ Error Guessing และ Traceability Record ที่ไล่จาก Story ไปถึง Test Case คือ Requirements Traceability Matrix [พูดช้า] ถ้าต้องสรุปชื่อเดียว ชุดนี้คือ Requirements-based Black-box Testing โดยมี Test Matrix เป็นแกน ข้อควรระวังคือ ถ้ามิติเพิ่มเป็น 3 ถึง 4 มิติ จำนวน case จะพุ่งเร็ว ตอนนั้นให้เปลี่ยนไปใช้ Pairwise Testing สังเกตว่านี่คือ skill ของ QA ล้วน ๆ ถ้าเราไม่รู้เทคนิคเหล่านี้ เราก็เขียนกฎให้ AI ไม่ได้" data-time="2">
+        <div class="hud"><span class="tag">THRIVE · LEVEL 1</span><span>TECHNIQUES</span></div>
+        <h2>เทคนิคเบื้องหลังกฎ <span class="sub">Black-box test design · ชื่อมาตรฐานตาม ISTQB</span></h2>
+        <table class="t tech">
+          <tr><th>เทคนิค</th><th>ในงานของเรา (QuickShift)</th></tr>
+          <tr><td>Combinatorial Testing <span class="muted">(Test Matrix)</span></td><td>คำค้น 4 × เรียงตาม 2 = 8 case</td></tr>
+          <tr><td>Equivalence Partitioning</td><td>คำค้น: ชื่องาน / สถานที่ / ไม่ตรงกับงานใด / ว่าง</td></tr>
+          <tr><td>Boundary Value Analysis</td><td>อายุ 17 / 18</td></tr>
+          <tr><td>Decision Coverage</td><td>งานปิดรับหรือยัง? → เปิดรับ / ปิดรับ</td></tr>
+          <tr><td>State Transition Testing</td><td>สถานะงานที่เปลี่ยนสิ่งที่ทำได้ต่อ</td></tr>
+          <tr><td>Checklist + Error Guessing</td><td>Recommend Cases 9 ข้อ</td></tr>
+          <tr><td>Traceability Matrix <span class="muted">(RTM)</span></td><td>Story → Feature → Group → Scenario → Test Case</td></tr>
+        </table>
+        <p class="tech-sum"><b class="gold">Requirements-based Black-box Testing</b> · Test Matrix เป็นแกน · มิติเกิน 2–3 ใช้ <b class="cyan">Pairwise</b></p>
       </section>
 
       <!-- 20 -->

@@ -411,10 +411,43 @@
     </div>
   </div>
 
+  <div class="gate" id="hostGate" hidden>
+    <div class="gate-card" role="dialog" aria-modal="true" aria-labelledby="hostGateTitle">
+      <div class="gate-title" id="hostGateTitle">ผู้จัดเท่านั้น</div>
+      <p class="gate-note">ใส่รหัสผู้จัดเพื่อเปิด dashboard</p>
+      <form class="gate-field" id="hostForm" autocomplete="off">
+        <input id="hostCode" type="password" aria-label="รหัสผู้จัด" placeholder="รหัสผู้จัด">
+        <p class="gate-msg" id="hostMsg"></p>
+        <button class="gate-btn" type="submit">เข้า dashboard</button>
+      </form>
+      <a class="gate-btn ghost-btn" href="/">กลับหน้าหลัก</a>
+    </div>
+  </div>
+  <script>
+    /* Organiser gate: the code is checked against its SHA-256 hash; unlocked once per browser tab. */
+    window.BH_HOST_READY = new Promise(function (resolve) {
+      const HASH = '88b40cab9f04db4a127f57fe0f3859adfb2abae7f876e2a99dac564e3fe25fcc';
+      const ok = function () { try { sessionStorage.setItem('bh-host-ok', '1'); } catch (e) { } document.getElementById('hostGate').hidden = true; resolve(); };
+      let passed = false; try { passed = sessionStorage.getItem('bh-host-ok') === '1'; } catch (e) { }
+      if (passed) { resolve(); return; }
+      const gate = document.getElementById('hostGate'); gate.hidden = false;
+      document.querySelector('.wrap').inert = true;
+      const input = document.getElementById('hostCode'), msg = document.getElementById('hostMsg');
+      input.focus();
+      document.getElementById('hostForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (!window.crypto || !crypto.subtle) { msg.textContent = 'เปิดผ่าน https เพื่อใช้รหัส'; msg.className = 'gate-msg bad'; return; }
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input.value));
+        const hex = Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+        if (hex === HASH) { document.querySelector('.wrap').inert = false; ok(); }
+        else { msg.textContent = 'รหัสไม่ถูกต้อง'; msg.className = 'gate-msg bad'; input.select(); }
+      });
+    });
+  </script>
   <script src="config.js"></script>
   <script src="assets/api.js"></script>
   <script>
-    (function () {
+    window.BH_HOST_READY.then(function () {
       const $ = id => document.getElementById(id);
       const api = window.BugHuntApi;
       $('sess').textContent = api.session;
@@ -519,7 +552,7 @@
       render();
       refresh();
       setInterval(() => { if (!document.hidden) refresh(); }, 5000);
-    })();
+    });
   </script>
   <script>
     /* Answer key: AES-GCM encrypted, key derived from the facilitator's code (PBKDF2). The code itself is not stored anywhere in this page. */

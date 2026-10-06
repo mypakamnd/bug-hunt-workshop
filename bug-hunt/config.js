@@ -12,5 +12,8 @@ window.BUG_HUNT_CONFIG = {
   supabaseAnonKey: 'sb_publishable_IFkyyv4s71Vdykikg_kgfw_Y8SYMygh',
   session: 'level-up-2026-10-10',
   // เวลาเล่นต่อรอบ (นาที): icebreak = /ice-breaking, full = /workshop
-  durationMinutes: { icebreak: 10, full: 30 }
+  durationMinutes: { icebreak: 10, full: 30 },
+  // รหัสเข้ารอบ (เก็บเป็น SHA-256 ไม่ใช่ตัวรหัส) · ไม่มี key = เข้าได้เลย
+  // เปลี่ยนรหัส: node -e "console.log(require('crypto').createHash('sha256').update('รหัสใหม่').digest('hex'))"
+  accessCodes: { full: '0fb542ca673346178bfdea3aa5ff7f463e08e28b726bac96ec26b71eaeac4060' }
 };
