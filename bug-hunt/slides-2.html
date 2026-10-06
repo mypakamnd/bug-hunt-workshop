@@ -1295,9 +1295,11 @@
       color: var(--muted);
       font-size: 17px;
     }
-    table.t.tech { font-size: 19px; }
-    table.t.tech td, table.t.tech th { padding: 9px 16px; }
-    table.t.tech td:first-child { color: var(--gold); font-family: var(--font-display); width: 42%; }
+    table.t.tech { font-size: 16.5px; }
+    table.t.tech td, table.t.tech th { padding: 7px 12px; line-height: 1.4; }
+    table.t.tech th { font-size: 17px; }
+    table.t.tech td:first-child { color: var(--gold); font-family: var(--font-display); width: 27%; }
+    table.t.tech td.tech-what { color: var(--ink); width: 41%; }
     table.t.tech td:first-child .muted { font-family: var(--font-body); font-size: 16px; }
     .tech-sum { font-size: 20px; text-align: center; }
     .ac-h { font-size: 40px; }
@@ -1324,6 +1326,24 @@
     table.t.tm-mini td.hl { font-size: 13px; }
     .tm-total { margin-top: 10px; font-size: 18px; }
     .tm-foot { text-align: center; font-size: 17px; }
+    .fs-h { font-size: 40px; }
+    .fs-cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); flex: none; align-items: start; }
+    .ft { padding: 16px 18px; display: grid; gap: 4px; }
+    .ft-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-family: var(--font-mono, ui-monospace, monospace); font-size: 16px; padding: 3px 8px; border-radius: 6px; }
+    .ft-row.root { color: var(--gold); font-weight: 600; }
+    .ft-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+    .ft-tag { flex: none; font-family: var(--font-display); font-size: 13px; padding: 1px 10px; border-radius: 99px; border: 1px solid currentColor; }
+    .ft-row.all .ft-tag, .fs-step.all b { color: var(--gold); }
+    .ft-row.l1 .ft-tag { color: var(--cyan); }
+    .ft-row.l2 .ft-tag { color: var(--green); }
+    .ft-row.out { color: var(--muted); }
+    .fs-steps { display: grid; gap: 12px; }
+    .fs-step { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 14px; align-items: center; background: var(--panel); border: 2px solid var(--line); border-left-width: 6px; border-radius: 8px; padding: 12px 16px; }
+    .fs-step.all { border-left-color: var(--gold); } .fs-step.l1 { border-left-color: var(--cyan); } .fs-step.l2 { border-left-color: var(--green); }
+    .fs-step b { font-family: var(--font-pixel); font-size: 18px; width: 40px; height: 40px; display: grid; place-items: center; border: 2px solid var(--line); border-radius: 6px; }
+    .fs-step.l1 b { color: var(--cyan); } .fs-step.l2 b { color: var(--green); }
+    .fs-step strong { display: block; font-family: var(--font-display); font-weight: 500; font-size: 18px; line-height: 1.35; }
+    .fs-step span { display: block; font-size: 15px; color: var(--muted); line-height: 1.45; margin-top: 2px; }
   </style>
 </head>
 
@@ -1536,7 +1556,7 @@
       <!-- 8 -->
       <section class="slide"
         data-notes="กิโลเมตรที่ 5 ทั้งสองคนดูเก่งพอกัน เพราะรองเท้าทำงานเต็มที่ AI ให้ test case มา 200 ข้อในสองนาที นักวิ่ง B ดีใจ รับไปทั้งหมดเพราะดูครบดี นักวิ่ง A ก็ได้ 200 ข้อเหมือนกัน แต่เขาคัดออกเหลือเฉพาะข้อที่มีความเสี่ยงจริง ตามที่เราคุยกันในด่าน Validate ของหัวข้อแรก 200 ข้อที่ไม่มีใครรันจริง ไม่ได้ทำให้ระบบปลอดภัยขึ้นเลย"
-        data-time="2.5">
+        data-time="2">
         <div class="hud"><span class="tag">SURVIVE · RACE</span>
           <div class="race"><span class="done">กม. 0</span><span class="on">กม. 5</span><span class="">CHECK</span><span
               class="">กม. 30</span><span class="">FINISH</span></div>
@@ -1644,7 +1664,7 @@
       <!-- 11 -->
       <section class="slide"
         data-notes="ถึงเส้นชัย ลองดูผลกัน นักวิ่ง A มี test case น้อยกว่า แต่ทุกข้อไล่กลับไปหา AC ได้ บั๊กที่หลุดไปถึง production น้อย และทีมเชื่อใจงานของเขา นักวิ่ง B มี case เยอะกว่า แต่บอกไม่ได้ว่าข้อไหนมาจาก AC ไหน บั๊กยังหลุด และที่แย่ที่สุดคือทีมเริ่มไม่เชื่อ test case ของเขา"
-        data-time="2">
+        data-time="1.5">
         <div class="hud"><span class="tag">SURVIVE · RACE</span>
           <div class="race"><span class="done">กม. 0</span><span class="done">กม. 5</span><span
               class="done">CHECK</span><span class="done">กม. 30</span><span class="on">FINISH</span></div>
@@ -1792,9 +1812,24 @@
         </div>
       </section>
 
+      <!-- 16b -->
+      <section class="slide" data-notes="ก่อนจะให้ AI เริ่มทำงาน มาดูว่ามันอ่านไฟล์อะไรบ้าง นี่คือโครงเอกสารของ QuickShift ไฟล์แรกคือ domain.md อ่านทุกครั้ง เก็บกฎของระบบที่ QA ยืนยันแล้ว และคำถามที่ยังไม่มีคำตอบ ระดับที่ 1 ตั้งชื่อ test case ใช้สองไฟล์คู่กัน generate_tc.md คือวิธีคิด เช่นกฎแตก flow ที่เราเพิ่งดู ส่วน prompt_tc.txt คือไวยากรณ์ชื่อ case ภาษาไทย ผลลัพธ์คือ Traceability Record ระดับที่ 2 เขียนรายละเอียด ใช้ generate_detail.md กับ prompt_detail.txt และ pre_steps.json ที่บอกขั้นตอนเริ่มต้น เช่นเปิดแอป QuickShift ผลลัพธ์คือ feature tab ที่มี Test Type ขั้นตอน ข้อมูล และผลที่คาดหวัง [พูดช้า] กฎสำคัญคือ ทุกครั้งที่ QA แก้งานของ AI ให้แก้ลงไฟล์ด้วย ไม่ใช่แก้แค่ใน sheet เพราะเอกสารพวกนี้คือความจำของ AI แก้ครั้งเดียว ครั้งหน้ามันก็ไม่พลาดซ้ำ" data-time="2">
+        <div class="hud"><span class="tag">THRIVE · DOCS</span><span>FILE STRUCTURE</span></div>
+        <h2 class="fs-h">เอกสารที่ AI อ่าน: ใช้ไฟล์ไหน ยังไง <span class="sub">แต่ละไฟล์ใช้ตอนไหน</span></h2>
+        <div class="cols fs-cols">
+          <div class="card ft"><div class="ft-row root"><span class="ft-name">QuickShift document/</span></div><div class="ft-row all"><span class="ft-name">├─ domain.md</span><span class="ft-tag">ทุกครั้ง</span></div><div class="ft-row l1"><span class="ft-name">├─ generate_tc.md</span><span class="ft-tag">ระดับ 1</span></div><div class="ft-row l1"><span class="ft-name">├─ prompt_tc.txt</span><span class="ft-tag">ระดับ 1</span></div><div class="ft-row l2"><span class="ft-name">├─ generate_detail.md</span><span class="ft-tag">ระดับ 2</span></div><div class="ft-row l2"><span class="ft-name">├─ prompt_detail.txt</span><span class="ft-tag">ระดับ 2</span></div><div class="ft-row l2"><span class="ft-name">├─ pre_steps.json</span><span class="ft-tag">ระดับ 2</span></div><div class="ft-row out"><span class="ft-name">├─ Traceability_Record-QS-101.csv</span><span class="ft-tag">ผลลัพธ์ 1</span></div><div class="ft-row out"><span class="ft-name">└─ F01_Job_Search.csv · F02_Apply_Job.csv</span><span class="ft-tag">ผลลัพธ์ 2</span></div></div>
+          <div class="fs-steps">
+            <div class="fs-step all"><b>0</b><div><strong>อ่านก่อนทุกครั้ง · domain.md</strong><span>กฎของระบบที่ QA ยืนยันแล้ว + คำถามที่ยังไม่มีคำตอบ</span></div></div>
+            <div class="fs-step l1"><b>1</b><div><strong>ตั้งชื่อ case · generate_tc.md + prompt_tc.txt</strong><span>วิธีแตก flow + ไวยากรณ์ชื่อ → Traceability_Record (ID + Name)</span></div></div>
+            <div class="fs-step l2"><b>2</b><div><strong>เขียน detail · generate_detail.md + prompt_detail.txt</strong><span>+ pre_steps.json → Feature tab (Type · Step · Data · Expected)</span></div></div>
+          </div>
+        </div>
+        <div class="quote">QA แก้งานของ AI ตรงไหน ให้แก้ลงไฟล์ด้วย · <span class="gold">เอกสารคือความจำของ AI</span></div>
+      </section>
+
       <!-- 17 -->
       <section class="slide"
-        data-notes="ระดับที่ 1 คือการออกแบบ ผลลัพธ์คือ Traceability Record ซึ่งทีมเมย์ใช้จริงทุกฟีเจอร์ วันนี้ขอใช้แอป QuickShift เป็นตัวอย่าง แต่ละแถวไล่จาก Story ID ไป Feature ไป Group ไป Scenario แล้วจึงเป็น Test Case ID กับชื่อ เช่น Story QS-101 ค้นหาและสมัครงาน แบ่งเป็นกลุ่มค้นหางานกับกลุ่มสมัครงาน ประโยชน์คือเวลามีคนถามว่าเรื่องนี้เทสหรือยัง เราตอบได้ทันทีว่าเทสแล้ว ข้อไหน และไล่กลับไปหา Story ได้"
+        data-notes="ระดับที่ 1 คือการออกแบบ ผลลัพธ์คือ Traceability Record วันนี้ขอใช้แอป QuickShift เป็นตัวอย่าง แต่ละแถวไล่จาก Story ID ไป Feature ไป Group ไป Scenario แล้วจึงเป็น Test Case ID กับชื่อ เช่น Story QS-101 ค้นหาและสมัครงาน แบ่งเป็นกลุ่มค้นหางานกับกลุ่มสมัครงาน ประโยชน์คือเวลามีคนถามว่าเรื่องนี้เทสหรือยัง เราตอบได้ทันทีว่าเทสแล้ว ข้อไหน และไล่กลับไปหา Story ได้"
         data-time="3">
         <div class="hud"><span class="tag">THRIVE · LEVEL 1</span><span>16 / TRACEABILITY</span></div>
         <div class="lvl-title">
@@ -1831,8 +1866,7 @@
             <td><b>TC001</b> ตรวจสอบการแสดงผลหน้าใบสมัคร</td>
           </tr>
         </table>
-        <p class="muted" style="font-size:18px">Story → Feature → Group → Scenario → Test Case ·
-          โครงเดียวกับที่ทีมใช้จริง</p>
+        <p class="muted" style="font-size:18px">Story → Feature → Group → Scenario → Test Case</p>
       </section>
 
       <!-- 17b -->
@@ -1917,14 +1951,7 @@
         <div class="hud"><span class="tag">THRIVE · LEVEL 1</span><span>TECHNIQUES</span></div>
         <h2>เทคนิคเบื้องหลังกฎ <span class="sub">Black-box test design · ชื่อมาตรฐานตาม ISTQB</span></h2>
         <table class="t tech">
-          <tr><th>เทคนิค</th><th>ในงานของเรา (QuickShift)</th></tr>
-          <tr><td>Combinatorial Testing <span class="muted">(Test Matrix)</span></td><td>คำค้น 4 × เรียงตาม 2 = 8 case</td></tr>
-          <tr><td>Equivalence Partitioning</td><td>คำค้น: ชื่องาน / สถานที่ / ไม่ตรงกับงานใด / ว่าง</td></tr>
-          <tr><td>Boundary Value Analysis</td><td>อายุ 17 / 18</td></tr>
-          <tr><td>Decision Coverage</td><td>งานปิดรับหรือยัง? → เปิดรับ / ปิดรับ</td></tr>
-          <tr><td>State Transition Testing</td><td>สถานะงานที่เปลี่ยนสิ่งที่ทำได้ต่อ</td></tr>
-          <tr><td>Checklist + Error Guessing</td><td>Recommend Cases 9 ข้อ</td></tr>
-          <tr><td>Traceability Matrix <span class="muted">(RTM)</span></td><td>Story → Feature → Group → Scenario → Test Case</td></tr>
+          <tr><th>เทคนิค</th><th>คืออะไร</th><th>ในงานของเรา (QuickShift)</th></tr><tr><td>Combinatorial Testing <span class="muted">(Test Matrix)</span></td><td class="tech-what">ไขว้ค่าของหลายมิติที่ผู้ใช้เลือกได้ ทุกการผสมคือ 1 case</td><td>คำค้น 4 × เรียงตาม 2 = 8 case</td></tr><tr><td>Equivalence Partitioning</td><td class="tech-what">แบ่งข้อมูลเป็นกลุ่มที่ระบบทำงานเหมือนกัน เทสตัวแทนกลุ่มละ 1 ค่า</td><td>คำค้น: ชื่องาน / สถานที่ / ไม่ตรง / ว่าง</td></tr><tr><td>Boundary Value Analysis</td><td class="tech-what">เทสค่าที่ขอบของเงื่อนไข เพราะบั๊กชอบซ่อนตรงขอบ</td><td>อายุ 17 / 18</td></tr><tr><td>Decision Coverage</td><td class="tech-what">ทุกจุดตัดสินใจใน flow ต้องเทสทั้งทาง Yes และ No</td><td>งานปิดรับหรือยัง? → เปิดรับ / ปิดรับ</td></tr><tr><td>State Transition Testing</td><td class="tech-what">เทสทุกสถานะที่ข้อมูลอยู่ได้ และการเปลี่ยนสถานะที่ทำได้ / ทำไม่ได้</td><td>งานเปิดรับสมัครได้ · ปิดรับสมัครไม่ได้</td></tr><tr><td>Checklist + Error Guessing</td><td class="tech-what">ไล่รายการความเสี่ยงจากประสบการณ์ เช่น ออกกลางทาง ระบบล่ม ไม่มีข้อมูล</td><td>Recommend Cases 9 ข้อ</td></tr><tr><td>Traceability Matrix <span class="muted">(RTM)</span></td><td class="tech-what">ผูกทุก test case กลับไปหา requirement ตรวจได้ว่าเทสครบ</td><td>Story → … → Test Case</td></tr>
         </table>
         <p class="tech-sum"><b class="gold">Requirements-based Black-box Testing</b> · Test Matrix เป็นแกน · มิติเกิน 2–3 ใช้ <b class="cyan">Pairwise</b></p>
       </section>
