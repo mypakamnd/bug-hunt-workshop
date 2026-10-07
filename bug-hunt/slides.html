@@ -1021,6 +1021,12 @@
         display: none;
       }
     }
+    .mvp-cols { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); flex: none; align-items: center; }
+    .mvp-cols h3 { font-family: var(--font-pixel); font-size: 30px; margin: 4px 0 10px; }
+    .mvp-cols p { font-size: 22px; }
+    .mvp-cols p b { color: var(--gold); }
+    .mvp-arrow { font-family: var(--font-pixel); font-size: 26px; color: var(--gold); }
+    .mvp-cols .label { font-family: var(--font-display); font-size: 16px; letter-spacing: 0; }
   </style>
 </head>
 
@@ -1061,20 +1067,20 @@
       </section>
 
       <!-- 2 -->
-      <section class="slide"
-        data-notes="จังหวะแรก: ในทีมเราได้ยินคำว่า MVP บ่อย แต่หมายถึง Minimum Viable Product คือทำขั้นต่ำให้พอใช้ได้ วันนี้เราจะพูดถึง MVP อีกแบบ คือ Most Valuable ซึ่งเป็นขั้นสูงสุด (Minimum กับ Most ตรงข้ามกันพอดี) จังหวะสอง: กด → เพื่อถามคำถาม ให้ผู้ฟังตอบสั้น ๆ คำตอบส่วนใหญ่จะเป็น 'QA' ใช้เปิดประเด็นว่าเรามองบทบาทนี้เป็นแค่คนหาบั๊ก"
-        data-time="2">
+      <section class="slide" data-notes="ในกีฬามีรางวัลหนึ่งที่ทุกคนอยากได้ คือ MVP ย่อมาจาก Most Valuable Player หรือตัวท็อปของทีม คนที่ทีมขาดไม่ได้ วันนี้เมย์ขอยืมคำนี้มาใช้กับเรา เป็น MVQ(A) ย่อมาจาก Most Valuable Quality Assurance คือ QA ตัวท็อปของทีม [กด →] ก่อนจะไปต่อ ขอถามหนึ่งคำถาม ถ้าวันนี้มีบั๊กหลุดไปถึง production… ใครผิด? [รอคำตอบ] ส่วนใหญ่จะตอบว่า QA ใช่ไหม ไม่แปลกเลย เพราะเรามักมองว่า QA คือคนหาบั๊ก บั๊กหลุดก็แปลว่า QA หาไม่เจอ วันนี้เราจะมาดูกันว่า QA ทำได้มากกว่านั้นแค่ไหน และจะเป็น MVQ(A) ของทีมได้ยังไง" data-time="2">
         <div class="hud"><span class="tag">INTRO</span><span>01 / HOOK</span></div>
-        <div class="cols c2" style="flex:0">
-          <div class="card"><span class="label">MVP ที่ทีมคุ้น</span>
-            <h3><span class="strike">Minimum</span> Viable Product</h3>
-            <p class="muted">ทำขั้นต่ำให้พอใช้ได้</p>
+        <div class="cols mvp-cols">
+          <div class="card"><span class="label">ในกีฬา</span>
+            <h3><span class="gold">MVP</span></h3>
+            <p><b>M</b>ost <b>V</b>aluable <b>P</b>layer</p>
+            <p class="muted">ตัวท็อปของทีม คนที่ทีมขาดไม่ได้</p>
           </div>
+          <div class="mvp-arrow" aria-hidden="true">▶</div>
           <div class="card gold" style="position:relative"><i class="spr" data-s="trophy" data-z="4"
-              style="position:absolute;right:20px;top:18px"></i><span class="label" style="color:var(--gold)">MVP
-              วันนี้</span>
-            <h3><span class="gold">Most</span> Valuable Player</h3>
-            <p class="muted">ขั้นสูงสุดของทีม</p>
+              style="position:absolute;right:20px;top:18px"></i><span class="label" style="color:var(--gold)">วันนี้</span>
+            <h3><span class="gold">MVQ<span class="cyan">(A)</span></span></h3>
+            <p><b>M</b>ost <b>V</b>aluable <b>Q</b>uality <b class="cyan">A</b>ssurance</p>
+            <p class="muted">QA ตัวท็อปของทีม</p>
           </div>
         </div>
         <div class="center frag">
@@ -1086,17 +1092,17 @@
 
       <!-- 3 -->
       <section class="slide"
-        data-notes="3 คำนี้มักใช้ปนกัน Testing คือการรันทดสอบ QC คือการตรวจว่าของผ่านมาตรฐาน ส่วน QA ดูแลกระบวนการเพื่อป้องกันไม่ให้เกิดปัญหาตั้งแต่แรก ชี้ไปที่คอลัมน์ QA"
+        data-notes="3 ตำแหน่งนี้มักถูกเรียกปนกัน Tester คือคนที่รันทดสอบ QC คือคนตรวจว่าของผ่านมาตรฐาน ส่วน QA ดูแลกระบวนการเพื่อป้องกันไม่ให้เกิดปัญหาตั้งแต่แรก ชี้ไปที่คอลัมน์ QA"
         data-time="1">
         <div class="hud"><span class="tag">INTRO</span><span>02 / DEFINITION</span></div>
         <div class="lvl-title">
-          <h2>Testing vs QC vs QA</h2><i class="spr" data-s="magnifier" data-z="4"></i><i class="spr" data-s="shield"
+          <h2>Tester vs QC vs QA</h2><i class="spr" data-s="magnifier" data-z="4"></i><i class="spr" data-s="shield"
             data-z="4"></i>
         </div>
         <table class="t">
           <tr>
             <th></th>
-            <th>Testing</th>
+            <th>Tester</th>
             <th>Quality Control</th>
             <th class="hl">Quality Assurance</th>
           </tr>
