@@ -994,6 +994,28 @@
       border-color: var(--gold);
     }
 
+    .home-btn {
+      font-family: var(--font-body);
+      font-size: 14px;
+      background: var(--panel);
+      color: var(--ink);
+      border: 2px solid var(--line);
+      border-radius: 6px;
+      padding: 7px 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .home-btn:hover {
+      border-color: var(--gold);
+    }
+
+    .home-btn:focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 2px;
+    }
+
     button:focus-visible {
       outline: 3px solid var(--cyan);
       outline-offset: 2px;
@@ -1660,8 +1682,9 @@
         <div class="fill" id="fill"></div>
       </div><span class="counter" id="counter">1 / 17</span>
     </div>
-    <span class="hint">← → เปลี่ยนสไลด์ · N โน้ต · F เต็มจอ</span>
+    <span class="hint">← → เปลี่ยนสไลด์ · N โน้ต · F เต็มจอ · H หน้าหลัก</span>
     <div class="btns">
+      <a class="home-btn" href="/" title="กลับหน้าหลัก (H)">⌂ หน้าหลัก</a>
       <button id="prev" type="button" aria-label="สไลด์ก่อนหน้า">← ก่อนหน้า</button>
       <button id="next" type="button" aria-label="สไลด์ถัดไป">ถัดไป →</button>
       <button id="notesBtn" type="button" aria-pressed="false">โน้ตผู้พูด</button>
@@ -1739,6 +1762,7 @@
           case 'End': show(slides.length - 1, true); break;
           case 'n': case 'N': toggleNotes(); break;
           case 'f': case 'F': toggleFs(); break;
+          case 'h': case 'H': location.href = '/'; break;
         }
       });
 
