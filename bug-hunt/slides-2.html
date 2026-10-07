@@ -1366,6 +1366,15 @@
     .fs-step.l1 b { color: var(--cyan); } .fs-step.l2 b { color: var(--green); }
     .fs-step strong { display: block; font-family: var(--font-display); font-weight: 500; font-size: 18px; line-height: 1.35; }
     .fs-step span { display: block; font-size: 15px; color: var(--muted); line-height: 1.45; margin-top: 2px; }
+    .end-cols { width: 100%; max-width: 1040px; flex: none; text-align: left; }
+    .end-card { padding: 16px 20px; }
+    .gold-label { color: var(--gold); font-family: var(--font-display); font-size: 16px; letter-spacing: 0; }
+    .repo-card { display: grid; grid-template-columns: 148px minmax(0, 1fr); gap: 16px; align-items: center; }
+    .qr-box { width: 148px; height: 148px; background: #fff; border-radius: 10px; padding: 8px; }
+    .qr-box svg { width: 100%; height: 100%; display: block; }
+    .repo-link { font-family: var(--font-body); font-size: 16px; font-weight: 600; color: var(--cyan); margin-top: 8px; line-height: 1.4; }
+    .repo-line { font-size: 17px; color: var(--muted); }
+    .repo-line .repo-link { font-size: 17px; }
   </style>
 </head>
 
@@ -1847,6 +1856,7 @@
           </div>
         </div>
         <div class="quote">QA แก้งานของ AI ตรงไหน ให้แก้ลงไฟล์ด้วย · <span class="gold">เอกสารคือความจำของ AI</span></div>
+        <p class="repo-line">📦 ชุดเอกสารนี้: <span class="repo-link">github.com/<wbr>mypakamnd/<wbr>quickshift-document</span></p>
       </section>
 
       <!-- 17 -->
@@ -2092,25 +2102,42 @@
 
       <!-- 25 -->
       <section class="slide"
-        data-notes="ใครมีคำถามเชิญได้เลย [ตอบคำถาม] ตอนเช้าเราเล่น QuickShift โดยไม่มี requirement ตอนนี้เรามีทั้ง L-E-V-E-L, test matrix และคำถามจาก AC Card แล้ว workshop ต่อจากนี้คือกลับไปที่แอปเดิมอีกครั้ง ลองดูว่ารอบนี้เราจะเจออะไรมากกว่าเดิม สแกน QR นี้ได้เลย"
+        data-notes="ใครมีคำถามเชิญได้เลย [ตอบคำถาม] ตอนเช้าเราเล่น QuickShift โดยไม่มี requirement ตอนนี้เรามีทั้ง L-E-V-E-L, test matrix และคำถามจาก AC Card แล้ว workshop ต่อจากนี้คือกลับไปที่แอปเดิมอีกครั้ง ลองดูว่ารอบนี้เราจะเจออะไรมากกว่าเดิม ส่วนใครอยากได้ชุดเอกสารที่เห็นในวันนี้ไปลองใช้ สแกน QR ทางขวาได้เลย"
         data-time="3">
         <div class="hud"><span class="tag">FINISH LINE</span><span>🏁</span></div>
-        <div class="center" style="gap:18px">
-          <i class="spr " data-s="flag" data-z="7"></i>
-          <h2 style="font-size:46px">Q &amp; A</h2>
-          <div class="card gold" style="max-width:860px">
-            <p style="font-size:24px">ต่อด้วย <b class="gold">Workshop</b>: กลับไปที่ QuickShift อีกครั้ง พร้อม
-              requirement และ skill ใหม่</p>
-            <p class="pixel cyan" style="font-size:16px;margin-top:10px">bug-hunt-workshop.vercel.app/workshop</p>
+        <div class="center" style="gap:16px;width:100%">
+          <i class="spr " data-s="flag" data-z="5"></i>
+          <h2 style="font-size:44px">Q &amp; A</h2>
+          <div class="cols c2 end-cols">
+            <div class="card gold end-card">
+              <span class="label gold-label">ต่อด้วย Workshop</span>
+              <p style="font-size:22px">กลับไปที่ QuickShift อีกครั้ง พร้อม requirement และ skill ใหม่</p>
+              <p class="pixel cyan" style="font-size:14px;margin-top:10px">bug-hunt-workshop.vercel.app/workshop</p>
+            </div>
+            <div class="card end-card repo-card">
+              <div class="qr-box" data-qr="https://github.com/mypakamnd/quickshift-document" aria-label="QR ไปที่ github.com/mypakamnd/quickshift-document"></div>
+              <div>
+                <span class="label gold-label">ชุดเอกสารตัวอย่าง</span>
+                <p style="font-size:19px">spec + prompt + Traceability + detail ของ QuickShift</p>
+                <p class="repo-link">github.com/<wbr>mypakamnd/<wbr>quickshift-document</p>
+              </div>
+            </div>
           </div>
         </div>
-        <i class="spr deco" data-s="hero" data-z="8" style="left:110px;bottom:34px"></i>
-        <i class="spr deco bob" data-s="trophy" data-z="7" style="right:130px;bottom:44px"></i>
+        <i class="spr deco" data-s="hero" data-z="6" style="left:40px;bottom:34px"></i>
+        <i class="spr deco bob" data-s="trophy" data-z="5" style="right:44px;bottom:44px"></i>
       </section>
 
     </div>
   </div>
 
+  <script src="assets/vendor/qrcode.min.js"></script>
+  <script>
+    document.querySelectorAll('[data-qr]').forEach(function (el) {
+      try { var q = qrcode(0, 'M'); q.addData(el.dataset.qr); q.make(); el.innerHTML = q.createSvgTag({ cellSize: 4, margin: 0, scalable: true }); }
+      catch (e) { el.textContent = el.dataset.qr; }
+    });
+  </script>
   <script>
     (function () {
       const P = { a: '#ff8a3d', t: '#c2453b', k: '#0b0b22', y: '#ffc53d', o: '#c98a12', l: '#fff1b0', w: '#ffffff', c: '#52d6ef', d: '#2b8fb0', r: '#ff6f7d', e: '#b33a4a', g: '#6be4a6', h: '#2f9e6a', p: '#8b6cf0', s: '#ffcf9e', n: '#7a4b2a', m: '#8886b8', b: '#3a3c7a' };
