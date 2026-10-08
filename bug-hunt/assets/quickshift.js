@@ -13,7 +13,7 @@
     { id: 'j5', title: 'พนักงานนับสต็อก ห้างสรรพสินค้า', place: 'สยาม', wage: 800, unit: 'วัน', start: day(4), posted: day(-6), closes: day(-1), desc: 'นับสต็อกสินค้าประจำไตรมาส ทำงานกลางคืน' }
   ];
   let st;
-  function reset() { st = { view: 'list', q: '', sort: 'latest', job: null, apps: [], badge: 0, errors: {}, form: {} }; render(); }
+  function reset() { st = { view: 'list', q: '', sort: 'latest', order: null, job: null, apps: [], badge: 0, errors: {}, form: {} }; render(); }
   const el = (tag, attrs, ...kids) => {
     const n = document.createElement(tag);
     for (const k in attrs || {}) {
@@ -53,9 +53,15 @@
     const body = el('div', { class: 'app-body', id: 'appList' });
     function renderList() {
       // BUG: search matches title only (REQ-02 says title or place)
-      let rows = JOBS.filter(j => j.title.includes(st.q.trim()));
-      if (st.sort === 'wage') rows = rows.slice().sort((a, b) => String(b.wage).localeCompare(String(a.wage))); // BUG: string sort
-      else rows = rows.slice().sort((a, b) => b.posted - a.posted);
+      // BUG: the search text is not trimmed, so a trailing space finds nothing
+      let rows = JOBS.filter(j => j.title.includes(st.q));
+      if (st.sort === 'wage') {
+        rows = rows.slice().sort((a, b) => String(b.wage).localeCompare(String(a.wage))); // BUG: string sort
+        st.order = rows.map(j => j.id);
+      } else if (st.order) {
+        // BUG: once sorted by wage, "ล่าสุด" keeps the wage order instead of re-sorting
+        rows = rows.slice().sort((a, b) => st.order.indexOf(a.id) - st.order.indexOf(b.id));
+      } else rows = rows.slice().sort((a, b) => b.posted - a.posted);
       body.replaceChildren(
         el('div', { class: 'count' }, 'พบ ' + JOBS.length + ' งาน'), // BUG: ignores search result
         ...rows.map(j => el('button', { class: 'job', type: 'button', onclick: () => go('detail', j) },
@@ -70,7 +76,8 @@
 
   function detailView() {
     const j = st.job;
-    return [bar('รายละเอียดงาน', () => go('list')),
+    // BUG: going back from the job detail clears the search text and the sort
+    return [bar('รายละเอียดงาน', () => { st.q = ''; st.sort = 'latest'; go('list'); }),
       el('div', { class: 'app-body' },
         el('div', { class: 'detail' },
           el('h3', null, j.title),
@@ -78,7 +85,7 @@
           el('dl', { class: 'kv' },
             el('dt', null, 'สถานที่'), el('dd', null, j.place),
             el('dt', null, 'เริ่มงาน'), el('dd', null, fmt(j.start)),
-            el('dt', null, 'รับสมัครถึง'), el('dd', null, fmt(j.closes)),
+            el('dt', null, 'รับสมัครถึง'), el('dd', null, fmt(j.start)), // BUG: shows the start date, not the closing date
             el('dt', null, 'โพสต์เมื่อ'), el('dd', null, fmt(j.posted))),
           el('p', { style: 'margin:0;font-size:13.5px' }, j.desc),
           // BUG: closed jobs still get an enabled apply button (REQ-07)
@@ -118,7 +125,7 @@
       if (!start.value) er['a-start'] = 'กรุณาเลือกวันที่';                     // BUG: past dates accepted
       if (!terms.checked) er['a-terms'] = 'กรุณายอมรับเงื่อนไข';
       st.errors = er;
-      if (Object.keys(er).length) { render(); return; }
+      if (Object.keys(er).length) { st.form.start = ''; render(); return; } // BUG: a validation error wipes the chosen start date
       // BUG: no duplicate check (REQ-13)
       st.apps.push({ job: st.job, at: new Date() });
       st.badge++;
@@ -135,7 +142,7 @@
         el('strong', { style: 'font-size:17px' }, 'สมัครงานสำเร็จ!'),
         el('span', null, 'ตำแหน่ง: ' + JOBS[0].title), // BUG: always shows the first job
         el('span', { style: 'color:var(--app-muted);font-size:13px' }, 'เราจะแจ้งผลให้ทราบ'),
-        el('button', { class: 'btn sec', type: 'button', onclick: () => go('list') }, 'กลับไปหางาน'))),
+        el('button', { class: 'btn sec', type: 'button', onclick: () => go('mine') }, 'กลับไปหางาน'))), // BUG: opens งานที่สมัคร instead of the job list
       tabs()];
   }
 
@@ -144,7 +151,8 @@
     if (!st.apps.length) body.append(el('p', { class: 'empty' }, 'ยังไม่ได้สมัครงาน'));
     st.apps.forEach(a => body.append(el('div', { class: 'job' },
       el('span', { class: 't' }, a.job.title),
-      el('span', { class: 'm' }, 'สมัครเมื่อ ' + a.at.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' · ' + a.job.place),
+      // BUG: always shows the first job's location
+      el('span', { class: 'm' }, 'สมัครเมื่อ ' + a.at.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) + ' · ' + JOBS[0].place),
       el('div', { style: 'display:flex;justify-content:space-between;align-items:center;margin-top:4px' },
         el('span', { class: 'pill closed' }, 'รอผล'),
         // BUG: always removes the first application; badge is not updated
