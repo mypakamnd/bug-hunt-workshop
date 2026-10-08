@@ -1375,6 +1375,22 @@
     .repo-link { font-family: var(--font-body); font-size: 16px; font-weight: 600; color: var(--cyan); margin-top: 8px; line-height: 1.4; }
     .repo-line { font-size: 17px; color: var(--muted); }
     .repo-line .repo-link { font-size: 17px; }
+    .chat-h { font-size: 40px; }
+    .chat { display: grid; gap: 10px; background: var(--bg); border: 2px solid var(--line); border-radius: 12px; padding: 14px 18px; }
+    .msg { display: flex; gap: 10px; align-items: flex-end; }
+    .msg.user { flex-direction: row-reverse; }
+    .msg .spr { flex: none; }
+    .bub { max-width: 84%; border-radius: 12px; padding: 10px 14px; font-size: 17px; line-height: 1.5; }
+    .msg.ai .bub { background: var(--panel); border: 2px solid var(--line); border-bottom-left-radius: 2px; }
+    .msg.user .bub { background: rgba(255,197,61,.14); border: 2px solid var(--gold); border-bottom-right-radius: 2px; }
+    .bub ol { margin: 4px 0 0; padding-left: 22px; }
+    .bub li { margin: 2px 0; }
+    .bub p { margin: 4px 0 0; }
+    .bub .q-h { font-family: var(--font-display); color: var(--gold); margin-top: 8px; }
+    .bub .dim { color: var(--muted); font-size: 15px; }
+    .tagok, .tagask { display: inline-block; font-size: 13px; font-weight: 600; border-radius: 99px; padding: 1px 10px; margin-right: 6px; }
+    .tagok { color: var(--green); border: 1px solid var(--green); }
+    .tagask { color: var(--gold); border: 1px solid var(--gold); }
   </style>
 </head>
 
@@ -1621,7 +1637,7 @@
       <!-- 9 -->
       <section class="slide"
         data-notes="ที่จุดเช็กพอยต์ กรรมการตรวจว่าวิ่งถูกเส้นทางไหม ตรงนี้นักวิ่ง B เริ่มมีปัญหา เพราะ AI ชอบเดาอยู่ 3 อย่าง หนึ่ง ปุ่มหรือช่องที่ไม่มีอยู่ในหน้าจอจริง สอง ค่าจำกัดที่ spec ไม่ได้บอก สาม ชื่อเรียกที่ไม่ตรงกับหน้าจอ ลองนึกถึงแอป QuickShift ที่ทุกคนเล่นตอนเช้า ถ้าส่งแค่ requirement ของฟอร์มสมัครงานให้ AI โดยไม่ส่งหน้าจอไปด้วย มันเขียน case มาว่าตรวจสอบการกรอกอีเมล ตรวจสอบการอัปโหลดรูปโปรไฟล์ และชื่อต้องไม่เกิน 50 ตัวอักษร ทั้งที่ฟอร์มจริงไม่มีช่องอีเมล ไม่มีรูปโปรไฟล์ และ requirement ไม่ได้บอกความยาวชื่อเลย ทุกข้อดูน่าเชื่อมาก นักวิ่ง A รอดเพราะเขาเทียบกับ Flow และ UI ทุกข้อ ส่วนนักวิ่ง B ไม่รู้เลยว่าผิด เพราะไม่ได้เทียบ"
-        data-time="3">
+        data-time="2.5">
         <div class="hud"><span class="tag">SURVIVE · RACE</span>
           <div class="race"><span class="done">กม. 0</span><span class="done">กม. 5</span><span
               class="on">CHECK</span><span class="">กม. 30</span><span class="">FINISH</span></div>
@@ -1824,7 +1840,7 @@
       <!-- 16 -->
       <section class="slide"
         data-notes="ก่อนให้ AI เริ่มทำงาน เมย์ตั้งให้มันเช็ก 4 อย่างทุกครั้ง เหมือนนักวิ่งเช็กของก่อนออกตัว project ไหน งานอะไร จะเขียนผลลงที่ไหน และมี Flow กับ UI ไหม ข้อสุดท้ายสำคัญที่สุด ถ้าไม่มี Flow มันจะไม่รู้ว่าต้องแตกกี่ทาง ถ้าไม่มี UI มันจะแต่งชื่อปุ่มขึ้นมาเอง และกฎคือห้ามเดา ห้ามใช้คำตอบจากครั้งก่อน ต้องถามใหม่ทุกครั้ง"
-        data-time="2">
+        data-time="1.5">
         <div class="hud"><span class="tag">THRIVE · STEP 0</span><span>PREFLIGHT</span></div>
         <h2>ก่อนให้ AI เริ่ม: Preflight 4 ข้อ</h2>
         <div class="checks">
@@ -1841,6 +1857,13 @@
             <p style="font-size:20px">AI แต่งชื่อปุ่มเอง</p>
           </div>
         </div>
+      </section>
+
+      <!-- 16a -->
+      <section class="slide" data-notes="มาดูตัวอย่างจริงว่า preflight ทำงานยังไง สมมติเราสั่งสั้น ๆ ว่า ช่วยตั้งชื่อ test case หน้าค้นหางานของ QuickShift ให้หน่อย AI ยังไม่เริ่มเขียน แต่ถามกลับ 4 ข้อก่อน project ไหน งานอะไร จะเขียนผลลงที่ไหน และมี Flow กับ UI ไหม และบอกด้วยว่าถ้าไม่มี Flow หรือ UI มันต้องเดาอะไรบ้าง พอเราตอบครบ มันถึงเริ่มทำ [พูดช้า] นี่คือสิ่งที่เราอยากได้จาก AI ไม่ใช่ AI ที่ตอบเร็วที่สุด แต่เป็น AI ที่รู้ว่าตัวเองยังไม่รู้อะไร" data-time="1.5">
+        <div class="hud"><span class="tag">THRIVE · STEP 0</span><span>PREFLIGHT · EXAMPLE</span></div>
+        <h2 class="chat-h">ถ้าสั่งไม่ครบ AI ต้องถามก่อน <span class="sub">ไม่เดา · ไม่ใช้คำตอบจากครั้งก่อน</span></h2>
+        <div class="chat"><div class="msg user"><i class="spr" data-s="hero" data-z="3"></i><div class="bub">ช่วยตั้งชื่อ test case หน้าค้นหางานของ QuickShift ให้หน่อย</div></div><div class="msg ai"><i class="spr" data-s="robot" data-z="3"></i><div class="bub"><b>ก่อนเริ่ม ขอข้อมูลให้ครบ 4 อย่าง</b><ol><li><b>Project:</b> ลง project ไหน?</li><li><b>งานอะไร:</b> ตั้งชื่อ case หรือเขียน detail?</li><li><b>เขียนผลลงที่ไหน:</b> tab / ไฟล์ไหน?</li><li><b>Flow + UI:</b> มีของหน้านี้ไหม? ถ้าไม่มี ต้องเดาทางแยกและชื่อปุ่มเอง</li></ol></div></div><div class="msg user"><i class="spr" data-s="hero" data-z="3"></i><div class="bub">quickshift · ตั้งชื่อ case · Traceability_Record · แนบ Flow + UI 📎</div></div><div class="msg ai"><i class="spr" data-s="robot" data-z="3"></i><div class="bub">ครบแล้ว เริ่มได้เลย ✅</div></div></div>
       </section>
 
       <!-- 16b -->
@@ -2021,7 +2044,7 @@
       <!-- 21 -->
       <section class="slide"
         data-notes="ทุกครั้งที่ AI ทำเสร็จ เมย์ให้มันปิดงานด้วย Recommend Cases ตัวอย่างจากหน้าค้นหาของ QuickShift มันจะบอกว่ายังขาดการค้นด้วยคำบางส่วน ซึ่งเพิ่มได้เลย แต่มีข้อหนึ่งที่ต้องถามก่อน คือ requirement บอกว่าเรียงงานล่าสุดก่อน แต่ไม่ได้บอกว่าล่าสุดตามวันโพสต์หรือวันเริ่มงาน และมันต้องบอกด้วยว่าสมมติอะไรไปบ้าง จากนั้นเป็นหน้าที่ของ QA ตรวจว่า Expected วัดผลได้จริงไหม Test Data มีค่าขอบไหม ทุก AC มี case ไหม และเราเห็นด้วยกับสิ่งที่ AI สมมติหรือเปล่า"
-        data-time="3">
+        data-time="2">
         <div class="hud"><span class="tag">THRIVE · REVIEW</span><span>RECOMMEND + REVIEW</span></div>
         <h2>ปิดงานทุกครั้ง: Recommend Cases + QA Review</h2>
         <div class="cols c2">
@@ -2045,6 +2068,13 @@
             </ul>
           </div>
         </div>
+      </section>
+
+      <!-- 21b -->
+      <section class="slide" data-notes="ทีนี้ดูตอนจบงาน หลังเขียน test case เสร็จ AI ไม่ได้บอกแค่ว่าเสร็จแล้ว แต่ส่งคำถามกลับมาให้เราตัดสินใจ ข้อแรก ล่าสุด เรียงตามวันโพสต์หรือวันเริ่มงาน มันบอกด้วยว่าตอนนี้สมมติไว้แบบไหน ข้อสอง งานทั้งหมด รวมงานที่ปิดรับไหม เพราะ REQ-01 กับ REQ-07 ขัดกันเอง แล้วมันแนะนำเคสเพิ่ม แยกเป็นเคสที่เพิ่มได้เลย กับเคสที่ต้องได้คำตอบก่อน สิ่งสำคัญคือ AI ไม่เพิ่มเคสเอง มันแนะนำ แล้วให้ QA ตัดสิน เราตอบกลับไปสั้น ๆ มันก็เพิ่มเคส และบันทึกคำตอบลง domain.md ครั้งหน้าจะไม่ต้องถามซ้ำ" data-time="1.5">
+        <div class="hud"><span class="tag">THRIVE · REVIEW</span><span>AI ASKS BACK · EXAMPLE</span></div>
+        <h2 class="chat-h">หลังเขียนเสร็จ AI ถามกลับ <span class="sub">ให้ QA ตัดสินใจจุดที่ไม่ชัด + เคสที่แนะนำเพิ่ม</span></h2>
+        <div class="chat"><div class="msg ai"><i class="spr" data-s="robot" data-z="3"></i><div class="bub"><b>เขียนเสร็จ 10 case ลง Traceability_Record แล้ว</b><p class="q-h">❓ ขอให้ช่วยตัดสินใจ 2 ข้อ</p><ol><li>"ล่าสุด" เรียงตามวันโพสต์ หรือวันเริ่มงาน? <span class="dim">(REQ-01 · ตอนนี้สมมติเป็นวันโพสต์)</span></li><li>"งานทั้งหมด" รวมงานที่ปิดรับแล้วไหม? <span class="dim">(REQ-01 ขัดกับ REQ-07)</span></li></ol><p class="q-h">💡 เคสที่แนะนำเพิ่ม</p><p><span class="tagok">เพิ่มได้เลย</span> ค้นด้วยคำบางส่วนของชื่องาน · ค้นแล้วล้างคำค้น · ค้นโดยมีเว้นวรรคท้ายคำ</p><p><span class="tagask">ต้องได้คำตอบก่อน</span> ค้นภาษาอังกฤษ / ตัวพิมพ์เล็กใหญ่ · จำนวนงานต่อหน้า</p></div></div><div class="msg user"><i class="spr" data-s="hero" data-z="3"></i><div class="bub">ข้อ 1 วันโพสต์ · ข้อ 2 แสดงพร้อมป้ายปิดรับ · เพิ่ม 3 เคสแรกได้เลย</div></div><div class="msg ai"><i class="spr" data-s="robot" data-z="3"></i><div class="bub">เพิ่ม TC011–TC013 แล้ว และบันทึกคำตอบทั้ง 2 ข้อลง domain.md ✅</div></div></div>
       </section>
 
       <!-- 22 -->
@@ -2103,7 +2133,7 @@
       <!-- 25 -->
       <section class="slide"
         data-notes="ใครมีคำถามเชิญได้เลย [ตอบคำถาม] ตอนเช้าเราเล่น QuickShift โดยไม่มี requirement ตอนนี้เรามีทั้ง L-E-V-E-L, test matrix และคำถามจาก AC Card แล้ว workshop ต่อจากนี้คือกลับไปที่แอปเดิมอีกครั้ง ลองดูว่ารอบนี้เราจะเจออะไรมากกว่าเดิม ส่วนใครอยากได้ชุดเอกสารที่เห็นในวันนี้ไปลองใช้ สแกน QR ทางขวาได้เลย"
-        data-time="3">
+        data-time="2">
         <div class="hud"><span class="tag">FINISH LINE</span><span>🏁</span></div>
         <div class="center" style="gap:16px;width:100%">
           <i class="spr " data-s="flag" data-z="5"></i>
