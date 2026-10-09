@@ -1049,6 +1049,28 @@
     .mvp-cols p b { color: var(--gold); }
     .mvp-arrow { font-family: var(--font-pixel); font-size: 26px; color: var(--gold); }
     .mvp-cols .label { font-family: var(--font-display); font-size: 16px; letter-spacing: 0; }
+    .label.th, .example { font-family: var(--font-display); font-size: 15px; letter-spacing: 0; }
+    .ex { display: grid; gap: 18px; }
+    .ex2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .ex3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .ex-flow { font-size: 22px; }
+    .ex-p { font-size: 20px; line-height: 1.5; }
+    .ex-p + .ex-p { margin-top: 8px; }
+    .ex-q { font-family: var(--font-display); font-size: 24px; line-height: 1.4; }
+    .ex3 .ex-q { margin-bottom: 8px; }
+    .ink { color: var(--ink); }
+    .story p { font-family: var(--font-display); font-size: 28px; }
+    .formula p { font-family: var(--font-display); font-size: 26px; }
+    .callout { font-family: var(--font-display); font-size: 24px; color: var(--gold); text-align: center;
+      border: 2px dashed var(--gold); border-radius: 8px; padding: 10px 18px; background: rgba(255,197,61,.08); }
+    .matrix.big { grid-template-rows: repeat(3, 84px) 34px; font-size: 18px; }
+    .matrix.big .pin { font-size: 18px; }
+    ol.rank { margin: 0; padding-left: 26px; display: grid; gap: 12px; font-size: 20px; }
+    ol.rank span { display: block; font-size: 16px; color: var(--muted); }
+    ol.rank .skip { opacity: .55; }
+    dl.bug { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 12px 0 0; font-size: 17px; }
+    dl.bug dt { color: var(--muted); font-family: var(--font-pixel); font-size: 10px; padding-top: 5px; }
+    dl.bug dd { margin: 0; }
   </style>
 </head>
 
@@ -1309,12 +1331,8 @@
       </section>
 
       <!-- 9 L1 -->
-      <section class="slide"
-        data-notes="แบบ MVP: รู้เกมทะลุปรุโปร่ง รู้กติกาและรู้จักคู่แข่ง QA ต้องเข้าใจว่าระบบทำไปเพื่ออะไร ไม่ใช่แค่ทำอะไรได้บ้าง ยกตัวอย่าง flow ผู้หางานกับนายจ้างที่เชื่อมกันข้าม Web, App และ Admin ถ้าเทสแค่หน้าเดียวจะไม่เห็นบั๊กที่อยู่ระหว่างระบบ"
-        data-time="5">
-        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 1/5 ·
-              ตัวเอง</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr"
-                data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
+      <section class="slide" data-notes="แบบ MVP: รู้เกมทะลุปรุโปร่ง รู้กติกาและรู้จักคู่แข่ง QA ต้องเข้าใจว่าระบบทำไปเพื่ออะไร ไม่ใช่แค่ทำอะไรได้บ้าง รู้ว่าผู้ใช้แต่ละกลุ่มใช้งานต่างกันยังไง และเข้าใจ flow ที่วิ่งข้ามหลายระบบ ถ้าไม่รู้ว่าแต่ละขั้นมีไว้ทำไม เราก็จะเทสตาม case ไปเรื่อย ๆ โดยไม่เห็นบั๊กที่สำคัญจริง" data-time="3">
+        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 1/5 · ตัวเอง</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
           <div class="levels"><span class="on">L</span><span>E</span><span>V</span><span>E</span><span>L</span></div>
         </div>
         <div class="lvl-title">
@@ -1322,7 +1340,7 @@
           <h2>Learn the Product <span class="sub">รู้จักธุรกิจ ผู้ใช้ และ domain ไม่ใช่รู้แค่หน้าจอ</span></h2>
         </div>
         <div class="cols lvl">
-          <div style="display:grid;gap:18px;align-content:start">
+          <div style="display:grid;gap:22px;align-content:start">
             <div class="quote">"บั๊กที่อันตรายที่สุด คือบั๊กที่เราไม่รู้ว่ามันเป็นบั๊ก"</div>
             <ul class="clean">
               <li>อธิบายได้ว่าฟีเจอร์แก้ปัญหาอะไรให้ผู้ใช้</li>
@@ -1331,14 +1349,8 @@
             </ul>
             <div class="badge">🏅 ทีมมาถาม QA ว่าฟีเจอร์ควรทำงานยังไง</div>
           </div>
-          <div style="display:grid;gap:16px;align-content:start">
-            <div class="card"><span class="label">ตัวอย่าง: FLOW ข้ามระบบ</span>
-              <div class="flow"><span class="chip">ผู้หางาน</span><span class="arrow">▶</span><span class="chip k">Web /
-                  App</span><span class="arrow">▶</span><span class="chip">สมัครงาน</span><span
-                  class="arrow">▶</span><span class="chip k">นายจ้าง</span><span class="arrow">▶</span><span
-                  class="chip k">Admin</span></div>
-            </div>
-            <div class="card"><span class="label">ลองทำ</span>
+          <div style="display:grid;gap:18px;align-content:start">
+            <div class="card"><span class="label th">ลองทำ</span>
               <p style="font-size:20px">อ่านรีวิวจากผู้ใช้จริง · นั่งฟัง CS/Sales · วาด flow เอง</p>
             </div>
             <div class="card anti"><span class="label">❌ ANTI-PATTERN</span>
@@ -1348,32 +1360,57 @@
         </div>
       </section>
 
+      <!-- 9b L1 example -->
+      <section class="slide" data-notes="ตัวอย่างจาก QuickShift ผู้หางานสมัครผ่าน App แล้วนายจ้างดูใบสมัครผ่าน Web [กด →] ถ้าเทสแค่ฝั่ง App ทุกอย่างผ่านหมด สมัครสำเร็จ หน้าสำเร็จขึ้นถูก งานที่สมัครแสดงครบ [กด →] แต่ถ้า QA รู้ว่าเป้าหมายของธุรกิจคือให้นายจ้างติดต่อผู้หางานได้ ก็จะตามข้อมูลไปดูถึงฝั่งนายจ้าง แล้วเจอว่านายจ้างไม่เห็นเบอร์โทร ทุกหน้าผ่าน แต่ธุรกิจพัง นี่คือบั๊กที่อยู่ระหว่างระบบ (ตัวอย่างสมมติ ฝั่งนายจ้างไม่มีในแอปที่ใช้เล่นเกม)" data-time="2">
+        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 1/5 · EXAMPLE</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
+          <div class="levels"><span class="on">L</span><span>E</span><span>V</span><span>E</span><span>L</span></div>
+        </div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr" data-s="book" data-z="5"></i></div>
+          <h2>ตัวอย่าง QuickShift <span class="sub">Flow ข้ามระบบ: ผู้หางานสมัคร → นายจ้างรับเข้าทำงาน</span></h2>
+        </div>
+        <div class="ex">
+          <div class="card"><span class="label">CROSS-SYSTEM FLOW</span>
+            <div class="flow ex-flow"><span class="chip">ผู้หางาน · App</span><span class="arrow">▶</span><span
+                class="chip">กรอกใบสมัคร</span><span class="arrow">▶</span><span class="chip k">นายจ้าง · Web</span><span
+                class="arrow">▶</span><span class="chip k">โทรนัดสัมภาษณ์</span><span class="arrow">▶</span><span
+                class="chip">แจ้งผลกลับผู้หางาน</span></div>
+          </div>
+          <div class="ex2">
+            <div class="card anti frag"><span class="label">TEST ONLY THE APP</span>
+              <p class="ex-p">✅ สมัครสำเร็จ · ✅ หน้าสำเร็จขึ้นถูก · ✅ งานที่สมัครแสดงครบ</p>
+              <p class="ex-p muted">ทุกหน้าผ่าน แต่ไม่มีใครเปิดดูฝั่งนายจ้าง</p>
+            </div>
+            <div class="card cyan frag"><span class="label">QA WHO KNOWS THE PRODUCT</span>
+              <p class="ex-p">ถาม: <b>"ข้อมูลที่ผู้หางานกรอก ไปโผล่ที่ไหนบ้าง?"</b></p>
+              <p class="ex-p muted">ตามไปดูฝั่งนายจ้าง → เจอว่า <b class="ink">นายจ้างไม่เห็นเบอร์โทร</b> ติดต่อผู้หางานไม่ได้</p>
+            </div>
+          </div>
+          <div class="callout frag">ทุกหน้าผ่าน แต่ธุรกิจพัง = บั๊กที่อยู่ระหว่างระบบ</div>
+        </div>
+      </section>
+
       <!-- 10 L2 -->
-      <section class="slide"
-        data-notes="แบบ MVP: อ่านเกมขาด ขยับไปดักก่อนบอลมา Shift-Left คือให้ QA เข้าไปตั้งแต่ requirement และ design ยิ่งเจอปัญหาเร็ว ต้นทุนในการแก้ยิ่งต่ำ แก้ในเอกสารถูกกว่าแก้บน production มาก (กราฟเป็นภาพเชิงแนวคิด ไม่ใช่ตัวเลขจริง)"
-        data-time="5">
-        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 2/5 ·
-              กระบวนการ</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr"
-                data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
-          <div class="levels"><span class="done">L</span><span
-              class="on">E</span><span>V</span><span>E</span><span>L</span></div>
+      <section class="slide" data-notes="แบบ MVP: อ่านเกมขาด ขยับไปดักก่อนบอลมา Shift-Left คือให้ QA เข้าไปตั้งแต่ requirement และ design ยิ่งเจอปัญหาเร็ว ต้นทุนในการแก้ยิ่งต่ำ แก้ในเอกสารถูกกว่าแก้บน production มาก (กราฟเป็นภาพเชิงแนวคิด ไม่ใช่ตัวเลขจริง)" data-time="3">
+        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 2/5 · กระบวนการ</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
+          <div class="levels"><span class="done">L</span><span class="on">E</span><span>V</span><span>E</span><span>L</span></div>
         </div>
         <div class="lvl-title">
           <div class="lvl-icon"><i class="spr" data-s="clock" data-z="5"></i></div>
           <h2>Early Involvement <span class="sub">เข้าไปตั้งแต่ requirement (Shift-Left) หาบั๊กก่อนมีโค้ด</span></h2>
         </div>
         <div class="cols lvl">
-          <div style="display:grid;gap:18px;align-content:start">
+          <div style="display:grid;gap:22px;align-content:start">
             <div class="quote">"บั๊กที่ถูกที่สุด คือบั๊กที่ไม่เคยถูกเขียนเป็นโค้ด"</div>
             <ul class="clean">
-              <li>เข้า grooming แล้วถามว่า "ถ้า...ล่ะ?"</li>
+              <li>เข้า grooming / 3 Amigos แล้วถามว่า "ถ้า...ล่ะ?"</li>
               <li>ช่วยเขียน Acceptance Criteria ให้ชัดและเทสได้</li>
               <li>ทักเรื่อง edge case, error, เน็ตหลุด ก่อน dev เริ่ม</li>
             </ul>
             <div class="badge">🏅 จับบั๊กได้ตั้งแต่ยังเป็นเอกสาร</div>
           </div>
-          <div style="display:grid;gap:16px;align-content:start">
-            <div class="card"><span class="label">ต้นทุนการแก้บั๊ก (ภาพเชิงแนวคิด)</span>
+          <div style="display:grid;gap:18px;align-content:start">
+            <div class="card"><span class="label th">ต้นทุนการแก้บั๊ก (ภาพเชิงแนวคิด)</span>
               <div class="bars">
                 <div class="qa" style="height:8%"></div>
                 <div class="qa" style="height:16%"></div>
@@ -1384,9 +1421,6 @@
               <div class="bar-labels" style="margin-top:8px"><span class="gold">Req</span><span
                   class="gold">Design</span><span>Dev</span><span>Test</span><span>Prod</span></div>
             </div>
-            <div class="card"><span class="label">ลองทำ</span>
-              <p style="font-size:20px">3 Amigos (PO + Dev + QA) · รีวิว UI ก่อนส่ง dev</p>
-            </div>
             <div class="card anti"><span class="label">❌ ANTI-PATTERN</span>
               <p style="font-size:20px">รอ dev ส่งงานมาแล้วค่อยเริ่มอ่าน requirement</p>
             </div>
@@ -1394,71 +1428,118 @@
         </div>
       </section>
 
+      <!-- 10b L2 example -->
+      <section class="slide" data-notes="ตัวอย่างจาก QuickShift story นี้ ผู้หางานได้รับแจ้งเตือนเมื่อมีงานใหม่ใกล้บ้าน ฟังดูชัดใช่ไหม [กด →] แต่ใกล้คือกี่กิโล ถ้าไม่ถาม dev อาจใส่ 50 กิโล ผู้ใช้ได้งานข้ามจังหวัด [กด →] ถ้าผู้ใช้ไม่เปิด location แอปจะทำยังไง [กด →] ถ้ามีงานใหม่ 20 งานพร้อมกัน แจ้ง 20 ครั้งไหม ผู้ใช้โดนแจ้งรัวจนปิด notification ไปเลย [กด →] 3 คำถามนี้ใช้เวลาแค่ 5 นาทีใน grooming แต่ถ้าไปเจอตอนเทส ต้องแก้โค้ดแล้วเทสใหม่ทั้งรอบ (ตัวอย่างสมมติ ฟีเจอร์แจ้งเตือนไม่มีในแอปที่ใช้เล่นเกม)" data-time="2">
+        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 2/5 · EXAMPLE</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
+          <div class="levels"><span class="done">L</span><span class="on">E</span><span>V</span><span>E</span><span>L</span></div>
+        </div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr" data-s="clock" data-z="5"></i></div>
+          <h2>ตัวอย่าง QuickShift <span class="sub">ถามอะไรใน grooming ก่อน dev เริ่มเขียนโค้ด</span></h2>
+        </div>
+        <div class="ex">
+          <div class="card gold story"><span class="label">USER STORY</span>
+            <p>📋 ผู้หางานได้รับแจ้งเตือน เมื่อมีงานใหม่<b class="gold">ใกล้บ้าน</b></p>
+          </div>
+          <div class="ex3">
+            <div class="card frag"><span class="label">Q1</span>
+              <p class="ex-q">"ใกล้" คือกี่ กม.?</p>
+              <p class="ex-p muted">ไม่ถาม → dev ใส่ 50 กม. ผู้ใช้ได้งานข้ามจังหวัด</p>
+            </div>
+            <div class="card frag"><span class="label">Q2</span>
+              <p class="ex-q">ผู้ใช้ไม่เปิด location ล่ะ?</p>
+              <p class="ex-p muted">ไม่ถาม → แอปเงียบ ไม่แจ้งอะไรเลย หรือ crash</p>
+            </div>
+            <div class="card frag"><span class="label">Q3</span>
+              <p class="ex-q">งานใหม่ 20 งานพร้อมกัน แจ้ง 20 ครั้งไหม?</p>
+              <p class="ex-p muted">ไม่ถาม → แจ้งรัวจนผู้ใช้ปิด notification</p>
+            </div>
+          </div>
+          <div class="callout frag">ถาม 3 ข้อใช้ 5 นาทีใน grooming · เจอตอนเทส = แก้โค้ด + เทสใหม่ทั้งรอบ</div>
+        </div>
+      </section>
+
       <!-- 11 L3 -->
-      <section class="slide"
-        data-notes="แบบ MVP: ตัดสินใจถูกในช่วงคับขัน ความเสี่ยง = โอกาสที่จะพัง × ความเสียหายถ้าพัง ถามทั้งห้องว่า Payment, Login และเปลี่ยนสีปุ่ม อันไหนเสี่ยงที่สุด แล้วกด → เพื่อวางลงตาราง ปิดด้วยคำถามว่าถ้าเหลือเวลา 1 ชั่วโมงจะเทสอะไร"
-        data-time="6">
-        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 3/5 ·
-              การทดสอบ</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr"
-                data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
-          <div class="levels"><span class="done">L</span><span class="done">E</span><span
-              class="on">V</span><span>E</span><span>L</span></div>
+      <section class="slide" data-notes="แบบ MVP: ตัดสินใจถูกในช่วงคับขัน เวลาของเรามีจำกัดเสมอ เทสทุกอย่างไม่ได้ ความเสี่ยงคือโอกาสที่จะพัง คูณกับความเสียหายถ้าพัง ส่วนที่เสี่ยงสูงเทสก่อนและเทสลึก ส่วนที่เสี่ยงต่ำเทสทีหลังหรือเทสแค่ผิว" data-time="3">
+        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 3/5 · การทดสอบ</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
+          <div class="levels"><span class="done">L</span><span class="done">E</span><span class="on">V</span><span>E</span><span>L</span></div>
         </div>
         <div class="lvl-title">
           <div class="lvl-icon"><i class="spr" data-s="target" data-z="5"></i></div>
           <h2>Validate by Risk <span class="sub">ทดสอบตามความเสี่ยง ไม่ใช่เทสทุกอย่างเท่ากันหมด</span></h2>
         </div>
         <div class="cols lvl">
-          <div style="display:grid;gap:18px;align-content:start">
+          <div style="display:grid;gap:22px;align-content:start">
             <div class="quote">"เทสทุกอย่างไม่ได้ แต่ต้องเทสสิ่งที่สำคัญที่สุดก่อนเสมอ"</div>
             <ul class="clean">
               <li>รู้ว่าส่วนไหนพังแล้วกระทบหนัก</li>
               <li>ครอบคลุม happy path, negative และ boundary</li>
               <li>ใช้ exploratory testing หาสิ่งที่ test case ไม่ได้เขียน</li>
             </ul>
-            <div class="card" style="padding:14px 20px">
-              <p style="font-size:22px">⏳ <b>"ถ้าเหลือเวลา 1 ชั่วโมง จะเทสอะไร?"</b></p>
-            </div>
             <div class="badge">🏅 release ได้อย่างมั่นใจแม้เวลาน้อย</div>
           </div>
+          <div style="display:grid;gap:18px;align-content:start">
+            <div class="card gold formula"><span class="label">RISK</span>
+              <p>ความเสี่ยง = <span class="gold">โอกาสพัง</span> × <span class="gold">ความเสียหาย</span></p>
+            </div>
+            <div class="card anti"><span class="label">❌ ANTI-PATTERN</span>
+              <p style="font-size:20px">เทสทุกฟีเจอร์เท่ากันหมด จนเวลาหมดก่อนถึงส่วนที่สำคัญ</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11b L3 example -->
+      <section class="slide" data-notes="ตัวอย่างจาก QuickShift ถามทั้งห้องว่าระหว่างสมัครงาน ค่าจ้างที่แสดง และสีไอคอนแท็บ อันไหนเสี่ยงที่สุด แล้วกด → เพื่อวางลงตาราง สมัครงานพังคือธุรกิจหยุดทันที ค่าจ้างแสดงผิดทำให้ผู้หางานเข้าใจผิดและเสียความเชื่อใจ ส่วนสีไอคอนผิดแทบไม่มีใครเดือดร้อน [กด →] ปิดด้วยคำถามว่าถ้า QuickShift จะ release ในอีก 1 ชั่วโมงจะเทสอะไร แล้วเปิดลำดับให้ดู" data-time="3">
+        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 3/5 · EXAMPLE</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
+          <div class="levels"><span class="done">L</span><span class="done">E</span><span class="on">V</span><span>E</span><span>L</span></div>
+        </div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr" data-s="target" data-z="5"></i></div>
+          <h2>ตัวอย่าง QuickShift <span class="sub">จัดลำดับความเสี่ยง แล้วเลือกว่าจะเทสอะไรก่อน</span></h2>
+        </div>
+        <div class="cols ex2" style="flex:none">
           <div class="card"><span class="label">RISK MATRIX · IMPACT × LIKELIHOOD</span>
-            <div class="matrix">
+            <div class="matrix big">
               <div class="ax y">Impact ↑</div>
               <div class="cell md"></div>
-              <div class="cell hi"><span class="pin frag">Login</span></div>
-              <div class="cell hi"><span class="pin frag">Payment</span></div>
+              <div class="cell hi"><span class="pin frag">ค่าจ้างที่แสดง</span></div>
+              <div class="cell hi"><span class="pin frag">สมัครงาน</span></div>
               <div class="cell lo"></div>
               <div class="cell md"></div>
               <div class="cell hi"></div>
-              <div class="cell lo"><span class="pin frag">สีปุ่ม</span></div>
+              <div class="cell lo"><span class="pin frag">สีไอคอนแท็บ</span></div>
               <div class="cell lo"></div>
               <div class="cell md"></div>
               <div></div>
               <div class="ax" style="grid-column:2 / 5">Likelihood →</div>
             </div>
           </div>
+          <div style="display:grid;gap:14px;align-content:start">
+            <div class="card gold"><p class="ex-q">⏳ "QuickShift จะ release ในอีก 1 ชั่วโมง จะเทสอะไร?"</p></div>
+            <div class="card frag">
+              <ol class="rank">
+                <li><b>สมัครงาน</b> กรอก → ยืนยัน → เห็นในงานที่สมัคร<span>พัง = ธุรกิจหยุด</span></li>
+                <li><b>ค่าจ้างที่แสดง</b> ตรงกับที่นายจ้างตั้ง<span>ผิด = เสียความเชื่อใจ</span></li>
+                <li class="skip"><b>สีไอคอนแท็บ</b> ไว้รอบหน้า<span>ผิด = แทบไม่มีใครเดือดร้อน</span></li>
+              </ol>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- 12 L4 -->
-      <section class="slide"
-        data-notes="แบบ MVP: แอสซิสต์ ทำให้เพื่อนเล่นดีขึ้น เปลี่ยนจากผู้เฝ้าประตูที่บอกแค่ผ่านหรือไม่ผ่าน มาเป็นโค้ชด้านคุณภาพ เทียบ bug report 2 แบบ ให้เห็นว่าการสื่อสารที่ดีช่วยให้ dev แก้ได้เร็ว เน้นการสื่อสารแบบไม่กล่าวโทษ"
-        data-time="5">
-        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 4/5 ·
-              ทีม</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart"
-                data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
-          <div class="levels"><span class="done">L</span><span class="done">E</span><span class="done">V</span><span
-              class="on">E</span><span>L</span></div>
+      <section class="slide" data-notes="แบบ MVP: แอสซิสต์ ทำให้เพื่อนเล่นดีขึ้น เปลี่ยนจากผู้เฝ้าประตูที่บอกแค่ผ่านหรือไม่ผ่าน มาเป็นโค้ชด้านคุณภาพ ทำ pair testing กับ dev ตั้ง Definition of Done ร่วมกัน และสื่อสารแบบไม่กล่าวโทษ" data-time="3">
+        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 4/5 · ทีม</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
+          <div class="levels"><span class="done">L</span><span class="done">E</span><span class="done">V</span><span class="on">E</span><span>L</span></div>
         </div>
         <div class="lvl-title">
           <div class="lvl-icon"><i class="spr" data-s="team" data-z="5"></i></div>
           <h2>Empower the Team <span class="sub">ทำให้คุณภาพเป็นความรับผิดชอบของทุกคน</span></h2>
         </div>
         <div class="cols lvl">
-          <div style="display:grid;gap:18px;align-content:start">
+          <div style="display:grid;gap:22px;align-content:start">
             <div class="quote">"QA ที่เก่งไม่ได้ทำงานคนเดียว แต่ทำให้ทั้งทีมเก่งเรื่องคุณภาพขึ้น"</div>
-            <div class="flow" style="font-size:22px"><span class="chip">🚧 Gatekeeper</span><span
-                class="arrow">▶</span><span class="chip k">🧑‍🏫 Quality Coach</span></div>
             <ul class="clean">
               <li>pair testing กับ dev · Definition of Done ร่วมกัน</li>
               <li>bug bash ทั้งทีม · automation ที่ทุกคนใช้ได้</li>
@@ -1466,11 +1547,10 @@
             </ul>
             <div class="badge">🏅 dev มาปรึกษา QA ก่อนส่งงาน</div>
           </div>
-          <div style="display:grid;gap:16px;align-content:start">
-            <div class="card report"><span class="label">BUG REPORT</span>
-              <p class="bad">❌ "สมัครงานไม่ได้ครับ"</p>
-              <p class="good frag" style="margin-top:12px">✅ [iOS · App] กดสมัครงานแล้วค้างที่ loading เมื่อแนบ resume
-                เกิน 5MB<br><span class="muted">Steps 1-2-3 · Expected / Actual · แนบวิดีโอ</span></p>
+          <div style="display:grid;gap:18px;align-content:start">
+            <div class="card"><span class="label">ROLE SHIFT</span>
+              <div class="flow" style="font-size:22px"><span class="chip">🚧 Gatekeeper</span><span
+                  class="arrow">▶</span><span class="chip k">🧑‍🏫 Quality Coach</span></div>
             </div>
             <div class="card anti"><span class="label">❌ ANTI-PATTERN</span>
               <p style="font-size:20px">"QA vs Dev" มองว่าหาบั๊กเจอคือการเอาชนะ dev</p>
@@ -1479,22 +1559,46 @@
         </div>
       </section>
 
+      <!-- 12b L4 example -->
+      <section class="slide" data-notes="ตัวอย่างจาก QuickShift bug report แบบแรก สมัครงานไม่ได้ครับ dev ต้องถามกลับอีกหลายรอบ เครื่องอะไร งานไหน ทำยังไง [กด →] แบบที่สองบอกครบ เครื่อง เวอร์ชัน ขั้นตอน ผลที่ควรเป็น ผลที่เกิดขึ้น และแนบวิดีโอ dev เปิดอ่านแล้วแก้ได้เลย การสื่อสารที่ดีคือการช่วยให้ทีมเก่งขึ้น ไม่ใช่การจับผิด" data-time="2">
+        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 4/5 · EXAMPLE</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
+          <div class="levels"><span class="done">L</span><span class="done">E</span><span class="done">V</span><span class="on">E</span><span>L</span></div>
+        </div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr" data-s="team" data-z="5"></i></div>
+          <h2>ตัวอย่าง QuickShift <span class="sub">Bug report ที่ทำให้ dev แก้ได้ทันที</span></h2>
+        </div>
+        <div class="cols ex2" style="flex:none">
+          <div class="card anti report"><span class="label">BEFORE</span>
+            <p class="bad ex-q">❌ "สมัครงานไม่ได้ครับ"</p>
+            <p class="ex-p muted" style="margin-top:14px">dev ต้องถามกลับ:</p>
+            <ul class="clean ex-p muted"><li>เครื่องอะไร? เวอร์ชันไหน?</li><li>งานไหน? ทำอะไรก่อนกด?</li><li>ค้าง, error หรือปิดไปเลย?</li></ul>
+          </div>
+          <div class="card report frag" style="border-color:var(--green)"><span class="label">AFTER</span>
+            <p class="good ex-q">✅ กดยืนยันสมัครงานตอนเน็ตหลุด แล้วค้างที่ loading</p>
+            <dl class="bug">
+              <dt>Env</dt><dd>Android 14 · QuickShift App v2.3</dd>
+              <dt>Steps</dt><dd>1. เปิดงาน "บาริสต้า คาเฟ่" 2. กรอกข้อมูลครบ 3. ปิด Wi-Fi แล้วกดยืนยัน</dd>
+              <dt>Expected</dt><dd>แจ้งว่าเน็ตหลุด พร้อมปุ่มลองใหม่</dd>
+              <dt>Actual</dt><dd>ค้างที่ loading ไม่มีปุ่มให้กด</dd>
+              <dt>Evidence</dt><dd>วิดีโอ 15 วินาที</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="callout frag">แบบแรก: ถาม-ตอบ 3 รอบ · แบบที่สอง: dev เปิดอ่านแล้วแก้ได้เลย</div>
+      </section>
+
       <!-- 13 L5 -->
-      <section class="slide"
-        data-notes="แบบ MVP: ผลงานมีสถิติรองรับ และเป็นผู้นำในสนาม เทียบการรายงานแบบใช้ความรู้สึกกับแบบมีข้อมูล ตัวเลขบน dashboard เป็นตัวอย่าง ปิดด้วยการทำ RCA ทุกครั้งที่มีบั๊กบน production และนำไปคุยใน Retrospective"
-        data-time="5">
-        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 5/5 ·
-              องค์กร</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr"
-                data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
-          <div class="levels"><span class="done">L</span><span class="done">E</span><span class="done">V</span><span
-              class="done">E</span><span class="on">L</span></div>
+      <section class="slide" data-notes="แบบ MVP: ผลงานมีสถิติรองรับ และเป็นผู้นำในสนาม รายงานด้วยตัวเลข ดู bug trend และหา root cause ให้ความเห็น Go หรือ No-Go ที่มีหลักฐานรองรับ ทำ RCA ทุกครั้งที่มีบั๊กบน production และนำไปคุยใน Retrospective" data-time="3">
+        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 5/5 · องค์กร</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
+          <div class="levels"><span class="done">L</span><span class="done">E</span><span class="done">V</span><span class="done">E</span><span class="on">L</span></div>
         </div>
         <div class="lvl-title">
           <div class="lvl-icon"><i class="spr" data-s="chart" data-z="5"></i></div>
           <h2>Lead with Data <span class="sub">ใช้ข้อมูลตัดสินใจ และปรับปรุงอย่างต่อเนื่อง</span></h2>
         </div>
         <div class="cols lvl">
-          <div style="display:grid;gap:18px;align-content:start">
+          <div style="display:grid;gap:22px;align-content:start">
             <div class="quote">"ความรู้สึกบอกว่าพร้อม แต่ข้อมูลบอกว่าพร้อมจริงไหม"</div>
             <ul class="clean">
               <li>รายงานด้วยตัวเลข: pass rate, bug ตาม severity</li>
@@ -1503,31 +1607,42 @@
             </ul>
             <div class="badge">🏅 PO ถาม QA ก่อนตัดสินใจ release</div>
           </div>
-          <div style="display:grid;gap:16px;align-content:start">
-            <div class="card"><span class="label">RELEASE DASHBOARD <span class="example">· ตัวอย่าง</span></span>
-              <div class="tiles">
-                <div class="tile-s">
-                  <div class="n">96%</div>
-                  <div class="k">Pass rate</div>
-                </div>
-                <div class="tile-s">
-                  <div class="n">0</div>
-                  <div class="k">Critical bugs</div>
-                </div>
-                <div class="tile-s">
-                  <div class="n w">4</div>
-                  <div class="k">Minor bugs (open)</div>
-                </div>
-                <div class="tile-s">
-                  <div class="n">2%</div>
-                  <div class="k">Defect leakage</div>
-                </div>
-              </div>
+          <div style="display:grid;gap:18px;align-content:start">
+            <div class="card"><span class="label th">ลองทำ</span>
+              <p style="font-size:20px">ตั้ง dashboard เล็ก ๆ · ทำ RCA ทุกบั๊กที่หลุดไป production แล้วคุยใน Retro</p>
             </div>
-            <div class="card report"><span class="label">รายงานสถานะ</span>
-              <p class="bad">❌ "เทสเสร็จแล้วครับ"</p>
-              <p class="good frag" style="margin-top:8px">✅ "Pass 96% · Critical 0 · Minor 4 มี workaround แล้ว · พร้อม
-                Go"</p>
+            <div class="card anti"><span class="label">❌ ANTI-PATTERN</span>
+              <p style="font-size:20px">รายงานว่า "น่าจะพร้อมแล้ว" โดยไม่มีตัวเลข</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 13b L5 example -->
+      <section class="slide" data-notes="ตัวอย่างจาก QuickShift v2.3 ตัวเลขบน dashboard เป็นตัวอย่าง เทียบการรายงานแบบใช้ความรู้สึกกับแบบมีข้อมูล [กด →] พอบอกว่า Critical 0 และ Minor 4 เป็นเรื่องข้อความบนหน้าจอ PO ตัดสินใจ release ได้ทันทีโดยไม่ต้องถามต่อ [กด →] และหลัง release ถ้ามีบั๊กหลุด เช่นแจ้งเตือนซ้ำ ก็ทำ RCA หาสาเหตุ เพิ่ม case แล้วคุยใน Retro เพื่อไม่ให้เกิดซ้ำ" data-time="2">
+        <div class="hud"><span style="display:flex;align-items:center;gap:16px"><span class="tag">LEVEL 5/5 · EXAMPLE</span><span class="hearts"><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i><i class="spr" data-s="heart" data-z="3"></i></span></span>
+          <div class="levels"><span class="done">L</span><span class="done">E</span><span class="done">V</span><span class="done">E</span><span class="on">L</span></div>
+        </div>
+        <div class="lvl-title">
+          <div class="lvl-icon"><i class="spr" data-s="chart" data-z="5"></i></div>
+          <h2>ตัวอย่าง QuickShift <span class="sub">รายงานสถานะ release ด้วยตัวเลข</span></h2>
+        </div>
+        <div class="cols ex2" style="flex:none">
+          <div class="card" style="align-self:start"><span class="label">QUICKSHIFT v2.3 RELEASE <span class="example">· ตัวอย่าง</span></span>
+            <div class="tiles">
+              <div class="tile-s"><div class="n">96%</div><div class="k">Pass rate</div></div>
+              <div class="tile-s"><div class="n">0</div><div class="k">Critical bugs</div></div>
+              <div class="tile-s"><div class="n w">4</div><div class="k">Minor bugs (open)</div></div>
+              <div class="tile-s"><div class="n">2%</div><div class="k">Defect leakage</div></div>
+            </div>
+          </div>
+          <div style="display:grid;gap:14px;align-content:start">
+            <div class="card report"><span class="label th">รายงานสถานะ</span>
+              <p class="bad ex-q">❌ "เทสเสร็จแล้วครับ"</p>
+              <p class="good ex-p frag" style="margin-top:10px">✅ "QuickShift v2.3 · Pass 96% · Critical 0 · Minor 4 เป็นเรื่องข้อความบนหน้าจอ มี workaround แล้ว · พร้อม Go"</p>
+            </div>
+            <div class="card frag"><span class="label">AFTER RELEASE · RCA</span>
+              <p class="ex-p">แจ้งเตือนซ้ำหลุดไป prod → สาเหตุ: ไม่มี test data งานใหม่หลายงานพร้อมกัน → เพิ่ม case + คุยใน Retro</p>
             </div>
           </div>
         </div>
